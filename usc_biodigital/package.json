@@ -1,0 +1,14 @@
+{
+  "name": "usc_biodigital",
+  "version": "1.0.0",
+  "main": "usc_biodigital.js",
+  "devDependencies": {
+    "eslint": "latest"
+  },
+  "scripts": {
+    "lint": "eslint -c eslintrc usc_biodigital.js"
+  },
+  "author": "Mark Utting <utting@usc.edu.au>",
+  "license": "BSD-2-Clause",
+  "description": "SAGE2 application usc_biodigital"
+}
