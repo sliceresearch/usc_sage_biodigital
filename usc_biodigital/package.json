@@ -10,5 +10,10 @@
   },
   "author": "Mark Utting <utting@usc.edu.au>",
   "license": "BSD-2-Clause",
-  "description": "SAGE2 application usc_biodigital"
+  "description": "SAGE2 app for viewing BioDigital Human Body in USC CAVE.",
+  "keywords": ["USC", "BioDigital", "SAGE2", "Human Body"],
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/sliceresearch/usc_sage_biodigital.git"
+  }
 }
