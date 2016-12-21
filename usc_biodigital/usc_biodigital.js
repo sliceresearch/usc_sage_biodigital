@@ -31,9 +31,10 @@ var usc_biodigital = SAGE2_App.extend({
 		var iframe = document.createElement('iframe');
 		iframe.src = this.state.value;
 		iframe.id = IFRAME_ID;
-		iframe.width = data.width;
-		iframe.height = data.height;
+		iframe.width = "100%"; //data.width;
+		iframe.height = "100%"; // data.height;
 		this.element.appendChild(iframe);
+		this.humanIframe = iframe;
 
 		// initialise our own object state.
 		this.currentZoom = 0.3;
@@ -62,6 +63,12 @@ var usc_biodigital = SAGE2_App.extend({
 
 	resize: function(date) {
 		// Called when window is resized
+		var w = this.element.clientWidth;
+		var h = this.element.clientHeight;
+
+		//console.log('resize to',  w, h, this.element);
+		//this.humanIframe.setAttribute("style", "width:" + w + "px");
+		//this.humanIframe.setAttribute("style", "height:" + h + "px");
 		this.refresh(date);
 	},
 
@@ -75,8 +82,8 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	event: function(eventType, position, user_id, data, date) {
-		console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
-				eventType, position, user_id, data, this.dragging);
+		//console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
+		//		eventType, position, user_id, data, this.dragging);
 		if (!('human' in this)) {
 			this.human = new HumanAPI(IFRAME_ID);
 			console.log('usc_biodigital> CREATED human:', this.human);
