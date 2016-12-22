@@ -13,7 +13,6 @@ var PAN_STEP = 1.0;
 
 var usc_biodigital = SAGE2_App.extend({
 	init: function(data) {
-		console.log('usc_biodigital> init with data', data, ' id=', data.id);
 		// Create div into the DOM
 		this.SAGE2Init("div", data);
 
@@ -25,12 +24,12 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// Set the DOM id
 		this.element.id = "div_" + "usc_biodigital";
-		console.log('usc_biodigital> init element ', this.element);
+		console.log('usc_biodigital> id=', this.id, 'init element=', this.element);
 		// Set the background to black
 		this.element.style.backgroundColor = 'black';
 		var iframe = document.createElement('iframe');
 		iframe.src = this.state.value;
-		iframe.id = IFRAME_ID;
+		iframe.id = IFRAME_ID + this.id;
 		iframe.width = "100%"; //data.width;
 		iframe.height = "100%"; // data.height;
 		this.element.appendChild(iframe);
@@ -58,7 +57,6 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	draw: function(date) {
-		console.log('usc_biodigital> DRAW state value', this.state.value);
 	},
 
 	resize: function(date) {
@@ -85,8 +83,10 @@ var usc_biodigital = SAGE2_App.extend({
 		//console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
 		//		eventType, position, user_id, data, this.dragging);
 		if (!('human' in this)) {
-			this.human = new HumanAPI(IFRAME_ID);
-			console.log('usc_biodigital> CREATED human:', this.human);
+			// NOTE: we append this.id so that each instance has a unique id.
+			// Otherwise the second, third,... instances do not respond to events.
+			this.human = new HumanAPI(IFRAME_ID + this.id);
+			console.log('usc_biodigital> CREATED human:', this.human, 'this.id=', this.id);
 			var _this = this;
 			this.human.send("camera.info", function(camera) {
 				console.log("Gathering camera info:");
@@ -106,7 +106,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.human.send('camera.orbit', { yaw: dx, pitch: dy });
 			this.dragFromX = position.x;
 			this.dragFromY = position.y;
-			console.log('usc_biodigital> camera.orbit!!', dx, dy);
+			// console.log('usc_biodigital> camera.orbit!!', dx, dy);
 			this.refresh(date);
 		} else if (eventType === "pointerRelease" && (data.button === "left")) {
 			// click release
@@ -126,22 +126,22 @@ var usc_biodigital = SAGE2_App.extend({
 			if (data.code === 37 && data.state === "down") {
 				// left
 				this.human.send('camera.pan', { x: -PAN_STEP, y: 0.0 });
-				console.log('usc_biodigital> camera.pan down');
+				// console.log('usc_biodigital> camera.pan left');
 				this.refresh(date);
 			} else if (data.code === 38 && data.state === "down") {
 				// up
 				this.human.send('camera.pan', { x: 0.0, y: -PAN_STEP });
-				console.log('usc_biodigital> camera.pan down');
+				// console.log('usc_biodigital> camera.pan up');
 				this.refresh(date);
 			} else if (data.code === 39 && data.state === "down") {
 				// right
 				this.human.send('camera.pan', { x: PAN_STEP, y: 0.0 });
-				console.log('usc_biodigital> camera.pan down');
+				// console.log('usc_biodigital> camera.pan right');
 				this.refresh(date);
 			} else if (data.code === 40 && data.state === "down") {
 				// down
 				this.human.send('camera.pan', { x: 0.0, y: PAN_STEP });
-				console.log('usc_biodigital> camera.pan down');
+				// console.log('usc_biodigital> camera.pan down');
 				this.refresh(date);
 			}
 		}
