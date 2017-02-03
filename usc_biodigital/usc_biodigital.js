@@ -15,23 +15,32 @@ var usc_biodigital = SAGE2_App.extend({
 	init: function(data) {
 		// Create div into the DOM
 		this.SAGE2Init("div", data);
+		this.data = data;
+		
 
+		this.addWidgetButtons();
+		this.addFormButtons();
+		
 		// load the BioDigital HumanAPI
 		var s = document.createElement('script');
 		s.type = 'text/javascript';
 		s.src = 'https://developer.biodigital.com/builds/api/2/human-api.min.js';
 		document.body.appendChild(s);
 
+
 		// Set the DOM id
 		this.element.id = "div_" + "usc_biodigital";
 		console.log('usc_biodigital> id=', this.id, 'init element=', this.element);
+		
+
 		// Set the background to black
-		this.element.style.backgroundColor = 'black';
+		this.element.style.backgroundColor = '#ADD8E6';
 		var iframe = document.createElement('iframe');
 		iframe.src = this.state.value;
 		iframe.id = IFRAME_ID + this.id;
 		iframe.width = "100%"; //data.width;
 		iframe.height = "100%"; // data.height;
+
 		this.element.appendChild(iframe);
 		this.humanIframe = iframe;
 
@@ -46,11 +55,103 @@ var usc_biodigital = SAGE2_App.extend({
 		//
 		// Control the frame rate for an animation application
 		this.maxFPS = 2.0;
-		// Not adding controls but making the default buttons available
+	},
+
+	// adding widget buttons
+	addWidgetButtons: function() {
+		// adding widget buttons
+		this.controls.addButton({ label: "Start", identifier: "start", position: 4 });
+		this.controls.addButton({ label: "Stop", identifier: "stop", position: 8 });
+		this.controls.addButton({ label: "Pause", identifier: "pause", position: 12 });
+		
+		this.controls.finishedAddingControls();
+		this.enableControls = true;
+	},
+		
+	// adding buttons
+	addWidgetButtons: function() {
+		// adding widget buttons
+		this.controls.addButton({ label: "Normal", identifier: "normal", position: 1 });
+		this.controls.addButton({ label: "X-ray", identifier: "xray", position: 2 });
+		this.controls.addButton({ label: "Isolate", identifier: "isolate", position: 3 });
+
+		this.controls.addButton({ label: "Select", identifier: "select", position: 8 });
+		this.controls.addButton({ label: "Dissect", identifier: "dissect", position: 9 });
+				
 		this.controls.finishedAddingControls();
 		this.enableControls = true;
 	},
 
+	// adding form buttons
+	addFormButtons: function() {
+		//Views
+		var div = document.createElement('div'); 
+		
+		var btnNormal = document.createElement('input');
+		btnNormal.type = 'button';
+		btnNormal.class = "btn";
+		btnNormal.value = 'Normal';
+		btnNormal.style.padding = '5px';
+		btnNormal.onclick = this.btnNormalClick();
+		div.appendChild(btnNormal);	
+		
+		var btnXRay = document.createElement('input');
+		btnXRay.type = 'button';
+		btnXRay.class = "btn";
+		btnXRay.value = 'X-ray';
+		btnXRay.style.padding = '5px';
+		btnXRay.onclick = this.btnXRayClick();
+		div.appendChild(btnXRay);	
+		
+		var btnIsolate = document.createElement('input');
+		btnIsolate.type = 'button';
+		btnIsolate.class = "btn";
+		btnIsolate.value = 'Isolate';
+		btnIsolate.style.padding = '5px';
+		btnIsolate.onclick = this.btnIsolateClick();
+		div.appendChild(btnIsolate);	
+		
+		this.element.appendChild(div);
+		
+		//Tools
+		var div = document.createElement('div');
+		var btnSelect = document.createElement('input');
+		btnSelect.type = 'button';
+		btnSelect.class = "btn";
+		btnSelect.value = 'Select';
+		btnSelect.onclick = this.btnSelectClick();
+		div.appendChild(btnSelect);	
+		
+		var btnDissect = document.createElement('input');
+		btnDissect.type = 'button';
+		btnDissect.class = "btn";
+		btnDissect.value = 'Dissect';
+		btnDissect.onclick = this.btnDissectClick();
+		div.appendChild(btnDissect);	
+		
+		this.element.appendChild(div);
+	},
+	
+	btnNormalClick: function(){
+		console.log('usc_biodigital> Normal Button');
+	},
+
+	btnXRayClick: function(){
+		console.log('usc_biodigital> XRay Button');
+	},
+		
+	btnIsolateClick: function(){
+		console.log('usc_biodigital> Isolate Button');
+	},
+		
+	btnDissectClick: function(){
+		console.log('usc_biodigital> Dissect Button');
+	},
+		
+	btnSelectClick: function(){
+		console.log('usc_biodigital> Select Button');
+	},	
+						
 	load: function(date) {
 		console.log('usc_biodigital> Load with state value', this.state.value);
 		this.refresh(date);
