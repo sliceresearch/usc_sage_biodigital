@@ -17,29 +17,34 @@ var usc_biodigital = SAGE2_App.extend({
 		this.SAGE2Init("div", data);
 		this.data = data;
 		
-
-		this.addWidgetButtons();
-		this.addFormButtons();
-		
 		// load the BioDigital HumanAPI
 		var s = document.createElement('script');
 		s.type = 'text/javascript';
 		s.src = 'https://developer.biodigital.com/builds/api/2/human-api.min.js';
 		document.body.appendChild(s);
 
-
 		// Set the DOM id
 		this.element.id = "div_" + "usc_biodigital";
 		console.log('usc_biodigital> id=', this.id, 'init element=', this.element);
 		
+		// adding an svg to the element
+		this.container = d3.select(this.element)
+			.append("svg")
+			.attr("id", "biodigitalSVG")
+			.attr("width", this.element.clientWidth)
+			.attr("height", 100);
 
+		// generate the interface of the usc_biodigital
+		this.createBioInterface();		
+		this.addWidgetButtons();
+		
 		// Set the background to black
 		this.element.style.backgroundColor = '#ADD8E6';
 		var iframe = document.createElement('iframe');
 		iframe.src = this.state.value;
 		iframe.id = IFRAME_ID + this.id;
 		iframe.width = "100%"; //data.width;
-		iframe.height = "100%"; // data.height;
+		iframe.height =  data.height - 100;
 
 		this.element.appendChild(iframe);
 		this.humanIframe = iframe;
@@ -57,15 +62,96 @@ var usc_biodigital = SAGE2_App.extend({
 		this.maxFPS = 2.0;
 	},
 
-	// adding widget buttons
-	addWidgetButtons: function() {
-		// adding widget buttons
-		this.controls.addButton({ label: "Start", identifier: "start", position: 4 });
-		this.controls.addButton({ label: "Stop", identifier: "stop", position: 8 });
-		this.controls.addButton({ label: "Pause", identifier: "pause", position: 12 });
-		
-		this.controls.finishedAddingControls();
-		this.enableControls = true;
+	// functionused to create the interface of the timer
+	createBioInterface: function() {
+		// clear the current svg
+		this.container.selectAll("*").remove();
+
+		// setting the number of rows, cols and the padding size of the table
+		var nRows   = 2;
+		var nCols   = 3;
+		var padding = 3;
+
+		// setting the image path
+		var path = this.resrcPath + "/img/";
+
+		// creating the model of the interface that will be given and interpreted by d3 to create the interface
+		this.modelInterface = [
+			{ name: "Normal", command: "true", parent: this, action: this.btnNormalClick, text: "Normal", r: 0, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "XRay", command: "true", parent: this, action: this.btnXRayClick, text: "X-ray", r: 0, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Isolate", command: "true", parent: this, action: this.btnIsolateClick, text: "Isolate", r: 0, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "Select", command: "true", parent: this, action: this.btnSelectClick, text: "Select", r: 1, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "Dissect", command: "true", parent: this, action: this.btnDissectClick, text: "Dissect", r: 1, c: 1, cSpan: 1, rSpan: 1 }
+		];
+
+		// getting the height and width of the current container
+		var w = parseInt(this.container.style("width"));
+		var h = parseInt(this.container.style("height"));
+
+		// calculating the heght and width of a single col and row
+		var colW = (w - ((nCols + 2) * padding)) / nCols;
+		var rowH = (h - ((nRows) * padding)) / nRows;
+
+		// setting default stroke and background variables
+		var defaultBg = "#77DD77";
+		var defaultStroke = "white";
+
+		// iterate over the interface model and generates every single item specified before
+		for (var i in this.modelInterface) {
+
+			// getting the styles contained into the model for the current item.
+			// If a style is not specified, it is set to the default value
+			var elem   = this.modelInterface[i];
+			var rSpan  = elem.rSpan || 1;
+			var cSpan  = elem.cSpan || 1;
+			var bg     = elem.backgroundColor || defaultBg;
+			var stroke = elem.stroke || defaultStroke;
+
+			// calculate the actual size with respect to the proportions specified in the model
+			var x = elem.c * (colW + padding) + padding;
+			var y = elem.r * (rowH + padding) + padding;
+			var elemH = rowH * rSpan + (rSpan - 1) * padding;
+			var elemW = colW * cSpan + (cSpan - 1) * padding;
+
+			elem.y = y;
+			elem.h = elemH;
+			elem.x = x;
+			elem.w = elemW;
+
+			// generating the svg item with the specified properties and styles
+			this.container
+				.append("rect")
+				.attr("id", elem.name)
+				.attr("fill", bg)
+				.attr("x", x)
+				.attr("y", y)
+				.attr("width", elemW)
+				.attr("height", elemH)
+				.style("stroke", stroke);
+
+			// adding special attribute, if the item name is Timer
+			if (elem.text) {
+				var t = this.container.append("text")
+					.attr("x", x + elem.w / 2)
+					.attr("y", y + elem.h / 2)
+					.style("dominant-baseline", "middle")
+					.style("text-anchor", "middle")
+					.style("font-size", "24px")
+					.text(elem.text);
+			}
+
+			// inserting the image, if present in the model
+			if (elem.image) {
+				this.container
+					.append("image")
+					.attr("fill", bg)
+					.attr("x", x)
+					.attr("y", y)
+					.attr("width", elemW)
+					.attr("height", elemH)
+					.attr("xlink:href", elem.image);
+			}
+		}
 	},
 		
 	// adding buttons
@@ -80,56 +166,6 @@ var usc_biodigital = SAGE2_App.extend({
 				
 		this.controls.finishedAddingControls();
 		this.enableControls = true;
-	},
-
-	// adding form buttons
-	addFormButtons: function() {
-		//Views
-		var div = document.createElement('div'); 
-		
-		var btnNormal = document.createElement('input');
-		btnNormal.type = 'button';
-		btnNormal.class = "btn";
-		btnNormal.value = 'Normal';
-		btnNormal.style.padding = '5px';
-		btnNormal.onclick = this.btnNormalClick();
-		div.appendChild(btnNormal);	
-		
-		var btnXRay = document.createElement('input');
-		btnXRay.type = 'button';
-		btnXRay.class = "btn";
-		btnXRay.value = 'X-ray';
-		btnXRay.style.padding = '5px';
-		btnXRay.onclick = this.btnXRayClick();
-		div.appendChild(btnXRay);	
-		
-		var btnIsolate = document.createElement('input');
-		btnIsolate.type = 'button';
-		btnIsolate.class = "btn";
-		btnIsolate.value = 'Isolate';
-		btnIsolate.style.padding = '5px';
-		btnIsolate.onclick = this.btnIsolateClick();
-		div.appendChild(btnIsolate);	
-		
-		this.element.appendChild(div);
-		
-		//Tools
-		var div = document.createElement('div');
-		var btnSelect = document.createElement('input');
-		btnSelect.type = 'button';
-		btnSelect.class = "btn";
-		btnSelect.value = 'Select';
-		btnSelect.onclick = this.btnSelectClick();
-		div.appendChild(btnSelect);	
-		
-		var btnDissect = document.createElement('input');
-		btnDissect.type = 'button';
-		btnDissect.class = "btn";
-		btnDissect.value = 'Dissect';
-		btnDissect.onclick = this.btnDissectClick();
-		div.appendChild(btnDissect);	
-		
-		this.element.appendChild(div);
 	},
 	
 	btnNormalClick: function(){
@@ -163,11 +199,16 @@ var usc_biodigital = SAGE2_App.extend({
 	resize: function(date) {
 		// Called when window is resized
 		var w = this.element.clientWidth;
-		var h = this.element.clientHeight;
-
+		var h = this.element.clientHeight - 100;
+		
+		this.container
+			.attr("width",  this.element.clientWidth)
+			.attr("height", 100);
+		
+		this.createBioInterface();
 		//console.log('resize to',  w, h, this.element);
-		//this.humanIframe.setAttribute("style", "width:" + w + "px");
-		//this.humanIframe.setAttribute("style", "height:" + h + "px");
+		this.humanIframe.setAttribute("style", "width:" + w + "px");
+		this.humanIframe.setAttribute("style", "height:" + h + "px");
 		this.refresh(date);
 	},
 
@@ -180,6 +221,34 @@ var usc_biodigital = SAGE2_App.extend({
 		// Make sure to delete stuff (timers, ...)
 	},
 
+	// function used to invoke button actions
+	leftClickPosition: function(x, y) {
+		// setting the feedback button color
+		var pressedColor = "white";
+		var defaultBg    = "#77DD77";
+
+		// taking a reference of the main object
+		var _this = this;
+
+		// iterating over the model trying to understand if a button was pressed
+		for (var i in this.modelInterface) {
+			var elem = this.modelInterface[i];
+
+			// check if the click is within the current button
+			if (elem.action && y >= elem.y & y <= elem.y + elem.h & x >= elem.x & x <= elem.x + elem.w) {
+				// if the button is clickable, generates a color transition feedback
+				if (elem.command) {
+					var oldColor = elem.backgroundColor || defaultBg;
+					d3.select("#" + elem.name).attr("fill", pressedColor).transition().duration(500).attr("fill", oldColor);
+				}
+
+				// invoke the button action passing the reference of the main object
+				elem.action(_this);
+			}
+		}
+
+	},
+	
 	event: function(eventType, position, user_id, data, date) {
 		//console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
 		//		eventType, position, user_id, data, this.dragging);
@@ -196,6 +265,8 @@ var usc_biodigital = SAGE2_App.extend({
 			});
 		}
 		if (eventType === "pointerPress" && (data.button === "left")) {
+			this.leftClickPosition(position.x, position.y);
+			
 			// click
 			this.dragging = true;
 			this.dragFromX = position.x;
