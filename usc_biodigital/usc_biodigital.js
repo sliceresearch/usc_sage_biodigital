@@ -17,6 +17,8 @@ var usc_biodigital = SAGE2_App.extend({
 		this.SAGE2Init("div", data);
 		this.data = data;
 		
+		this.tool = "default"; // default tool
+		
 		// load the BioDigital HumanAPI
 		var s = document.createElement('script');
 		s.type = 'text/javascript';
@@ -69,7 +71,7 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// setting the number of rows, cols and the padding size of the table
 		var nRows   = 2;
-		var nCols   = 3;
+		var nCols   = 4;
 		var padding = 3;
 
 		// setting the image path
@@ -80,8 +82,12 @@ var usc_biodigital = SAGE2_App.extend({
 			{ name: "Normal", command: "true", parent: this, action: this.btnNormalClick, text: "Normal", r: 0, c: 0, cSpan: 1, rSpan: 1 },
 			{ name: "XRay", command: "true", parent: this, action: this.btnXRayClick, text: "X-ray", r: 0, c: 1, cSpan: 1, rSpan: 1 },
 			{ name: "Isolate", command: "true", parent: this, action: this.btnIsolateClick, text: "Isolate", r: 0, c: 2, cSpan: 1, rSpan: 1 },
+		//	{ name: "SelectGroup", command: "true", parent: this, action: this.btnSelectGroupClick, text: "Select Group", r: 0, c: 3, cSpan: 1, rSpan: 1 },
+
 			{ name: "Select", command: "true", parent: this, action: this.btnSelectClick, text: "Select", r: 1, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "Dissect", command: "true", parent: this, action: this.btnDissectClick, text: "Dissect", r: 1, c: 1, cSpan: 1, rSpan: 1 }
+			{ name: "Dissect", command: "true", parent: this, action: this.btnDissectClick, text: "Dissect", r: 1, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Annotate", command: "true", parent: this, action: this.btnAnnotateClick, text: "Annotate", r: 1, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "Reset", command: "true", parent: this, action: this.btnResetClick, text: "Reset", r: 1, c: 3, cSpan: 1, rSpan: 1 }
 		];
 
 		// getting the height and width of the current container
@@ -170,24 +176,62 @@ var usc_biodigital = SAGE2_App.extend({
 	
 	btnNormalClick: function(){
 		console.log('usc_biodigital> Normal Button');
+		this.parent.human.send( 'scene.disableXray');
+		this.parent.human.send("scene.selectionMode", "highlight");
 	},
 
 	btnXRayClick: function(){
 		console.log('usc_biodigital> XRay Button');
+		this.parent.human.send( 'scene.enableXray');
 	},
 		
 	btnIsolateClick: function(){
 		console.log('usc_biodigital> Isolate Button');
+		this.parent.human.send("scene.selectionMode", "isolate");
+	},
+
+	btnSelectGroupClick: function(){
+		this.parent.tool = "highlight"; // select mode
+		console.log('usc_biodigital> Select Group');
+		this.parent.changeTool();
 	},
 		
 	btnDissectClick: function(){
+		this.parent.tool = "dissect"; // dissect
 		console.log('usc_biodigital> Dissect Button');
+		this.parent.changeTool();
+		
 	},
 		
 	btnSelectClick: function(){
+		this.parent.tool = "highlight"; // select
 		console.log('usc_biodigital> Select Button');
+		this.parent.changeTool();
 	},	
-						
+		
+	btnAnnotateClick: function(){
+		this.parent.tool = "annotate"; // select
+		console.log('usc_biodigital> Annotate Button');
+		this.parent.human.send("input.enable");
+		this.parent.changeTool();
+	},
+		
+	changeTool: function(){
+		var _this = this;
+		_this.human.send("scene.pickingMode", _this.tool);
+	    console.log("PICK");
+	    
+	    _this.human.on("scene.pickingModeUpdated", function(event) {
+			console.log("Enabling " + event.pickingMode + " mode. Click to " + event.pickingMode + " an object");
+		});
+	},
+			
+	btnResetClick: function(){
+		this.parent.tool = "default"; // select
+		console.log('usc_biodigital> Select Button');
+		this.parent.human.send( 'scene.reset');
+	},
+		
 	load: function(date) {
 		console.log('usc_biodigital> Load with state value', this.state.value);
 		this.refresh(date);
@@ -264,13 +308,35 @@ var usc_biodigital = SAGE2_App.extend({
 				_this.currentZoom = camera.zoom;
 			});
 		}
+
 		if (eventType === "pointerPress" && (data.button === "left")) {
+			console.log("TEST x:" + position.x + " y: " + position.y);	
 			this.leftClickPosition(position.x, position.y);
-			
+			var _this = this;
+			var posY = position.y - 100;
 			// click
-			this.dragging = true;
-			this.dragFromX = position.x;
-			this.dragFromY = position.y;
+			if (this.tool ==  "default"){
+				this.dragging = true;
+				this.dragFromX = position.x;
+				this.dragFromY = position.y;
+			} else {
+		    	
+		    	_this.human.send("scene.pick", { x: position.x, y: posY},
+			        function (hit) {
+			            if (hit) {
+			            	var obj = JSON.parse(JSON.stringify(hit))
+			            	var str = obj.objectId;
+			            	_this.human.send("scene.selectObjects", {
+								str: true
+    						});
+			                console.log("Hit: " + JSON.stringify(hit));
+			            } else {
+			                console.log("Miss");
+			            }
+			        });
+			        _this.human.send("scene.pick", { x: position.x, y: posY, triggerActions: true});
+
+			}
 		} else if (eventType === "pointerMove" && this.dragging) {
 			// move (pan camera)
 			var dx = position.x - this.dragFromX;
@@ -282,6 +348,8 @@ var usc_biodigital = SAGE2_App.extend({
 			this.refresh(date);
 		} else if (eventType === "pointerRelease" && (data.button === "left")) {
 			// click release
+
+			
 			this.dragging = false;
 		} else if (eventType === "pointerScroll") {
 			// Scroll events for zoom
