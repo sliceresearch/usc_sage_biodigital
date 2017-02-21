@@ -70,7 +70,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.container.selectAll("*").remove();
 
 		// setting the number of rows, cols and the padding size of the table
-		var nRows   = 2;
+		var nRows   = 3;
 		var nCols   = 4;
 		var padding = 3;
 
@@ -80,14 +80,19 @@ var usc_biodigital = SAGE2_App.extend({
 		// creating the model of the interface that will be given and interpreted by d3 to create the interface
 		this.modelInterface = [
 			{ name: "Normal", command: "true", parent: this, action: this.btnNormalClick, text: "Normal", r: 0, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "XRay", command: "true", parent: this, action: this.btnXRayClick, text: "X-ray", r: 0, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "XRay", command: "true", parent: this, action: this.btnXRayClick, text: "X-Ray", r: 0, c: 1, cSpan: 1, rSpan: 1 },
 			{ name: "Isolate", command: "true", parent: this, action: this.btnIsolateClick, text: "Isolate", r: 0, c: 2, cSpan: 1, rSpan: 1 },
-		//	{ name: "SelectGroup", command: "true", parent: this, action: this.btnSelectGroupClick, text: "Select Group", r: 0, c: 3, cSpan: 1, rSpan: 1 },
+			{ name: "SelectGroup", command: "true", parent: this, action: this.btnSelectGroupClick, text: "Select Group", r: 0, c: 3, cSpan: 1, rSpan: 1 },
 
 			{ name: "Select", command: "true", parent: this, action: this.btnSelectClick, text: "Select", r: 1, c: 0, cSpan: 1, rSpan: 1 },
 			{ name: "Dissect", command: "true", parent: this, action: this.btnDissectClick, text: "Dissect", r: 1, c: 1, cSpan: 1, rSpan: 1 },
 			{ name: "Annotate", command: "true", parent: this, action: this.btnAnnotateClick, text: "Annotate", r: 1, c: 2, cSpan: 1, rSpan: 1 },
-			{ name: "Reset", command: "true", parent: this, action: this.btnResetClick, text: "Reset", r: 1, c: 3, cSpan: 1, rSpan: 1 }
+			{ name: "Reset", command: "true", parent: this, action: this.btnResetClick, text: "Reset", r: 1, c: 3, cSpan: 1, rSpan: 1 },
+				
+			{ name: "Play", command: "true", parent: this, action: this.playAnimation, image: path + "play.png", text: "play", r: 2, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "Pause", command: "true", parent: this, action: this.pauseAnimation, image: path + "pause.png", text: "pause", r: 2, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Previous", command: "true", parent: this, action: this.previousChapter, image: path + "previous.png", text: "previous", r: 2, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "Next", command: "true", parent: this, action: this.nextChapter, image: path + "next.png", text: "next", r: 2, c: 3, cSpan: 1, rSpan: 1 }
 		];
 
 		// getting the height and width of the current container
@@ -135,7 +140,7 @@ var usc_biodigital = SAGE2_App.extend({
 				.attr("height", elemH)
 				.style("stroke", stroke);
 
-			// adding special attribute, if the item name is Timer
+			// adding special attribute
 			if (elem.text) {
 				var t = this.container.append("text")
 					.attr("x", x + elem.w / 2)
@@ -151,10 +156,10 @@ var usc_biodigital = SAGE2_App.extend({
 				this.container
 					.append("image")
 					.attr("fill", bg)
-					.attr("x", x)
-					.attr("y", y)
-					.attr("width", elemW)
-					.attr("height", elemH)
+					.attr("x", x + 20)
+					.attr("y", y + 5)
+					.attr("width", 20)
+					.attr("height", 20)
 					.attr("xlink:href", elem.image);
 			}
 		}
@@ -193,7 +198,7 @@ var usc_biodigital = SAGE2_App.extend({
 	btnSelectGroupClick: function(){
 		this.parent.tool = "highlight"; // select mode
 		console.log('usc_biodigital> Select Group');
-		this.parent.changeTool();
+		this.parent.selectGroup();
 	},
 		
 	btnDissectClick: function(){
@@ -225,7 +230,37 @@ var usc_biodigital = SAGE2_App.extend({
 			console.log("Enabling " + event.pickingMode + " mode. Click to " + event.pickingMode + " an object");
 		});
 	},
-			
+
+	selectGroup: function(){
+		var _this = this;
+		_this.changeTool();
+		_this.human.send("scene.selectionMode", _this.tool);
+		    	
+	    _this.human.on("scene.selectionModeUpdated", function(event) {
+			console.log("Enabling " + event.selectionMode + " mode. Click to " + event.selectionMode + " an object");
+		});
+	},
+
+	playAnimation: function(){
+		var _this = this;
+		_this.human.send("timeline.play", { loop: true });
+	},
+
+	pauseAnimation: function(){
+		var _this = this;
+		_this.human.send("timeline.pause", { loop: true });
+	},
+		
+	nextChapter: function(){
+		var _this = this;
+		_this.human.send("timeline.nextChapter");		    	
+	},
+
+	previousChapter: function(){
+		var _this = this;
+		_this.human.send("timeline.previousChapter");
+	},
+							
 	btnResetClick: function(){
 		this.parent.tool = "default"; // select
 		console.log('usc_biodigital> Select Button');
@@ -320,7 +355,7 @@ var usc_biodigital = SAGE2_App.extend({
 				this.dragFromX = position.x;
 				this.dragFromY = position.y;
 			} else {
-		    	
+		    /*	
 		    	_this.human.send("scene.pick", { x: position.x, y: posY},
 			        function (hit) {
 			            if (hit) {
@@ -333,23 +368,24 @@ var usc_biodigital = SAGE2_App.extend({
 			            } else {
 			                console.log("Miss");
 			            }
-			        });
-			        _this.human.send("scene.pick", { x: position.x, y: posY, triggerActions: true});
+			        });*/
+			    _this.human.send("scene.pick", { x: position.x, y: posY, triggerActions: true});
 
 			}
 		} else if (eventType === "pointerMove" && this.dragging) {
-			// move (pan camera)
-			var dx = position.x - this.dragFromX;
-			var dy = position.y - this.dragFromY;
-			this.human.send('camera.orbit', { yaw: dx, pitch: dy });
-			this.dragFromX = position.x;
-			this.dragFromY = position.y;
-			// console.log('usc_biodigital> camera.orbit!!', dx, dy);
-			this.refresh(date);
+			if (this.tool ==  "default"){
+				// move (pan camera)
+				var dx = position.x - this.dragFromX;
+				var dy = position.y - this.dragFromY;
+				this.human.send('camera.orbit', { yaw: dx, pitch: dy });
+				this.dragFromX = position.x;
+				this.dragFromY = position.y;
+				// console.log('usc_biodigital> camera.orbit!!', dx, dy);
+				this.refresh(date);
+			}
 		} else if (eventType === "pointerRelease" && (data.button === "left")) {
 			// click release
 
-			
 			this.dragging = false;
 		} else if (eventType === "pointerScroll") {
 			// Scroll events for zoom
