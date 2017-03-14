@@ -34,7 +34,7 @@ var usc_biodigital = SAGE2_App.extend({
 			.append("svg")
 			.attr("id", "biodigitalSVG")
 			.attr("width", this.element.clientWidth)
-			.attr("height", 100);
+			.attr("height", 0.1 * this.element.clientHeight);
 
 		// generate the interface of the usc_biodigital
 		this.createBioInterface();		
@@ -46,10 +46,14 @@ var usc_biodigital = SAGE2_App.extend({
 		iframe.src = this.state.value;
 		iframe.id = IFRAME_ID + this.id;
 		iframe.width = "100%"; //data.width;
-		iframe.height =  data.height - 100;
+		iframe.height =  data.height - 0.1 * this.element.clientHeight;
 
 		this.element.appendChild(iframe);
 		this.humanIframe = iframe;
+		
+		this.activeButtonGroup1 = null;
+		this.activeButtonGroup2 = null;
+		this.activeButtonGroup3 = null;
 
 		// initialise our own object state.
 		this.currentZoom = 0.3;
@@ -79,20 +83,20 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// creating the model of the interface that will be given and interpreted by d3 to create the interface
 		this.modelInterface = [
-			{ name: "Normal", command: "true", parent: this, action: this.btnNormalClick, text: "Normal", r: 0, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "XRay", command: "true", parent: this, action: this.btnXRayClick, text: "X-Ray", r: 0, c: 1, cSpan: 1, rSpan: 1 },
-			{ name: "Isolate", command: "true", parent: this, action: this.btnIsolateClick, text: "Isolate", r: 0, c: 2, cSpan: 1, rSpan: 1 },
-			{ name: "SelectGroup", command: "true", parent: this, action: this.btnSelectGroupClick, text: "Select Group", r: 0, c: 3, cSpan: 1, rSpan: 1 },
+			{ name: "Normal" + this.id, command: "true", group: 1, parent: this, action: this.btnNormalClick, text: "Normal", r: 0, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "XRay" + this.id, command: "true", group: 1, parent: this, action: this.btnXRayClick, text: "X-Ray", r: 0, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Isolate" + this.id, command: "true", group: 1, parent: this, action: this.btnIsolateClick, text: "Isolate", r: 0, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "SelectGroup" + this.id, command: "true", group: 1, parent: this.id, action: this.btnSelectGroupClick, text: "Select Group", r: 0, c: 3, cSpan: 1, rSpan: 1 },
 
-			{ name: "Select", command: "true", parent: this, action: this.btnSelectClick, text: "Select", r: 1, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "Dissect", command: "true", parent: this, action: this.btnDissectClick, text: "Dissect", r: 1, c: 1, cSpan: 1, rSpan: 1 },
-			{ name: "Annotate", command: "true", parent: this, action: this.btnAnnotateClick, text: "Annotate", r: 1, c: 2, cSpan: 1, rSpan: 1 },
-			{ name: "Reset", command: "true", parent: this, action: this.btnResetClick, text: "Reset", r: 1, c: 3, cSpan: 1, rSpan: 1 },
+			{ name: "Select" + this.id, command: "true", group: 2, parent: this, action: this.btnSelectClick, text: "Select", r: 1, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "Dissect" + this.id, command: "true", group: 2, parent: this, action: this.btnDissectClick, text: "Dissect", r: 1, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Annotate" + this.id, command: "true", group: 2, parent: this, action: this.btnAnnotateClick, text: "Annotate", r: 1, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "Reset" + this.id, command: "true", group: 2, parent: this, action: this.btnResetClick, text: "Reset", r: 1, c: 3, cSpan: 1, rSpan: 1 },
 				
-			{ name: "Play", command: "true", parent: this, action: this.playAnimation, image: path + "play.png", text: "play", r: 2, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "Pause", command: "true", parent: this, action: this.pauseAnimation, image: path + "pause.png", text: "pause", r: 2, c: 1, cSpan: 1, rSpan: 1 },
-			{ name: "Previous", command: "true", parent: this, action: this.previousChapter, image: path + "previous.png", text: "previous", r: 2, c: 2, cSpan: 1, rSpan: 1 },
-			{ name: "Next", command: "true", parent: this, action: this.nextChapter, image: path + "next.png", text: "next", r: 2, c: 3, cSpan: 1, rSpan: 1 }
+			{ name: "Play" + this.id, command: "true", group: 3, parent: this, action: this.playAnimation, image: path + "play.png", text: "play", r: 2, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "Pause" + this.id, command: "true", group: 3, parent: this, action: this.pauseAnimation, image: path + "pause.png", text: "pause", r: 2, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Previous" + this.id, command: "true", group: 3, parent: this, action: this.previousChapter, image: path + "previous.png", text: "previous", r: 2, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "Next" + this.id, command: "true", group: 3, parent: this, action: this.nextChapter, image: path + "next.png", text: "next", r: 2, c: 3, cSpan: 1, rSpan: 1 }
 		];
 
 		// getting the height and width of the current container
@@ -147,7 +151,7 @@ var usc_biodigital = SAGE2_App.extend({
 					.attr("y", y + elem.h / 2)
 					.style("dominant-baseline", "middle")
 					.style("text-anchor", "middle")
-					.style("font-size", "24px")
+					.style("font-size", elem.w / 10 + "px")
 					.text(elem.text);
 			}
 
@@ -158,8 +162,8 @@ var usc_biodigital = SAGE2_App.extend({
 					.attr("fill", bg)
 					.attr("x", x + 20)
 					.attr("y", y + 5)
-					.attr("width", 20)
-					.attr("height", 20)
+					.attr("width", elem.h - 5)
+					.attr("height", elem.h - 5)
 					.attr("xlink:href", elem.image);
 			}
 		}
@@ -168,12 +172,13 @@ var usc_biodigital = SAGE2_App.extend({
 	// adding buttons
 	addWidgetButtons: function() {
 		// adding widget buttons
-		this.controls.addButton({ label: "Normal", identifier: "normal", position: 1 });
-		this.controls.addButton({ label: "X-ray", identifier: "xray", position: 2 });
-		this.controls.addButton({ label: "Isolate", identifier: "isolate", position: 3 });
+		this.controls.addButton({ label: "Normal", identifier: "normal" + this.id, action: this.btnNormalClick, position: 1 });
+		this.controls.addButton({ label: "X-ray", identifier: "xray" + this.id, action: this.btnXRayClick, position: 2 });
+		this.controls.addButton({ label: "Isolate", identifier: "isolate" + this.id, action: this.btnIsolateClick, position: 3 });
 
-		this.controls.addButton({ label: "Select", identifier: "select", position: 8 });
-		this.controls.addButton({ label: "Dissect", identifier: "dissect", position: 9 });
+		this.controls.addButton({ label: "Select", identifier: "select" + this.id, action: this.btnSelectClick, position: 8 });
+		this.controls.addButton({ label: "Dissect", identifier: "dissect" + this.id, action: this.btnDissectClick, position: 9 });
+		this.controls.addButton({ label: "Reset", identifier: "reset" + this.id, action: this.btnResetClick, position: 10 });
 				
 		this.controls.finishedAddingControls();
 		this.enableControls = true;
@@ -278,11 +283,11 @@ var usc_biodigital = SAGE2_App.extend({
 	resize: function(date) {
 		// Called when window is resized
 		var w = this.element.clientWidth;
-		var h = this.element.clientHeight - 100;
+		var h = this.element.clientHeight - 0.1 * this.element.clientHeight;
 		
 		this.container
 			.attr("width",  this.element.clientWidth)
-			.attr("height", 100);
+			.attr("height", 0.1 * this.element.clientHeight);
 		
 		this.createBioInterface();
 		//console.log('resize to',  w, h, this.element);
@@ -308,20 +313,44 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// taking a reference of the main object
 		var _this = this;
-
+			console.log(this.activeButton);
+			
 		// iterating over the model trying to understand if a button was pressed
 		for (var i in this.modelInterface) {
 			var elem = this.modelInterface[i];
-
 			// check if the click is within the current button
 			if (elem.action && y >= elem.y & y <= elem.y + elem.h & x >= elem.x & x <= elem.x + elem.w) {
-				// if the button is clickable, generates a color transition feedback
+				// if the button is clickable, change a color
 				if (elem.command) {
-					var oldColor = elem.backgroundColor || defaultBg;
-					d3.select("#" + elem.name).attr("fill", pressedColor).transition().duration(500).attr("fill", oldColor);
+					// change previous pressed button colour
+					if ((this.activeButtonGroup1!=null) && (elem.group == 1))
+					{
+						d3.select("#" + this.activeButtonGroup1.name).attr("fill", defaultBg);
+					}
+					
+					if ((this.activeButtonGroup2!=null) && (elem.group == 2))
+					{
+						d3.select("#" + this.activeButtonGroup2.name).attr("fill", defaultBg);
+					}
+					
+					if ((this.activeButtonGroup3!=null) && (elem.group == 3))
+					{
+						d3.select("#" + this.activeButtonGroup3.name).attr("fill", defaultBg);
+					}
 				}
-
 				// invoke the button action passing the reference of the main object
+				if (elem.group == 1){
+					d3.select("#" + elem.name).attr("fill", pressedColor);
+					this.activeButtonGroup1 = elem;
+				}
+				if (elem.group == 2){
+					d3.select("#" + elem.name).attr("fill", 'skyblue');
+					this.activeButtonGroup2 = elem;
+				}
+				if (elem.group == 3){
+					d3.select("#" + elem.name).attr("fill", pressedColor);
+					this.activeButtonGroup3 = elem;
+				}
 				elem.action(_this);
 			}
 		}
@@ -393,6 +422,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.refresh(date);
 		} else if (eventType === "widgetEvent") {
 			// widget events
+			
 		} else if (eventType === "keyboard") {
 			if (data.character === "r") {
 				this.human.send('camera.reset');
