@@ -27,7 +27,8 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// Set the DOM id
 		this.element.id = "div_" + "usc_biodigital";
-		console.log('usc_biodigital> id=', this.id, 'init element=', this.element);
+		console.log('usc_biodigital> id=', this.id, 'init element=', this.element,
+		    'w=', this.element.clientWidth, 'h=', this.element.clientHeight);
 		
 		// adding an svg to the element
 		this.container = d3.select(this.element)
@@ -37,9 +38,9 @@ var usc_biodigital = SAGE2_App.extend({
 			.attr("height", 0.1 * this.element.clientHeight);
 
 		// generate the interface of the usc_biodigital
-		this.createBioInterface();		
+		this.createBioInterface();
 		this.addWidgetButtons();
-		
+
 		// Set the background to black
 		this.element.style.backgroundColor = '#ADD8E6';
 		var iframe = document.createElement('iframe');
@@ -151,7 +152,7 @@ var usc_biodigital = SAGE2_App.extend({
 					.attr("y", y + elem.h / 2)
 					.style("dominant-baseline", "middle")
 					.style("text-anchor", "middle")
-					.style("font-size", elem.w / 10 + "px")
+					.style("font-size", elem.h * 2 / 3 + "px")
 					.text(elem.text);
 			}
 
