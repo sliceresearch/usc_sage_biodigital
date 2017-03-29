@@ -29,31 +29,35 @@ var usc_biodigital = SAGE2_App.extend({
 		this.element.id = "div_" + "usc_biodigital";
 		console.log('usc_biodigital> id=', this.id, 'init element=', this.element);
 		
+
 		// adding an svg to the element
 		this.container = d3.select(this.element)
 			.append("svg")
 			.attr("id", "biodigitalSVG")
 			.attr("width", this.element.clientWidth)
 			.attr("height", 0.1 * this.element.clientHeight);
-
+		
 		// generate the interface of the usc_biodigital
 		this.createBioInterface();		
-		this.addWidgetButtons();
+		this.addWidgetButtons();	
 		
 		// Set the background to black
-		this.element.style.backgroundColor = '#ADD8E6';
+		this.element.style.backgroundColor = '#ADD8E6';			
+		
 		var iframe = document.createElement('iframe');
 		iframe.src = this.state.value;
 		iframe.id = IFRAME_ID + this.id;
-		iframe.width = "100%"; //data.width;
-		iframe.height =  data.height - 0.1 * this.element.clientHeight;
+		iframe.width =  '100%';
+		iframe.height =  data.height - 0.1 * this.element.clientHeight - 6;
+		iframe.setAttribute("style", "float:left");
 
 		this.element.appendChild(iframe);
 		this.humanIframe = iframe;
-		
+						
 		this.activeButtonGroup1 = null;
 		this.activeButtonGroup2 = null;
 		this.activeButtonGroup3 = null;
+		this.humanQuiz = null;
 
 		// initialise our own object state.
 		this.currentZoom = 0.3;
@@ -74,7 +78,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.container.selectAll("*").remove();
 
 		// setting the number of rows, cols and the padding size of the table
-		var nRows   = 3;
+		var nRows   = 4;
 		var nCols   = 4;
 		var padding = 3;
 
@@ -83,20 +87,22 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// creating the model of the interface that will be given and interpreted by d3 to create the interface
 		this.modelInterface = [
-			{ name: "Normal" + this.id, command: "true", group: 1, parent: this, action: this.btnNormalClick, text: "Normal", r: 0, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "XRay" + this.id, command: "true", group: 1, parent: this, action: this.btnXRayClick, text: "X-Ray", r: 0, c: 1, cSpan: 1, rSpan: 1 },
-			{ name: "Isolate" + this.id, command: "true", group: 1, parent: this, action: this.btnIsolateClick, text: "Isolate", r: 0, c: 2, cSpan: 1, rSpan: 1 },
-			{ name: "SelectGroup" + this.id, command: "true", group: 1, parent: this.id, action: this.btnSelectGroupClick, text: "Select Group", r: 0, c: 3, cSpan: 1, rSpan: 1 },
+			{ name: "Quiz" + this.id, command: "true", group: 0, parent: this, action: this.btnQuizClick, text: "Quiz", r: 0, c: 3, cSpan: 1, rSpan: 1 },
+			
+			{ name: "Normal" + this.id, command: "true", group: 1, parent: this, action: this.btnNormalClick, text: "Normal", r: 1, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "XRay" + this.id, command: "true", group: 1, parent: this, action: this.btnXRayClick, text: "X-Ray", r: 1, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Isolate" + this.id, command: "true", group: 1, parent: this, action: this.btnIsolateClick, text: "Isolate", r: 1, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "SelectGroup" + this.id, command: "true", group: 1, parent: this.id, action: this.btnSelectGroupClick, text: "Select Group", r: 1, c: 3, cSpan: 1, rSpan: 1 },
 
-			{ name: "Select" + this.id, command: "true", group: 2, parent: this, action: this.btnSelectClick, text: "Select", r: 1, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "Dissect" + this.id, command: "true", group: 2, parent: this, action: this.btnDissectClick, text: "Dissect", r: 1, c: 1, cSpan: 1, rSpan: 1 },
-			{ name: "Annotate" + this.id, command: "true", group: 2, parent: this, action: this.btnAnnotateClick, text: "Annotate", r: 1, c: 2, cSpan: 1, rSpan: 1 },
-			{ name: "Reset" + this.id, command: "true", group: 2, parent: this, action: this.btnResetClick, text: "Reset", r: 1, c: 3, cSpan: 1, rSpan: 1 },
+			{ name: "Select" + this.id, command: "true", group: 2, parent: this, action: this.btnSelectClick, text: "Select", r: 2, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "Dissect" + this.id, command: "true", group: 2, parent: this, action: this.btnDissectClick, text: "Dissect", r: 2, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Annotate" + this.id, command: "true", group: 2, parent: this, action: this.btnAnnotateClick, text: "Annotate", r: 2, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "Reset" + this.id, command: "true", group: 2, parent: this, action: this.btnResetClick, text: "Reset", r: 2, c: 3, cSpan: 1, rSpan: 1 },
 				
-			{ name: "Play" + this.id, command: "true", group: 3, parent: this, action: this.playAnimation, image: path + "play.png", text: "play", r: 2, c: 0, cSpan: 1, rSpan: 1 },
-			{ name: "Pause" + this.id, command: "true", group: 3, parent: this, action: this.pauseAnimation, image: path + "pause.png", text: "pause", r: 2, c: 1, cSpan: 1, rSpan: 1 },
-			{ name: "Previous" + this.id, command: "true", group: 3, parent: this, action: this.previousChapter, image: path + "previous.png", text: "previous", r: 2, c: 2, cSpan: 1, rSpan: 1 },
-			{ name: "Next" + this.id, command: "true", group: 3, parent: this, action: this.nextChapter, image: path + "next.png", text: "next", r: 2, c: 3, cSpan: 1, rSpan: 1 }
+			{ name: "Play" + this.id, command: "true", group: 3, parent: this, action: this.playAnimation, image: path + "play.png", text: "play", r: 3, c: 0, cSpan: 1, rSpan: 1 },
+			{ name: "Pause" + this.id, command: "true", group: 3, parent: this, action: this.pauseAnimation, image: path + "pause.png", text: "pause", r: 3, c: 1, cSpan: 1, rSpan: 1 },
+			{ name: "Previous" + this.id, command: "true", group: 3, parent: this, action: this.previousChapter, image: path + "previous.png", text: "previous", r: 3, c: 2, cSpan: 1, rSpan: 1 },
+			{ name: "Next" + this.id, command: "true", group: 3, parent: this, action: this.nextChapter, image: path + "next.png", text: "next", r: 3, c: 3, cSpan: 1, rSpan: 1 }
 		];
 
 		// getting the height and width of the current container
@@ -184,6 +190,26 @@ var usc_biodigital = SAGE2_App.extend({
 		this.enableControls = true;
 	},
 	
+	btnQuizClick: function(){
+		// read info for the quiz from quiz.json
+		this.parent.humanIframe.width = 0.5 * this.parent.element.clientWidth;
+		
+		var divQuiz = document.createElement('div');
+		var liName = 'human_02_male_muscular_system-left_pectoralis_major_ID' + this.parent.id;
+		var li = document.createElement('li');
+		li.setAttribute('id', liName);
+
+		li.appendChild(document.createTextNode("left_pectoralis_major\n"));
+		li.style.backgroundColor = 'green';
+		divQuiz.appendChild(li);		
+	//	d3.select("#" + liName).attr("fill", "blue");;
+		//
+		this.parent.humanQuiz = divQuiz;
+		this.parent.element.appendChild(this.parent.humanQuiz);
+			console.log(document.getElementById(liName));
+		
+	},
+	
 	btnNormalClick: function(){
 		console.log('usc_biodigital> Normal Button');
 		this.parent.human.send( 'scene.disableXray');
@@ -217,6 +243,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.parent.tool = "highlight"; // select
 		console.log('usc_biodigital> Select Button');
 		this.parent.changeTool();
+
 	},	
 		
 	btnAnnotateClick: function(){
@@ -229,7 +256,6 @@ var usc_biodigital = SAGE2_App.extend({
 	changeTool: function(){
 		var _this = this;
 		_this.human.send("scene.pickingMode", _this.tool);
-	    console.log("PICK");
 	    
 	    _this.human.on("scene.pickingModeUpdated", function(event) {
 			console.log("Enabling " + event.pickingMode + " mode. Click to " + event.pickingMode + " an object");
@@ -323,6 +349,12 @@ var usc_biodigital = SAGE2_App.extend({
 				// if the button is clickable, change a color
 				if (elem.command) {
 					// change previous pressed button colour
+					if (elem.group == 0)
+					{
+						d3.select("#" + elem.name).attr("fill", pressedColor);
+					//	elem.text = "End Quiz";
+					}
+					
 					if ((this.activeButtonGroup1!=null) && (elem.group == 1))
 					{
 						d3.select("#" + this.activeButtonGroup1.name).attr("fill", defaultBg);
@@ -384,20 +416,31 @@ var usc_biodigital = SAGE2_App.extend({
 				this.dragFromX = position.x;
 				this.dragFromY = position.y;
 			} else {
-		    /*	
+		    	
 		    	_this.human.send("scene.pick", { x: position.x, y: posY},
 			        function (hit) {
 			            if (hit) {
 			            	var obj = JSON.parse(JSON.stringify(hit))
 			            	var str = obj.objectId;
-			            	_this.human.send("scene.selectObjects", {
-								str: true
-    						});
-			                console.log("Hit: " + JSON.stringify(hit));
+			                //console.log("Hit: " + JSON.stringify(hit));
+			                console.log(str);
+							/*	
+							var li = document.createElement('li');
+							li.appendChild(document.createTextNode(str));
+							li.style.backgroundColor = 'green';
+							console.log(li);
+							_this.humanQuiz.appendChild(li);
+							_this.refresh(date);
+							*/
+							var nm = str + _this.id;
+							var el = document.getElementById(nm);	
+							if (el != null){
+								el.style.backgroundColor = "red";
+							};
 			            } else {
 			                console.log("Miss");
 			            }
-			        });*/
+			        });
 			    _this.human.send("scene.pick", { x: position.x, y: posY, triggerActions: true});
 
 			}
