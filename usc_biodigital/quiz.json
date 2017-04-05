@@ -1,0 +1,16 @@
+{ 	"name": "Quiz", 
+	"author": "SM", 
+	"copyright": "SM", 
+	"fontsize": 24, 
+	"questions":[
+		{
+	        "id": "human_02_male_muscular_system-left_pectoralis_major_ID",
+        	"name": "left pectoralis major"},
+		{
+	        "id": "human_02_male_muscular_system-left_rectus_femoris_ID",
+        	"name": "left rectus femoris"},
+		{
+	        "id": "human_02_male_muscular_system-right_external_oblique_ID",
+        	"name": "right external oblique"}
+	] 
+}

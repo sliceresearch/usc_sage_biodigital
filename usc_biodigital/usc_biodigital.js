@@ -196,18 +196,47 @@ var usc_biodigital = SAGE2_App.extend({
 		this.parent.humanIframe.width = 0.5 * this.parent.element.clientWidth;
 		
 		var divQuiz = document.createElement('div');
-		var liName = 'human_02_male_muscular_system-left_pectoralis_major_ID' + this.parent.id;
-		var li = document.createElement('li');
-		li.setAttribute('id', liName);
+		var quizPath = this.parent.resrcPath + "quiz.json";
+		console.log(quizPath);
+		var appId = this.parent.id;
+		
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if ( xhr.readyState === 4 ) {
+				if ( xhr.status === 200 || xhr.status === 0 ) {
+					var jsonObject = JSON.parse( xhr.responseText );
 
-		li.appendChild(document.createTextNode("left_pectoralis_major\n"));
-		li.style.backgroundColor = 'green';
-		divQuiz.appendChild(li);		
+					    var obj = JSON.parse(xhr.responseText);
+					    
+						for (var i = 0; i < obj.questions.length; i++){
+							
+								var liName = obj.questions[i].id + appId;
+								var li = document.createElement('ul');
+								li.setAttribute('id', liName);
+								
+								console.log(obj.fontsize);
+								li.style.fontSize = obj.fontsize + "px";
+								
+								li.appendChild(document.createTextNode(obj.questions[i].name + "\n"));
+
+								
+							//	li.style.backgroundColor = 'green';
+								divQuiz.appendChild(li);
+						}
+				}
+			}
+		};
+
+		xhr.open("GET", quizPath, false);
+		xhr.setRequestHeader("Content-Type", "text/plain");
+		xhr.send(null);
+		
+		
 	//	d3.select("#" + liName).attr("fill", "blue");;
 		//
 		this.parent.humanQuiz = divQuiz;
 		this.parent.element.appendChild(this.parent.humanQuiz);
-			console.log(document.getElementById(liName));
+	//		console.log(document.getElementById(liName));
 		
 	},
 	
