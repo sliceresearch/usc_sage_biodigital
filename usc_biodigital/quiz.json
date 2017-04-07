@@ -1,7 +1,9 @@
 { 	"name": "Quiz", 
 	"author": "SM", 
 	"copyright": "SM", 
-	"fontsize": 24, 
+	"fontsize": 20, 
+	"window": 0.35, 
+	"number": 3,
 	"questions":[
 		{
 	        "id": "human_02_male_muscular_system-left_pectoralis_major_ID",
