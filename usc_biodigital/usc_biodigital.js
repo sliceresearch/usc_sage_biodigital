@@ -196,7 +196,9 @@ var usc_biodigital = SAGE2_App.extend({
 		this.controls.addButton({ label: "Select", identifier: "select" + this.id, action: this.btnSelectClick, position: 8 });
 		this.controls.addButton({ label: "Dissect", identifier: "dissect" + this.id, action: this.btnDissectClick, position: 9 });
 		this.controls.addButton({ label: "Reset", identifier: "reset" + this.id, action: this.btnResetClick, position: 10 });
-				
+		
+		this.controls.addSlider({ identifier: "my Slider", minimum: 5, maximum: 10, property: "this.element.clientWidth", increment: 0.2});
+			
 		this.controls.finishedAddingControls();
 		this.enableControls = true;
 	},
@@ -533,7 +535,7 @@ var usc_biodigital = SAGE2_App.extend({
 							var nm = str + _this.id;
 							var el = document.getElementById(nm);	
 							if (el != null){
-								el.style.backgroundColor = "red";
+								el.style.backgroundColor = "purple";
 								_this.correctAnswers++;
 								console.log(_this.correctAnswers + " " + _this.numQuestions);
 								// finish quiz
