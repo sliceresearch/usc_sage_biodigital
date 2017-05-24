@@ -189,7 +189,8 @@ var usc_biodigital = SAGE2_App.extend({
 	// adding buttons
 	addWidgetButtons: function() {
 		// adding widget buttons
-		this.controls.addButton({ label: "Normal", identifier: "normal" + this.id, action: this.btnNormalClick, position: 1 });
+		//this.controls.addButton({ label: "Normal", identifier: "normal" + this.id, action: this.btnNormalClick, position: 1 });
+		this.controls.addButton({label: "normal", type: "normal", position: 1, identifier: "normal"});
 		this.controls.addButton({ label: "X-ray", identifier: "xray" + this.id, action: this.btnXRayClick, position: 2 });
 		this.controls.addButton({ label: "Isolate", identifier: "isolate" + this.id, action: this.btnIsolateClick, position: 3 });
 
@@ -197,8 +198,6 @@ var usc_biodigital = SAGE2_App.extend({
 		this.controls.addButton({ label: "Dissect", identifier: "dissect" + this.id, action: this.btnDissectClick, position: 9 });
 		this.controls.addButton({ label: "Reset", identifier: "reset" + this.id, action: this.btnResetClick, position: 10 });
 		
-		this.controls.addSlider({ identifier: "my Slider", minimum: 5, maximum: 10, property: "this.element.clientWidth", increment: 0.2});
-			
 		this.controls.finishedAddingControls();
 		this.enableControls = true;
 	},
@@ -544,14 +543,33 @@ var usc_biodigital = SAGE2_App.extend({
 								console.log(_this.correctAnswers + " " + _this.numQuestions);
 								// finish quiz
 								if (_this.correctAnswers == _this.numQuestions){
+									var quizClock = this.interval;
+									console.log(quizClock);
 									_this.pauseClock();
 									var win = document.createElement('p');
 									win.style.color = "green";
 									win.appendChild(document.createTextNode("YOU WIN!"));
 									_this.humanQuiz.appendChild(win);	
+									//Send the Quiz data to MongoDB Database
+									console.log("score = 3");
+									var xhr = new XMLHttpRequest();
+									xhr.open('GET', 'http://localhost:3000?id=blank+score=3+quizClock='+quizClock);
+									xhr.onreadystatechange = function () {
+										var DONE = 4; // readyState 4 means the request is done.
+										var OK = 200; // status 200 is a successful return.
+										if (xhr.readyState === DONE) {
+											if (xhr.status === OK) 	{
+												console.log(xhr.responseText); // 'This is the returned text.'
+											} else {
+												console.log('error'+xhr.responseText);
+											}
+										} else {
+											console.log('Error: ' + xhr.status); // An error occurred during the request.
+										}
+									}
+									xhr.send(null);	
 								}
-							}
-							else{
+							} else {
 								if (_this.isQuiz){
 									_this.missed++;
 				            		document.getElementById("missed" + _this.id).textContent = "Missed: " + _this.missed;
@@ -616,8 +634,20 @@ var usc_biodigital = SAGE2_App.extend({
 				this.human.send('camera.pan', { x: 0.0, y: PAN_STEP });
 				// console.log('usc_biodigital> camera.pan down');
 				this.refresh(date);
-			} else if (eventType === "pointerDblClick") {
+			}	
+		} else if (eventType === "pointerDblClick") {
 				//Add code to switch between pointer options
+		} else if (eventType === "widgetEvent"){
+			switch(data.identifier){
+				case "normal":
+					console.log('usc_biodigital> Normal Widget');
+					this.parent.human.send( 'scene.disableXray');
+					this.parent.human.send("scene.selectionMode", "highlight");
+					break;
+				case "RewindButton":
+					// Code to be executed when rewind button is clicked
+					break;
+				// Other controls follow
 			}
 		}
 	},
