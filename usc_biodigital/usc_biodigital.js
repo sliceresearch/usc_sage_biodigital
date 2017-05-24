@@ -217,6 +217,7 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	  pauseClock: function () {
+		  console.log(this.interval);
 	    clearInterval(this.interval);
 	    delete this.interval;
 	  },
@@ -408,7 +409,7 @@ var usc_biodigital = SAGE2_App.extend({
 		
 		console.log(this.window + " " + this.isQuiz);
 		if (this.isQuiz)
-			this.humanIframe.width = this.window * w;
+			this.humanIframe.width = (1-this.window) * w;
 		else
 			this.humanIframe.width = w;
 	//		this.btnQuizClick();
@@ -418,7 +419,8 @@ var usc_biodigital = SAGE2_App.extend({
 		
 	//	this.humanIframe.setAttribute("style", "width:" + w + "px");
 		this.humanIframe.setAttribute("style", "height:" + h + "px");
-		this.humanQuiz.setAttribute("style", "float:right");
+		if (this.isQuiz)
+			this.humanQuiz.setAttribute("style", "float:right");
 		this.refresh(date);
 	},
 
@@ -492,6 +494,7 @@ var usc_biodigital = SAGE2_App.extend({
 	event: function(eventType, position, user_id, data, date) {
 		//console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
 		//		eventType, position, user_id, data, this.dragging);
+		//console.log(eventType);
 		if (!('human' in this)) {
 			// NOTE: we append this.id so that each instance has a unique id.
 			// Otherwise the second, third,... instances do not respond to events.
@@ -510,6 +513,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.leftClickPosition(position.x, position.y);
 			var _this = this;
 			var posY = position.y - 100;
+			var posX = position.x;
 			// click
 			if (this.tool ==  "default"){
 				this.dragging = true;
@@ -517,7 +521,7 @@ var usc_biodigital = SAGE2_App.extend({
 				this.dragFromY = position.y;
 			} else {
 		    	
-		    	_this.human.send("scene.pick", { x: position.x, y: posY},
+		    	_this.human.send("scene.pick", { x: posX, y: posY},
 			        function (hit) {
 			            if (hit) {
 			            	var obj = JSON.parse(JSON.stringify(hit))
@@ -561,13 +565,13 @@ var usc_biodigital = SAGE2_App.extend({
 			                console.log("Miss");
 			            }
 			        });
-			    _this.human.send("scene.pick", { x: position.x, y: posY, triggerActions: true});
+			    _this.human.send("scene.pick", { x: posX, y: posY, triggerActions: true});
 
 			}
 		} else if (eventType === "pointerMove" && this.dragging) {
 			if (this.tool ==  "default"){
 				// move (pan camera)
-				var dx = position.x - this.dragFromX;
+				var dx = (position.x - this.dragFromX) * -1;
 				var dy = position.y - this.dragFromY;
 				this.human.send('camera.orbit', { yaw: dx, pitch: dy });
 				this.dragFromX = position.x;
@@ -581,7 +585,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.dragging = false;
 		} else if (eventType === "pointerScroll") {
 			// Scroll events for zoom
-			this.zoomInOut(data.wheelDelta / 1000.0);
+			this.zoomInOut((data.wheelDelta / 10000.0) * -1);
 			this.refresh(date);
 		} else if (eventType === "widgetEvent") {
 			// widget events
@@ -612,6 +616,8 @@ var usc_biodigital = SAGE2_App.extend({
 				this.human.send('camera.pan', { x: 0.0, y: PAN_STEP });
 				// console.log('usc_biodigital> camera.pan down');
 				this.refresh(date);
+			} else if (eventType === "pointerDblClick") {
+				//Add code to switch between pointer options
 			}
 		}
 	},
