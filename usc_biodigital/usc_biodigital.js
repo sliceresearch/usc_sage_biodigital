@@ -217,7 +217,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.interval = setInterval(function () {
 		totalSeconds += 1;
 
-		document.getElementById("hour" + self.id).textContent = "Time: " + Math.floor(totalSeconds / 3600) + " : ";
+		document.getElementById("hour" + self.id).textContent = ("Time: " + Math.floor(totalSeconds / 3600) + " : ");
 		document.getElementById("min" + self.id).textContent = Math.floor(totalSeconds / 60 % 60) + " : ";
 		document.getElementById("sec" + self.id).textContent = parseInt(totalSeconds % 60);
 		}, 1000);
@@ -230,6 +230,152 @@ var usc_biodigital = SAGE2_App.extend({
 	  },
   	  			  	  
 	btnQuizClick: function(){
+		/*// declare objects to select
+		var QUIZ_OBJECTS = [{
+		name: "Maxilla"
+		}, {
+		name: "Right temporal"
+		}, {
+		name: "Occipital"
+		}, {
+		name: "Mandible"
+		}, {
+		name: "Left Zygomatic"
+		}];
+
+		// a list of scene objects
+		var sceneObjects = {};
+		// a list of object selections
+		var selectedIndex = 0;
+
+		// DOM elements
+		var selectedObjectDOM = this.parent.human.document.getElementById("selectedObjectElement");
+		var userSelected = this.parent.human.document.getElementById("userSelectedObject");
+		var submitBtn = this.parent.human.document.getElementById("submitBtn");
+		var nextBtn = this.parent.human.document.getElementById("nextBtn");
+		var responsePanel = this.parent.human.document.getElementById("response-panel");
+		var responseLabel = this.parent.human.document.getElementById("response-label");
+		var responseSelection = this.parent.human.document.getElementById("response-selection");
+
+		// get a random object in the list
+		function getRandomObject(objects) {
+		var object = objects[Math.floor(Math.random() * objects.length)];
+		return object;
+		}
+
+		// Human + objects
+		//var human = new HumanAPI("myWidget");
+		var objects = [];
+
+		// track human selection vs user selection
+		var selectedObject;
+		var userSelectedObject;
+
+		// disable labels + tooltips + annotations
+		this.parent.human.send('labels.setEnabled', {
+		enable: false
+		});
+		this.parent.human.send('tooltips.setEnabled', {
+		enable: false
+		});
+		this.parent.human.send('annotations.setShown', {
+		enable: false
+		});
+
+		// listen to object pick event
+		this.parent.human.on('scene.picked', function(event) {
+		var pickedObjectId = event.objectId;
+		var pickedObject = sceneObjects[pickedObjectId];
+		setUserSelection(pickedObject);  
+		});
+
+		this.parent.human.on("human.ready", function() {
+		// get a list of objects
+			this.parent.human.send("scene.info", function(data) {
+				// get global objects
+				sceneObjects = data.objects;
+				for (var objectId in sceneObjects) {
+				var object = sceneObjects[objectId];
+				// for each of our quiz objects, find matching scene object
+				for (var i = 0; i < QUIZ_OBJECTS.length; i++) {
+					var quizObject = QUIZ_OBJECTS[i];
+					var objectFound = matchNames(object.name, quizObject.name);
+					if (objectFound) {
+					quizObject.objectId = objectId;
+					}
+				}
+				}
+				// start quiz
+				nextSelection();
+			});
+		});
+
+		submitBtn.addEventListener('click', function(e) {
+			if (!userSelectedObject) {
+				alert('Please select an object.')
+			} else {
+				// check if quiz selection matches user selection
+				var isCorrect = matchNames(selectedObject.objectId, userSelectedObject.objectId);
+				setResponse(isCorrect, true);
+			}
+			// prevent submit
+			this.parent.e.preventDefault();
+		});
+
+		this.parent.nextBtn.addEventListener('click', function(e) {
+		// reset selections
+		this.parent.human.send('scene.selectObjects', { replace: true });
+		// reset camera and proceed to next
+		this.parent.human.send('camera.reset', function() {
+			nextSelection();
+		});
+		// prevent submit
+		this.parent.e.preventDefault();
+		});
+
+		// selects the next object in the list
+		function nextSelection() {
+		// clear selected object and text
+		setUserSelection(null);
+		setResponse(false, false);
+		
+		// get the next object (within range)
+		selectedIndex++;
+		var randomObjectIndex = selectedIndex % QUIZ_OBJECTS.length;
+		selectedObject = QUIZ_OBJECTS[randomObjectIndex];
+		selectedObjectDOM.innerHTML = selectedObject.name;
+		}
+
+		function setUserSelection(object) {
+		userSelectedObject = object;
+		userSelected.innerHTML = object ? object.name : "";
+		}
+
+		function setResponse(isCorrect, doShow) {
+		// set label
+		responseLabel.innerHTML = isCorrect ? 'Correct!' : 'Incorrect!';
+		
+		if(!isCorrect) {
+			responseLabel.style.color = "red";
+			responseSelection.style.display = 'block';
+		}
+		else {
+			responseLabel.style.color = "green";
+			responseSelection.style.display = 'none';
+		}
+		
+		// set next navigation
+		responsePanel.style.display = doShow ? 'block' : 'none';
+		submitBtn.style.display = doShow ? 'none' : 'block';
+		}
+
+		// returns if a names match or contains substring
+		function matchNames(a, b) {
+		return a === b || a.trim().toLowerCase().indexOf(b.trim().toLowerCase()) > -1;
+		};
+	},
+
+		*/
 		// read info for the quiz from quiz.json
 		var _this = this.parent;
 		
@@ -517,10 +663,10 @@ var usc_biodigital = SAGE2_App.extend({
 		}
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
-			console.log("TEST x:" + position.x + " y: " + position.y);	
+			//console.log("TEST x:" + position.x + " y: " + position.y);	
 			this.leftClickPosition(position.x, position.y);
 			var _this = this;
-			console.log(this.element.clientHeight);
+			//console.log(this.element.clientHeight);
 			var posY = position.y - (this.element.clientHeight * 0.1);
 			var posX = position.x;
 			// click
@@ -704,6 +850,7 @@ var usc_biodigital = SAGE2_App.extend({
 					this.human.send("timeline.previousChapter");
 					break;
 				default:
+					console.log("Error: unkown widget");
 					console.log(eventType, position, user_id, data, date);
 					break;
 			}
