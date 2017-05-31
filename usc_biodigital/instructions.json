@@ -8,12 +8,12 @@
 	"dependencies": [
 	],
 	"load": {
-"value": "https://human.biodigital.com/widget?be=1gjN&background=255,255,255,51,64,77&dk=ae484d517dfdb73aa39b089e0e9f30ff5a1492bb"
+"value": "https://human.biodigital.com/widget?be=1to1&background=255,255,255,51,64,77&dk=ae484d517dfdb73aa39b089e0e9f30ff5a1492bb"
 	},
 	"title": "usc_biodigital",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "SAGE2 application usc_biodigital",
 	"keywords": [ "sage2", "usc_biodigital" ],
-	"author": "Mark Utting <utting@usc.edu.au>",
+	"author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>",
 	"license": "SAGE2-Software-License"
 }

@@ -189,16 +189,24 @@ var usc_biodigital = SAGE2_App.extend({
 	// adding buttons
 	addWidgetButtons: function() {
 		// adding widget buttons
-		//this.controls.addButton({ label: "Normal", identifier: "normal" + this.id, action: this.btnNormalClick, position: 1 });
-		this.controls.addButton({label: "normal", type: "normal", position: 1, identifier: "normal"});
-		this.controls.addButton({ label: "X-ray", identifier: "xray" + this.id, action: this.btnXRayClick, position: 2 });
-		this.controls.addButton({ label: "Isolate", identifier: "isolate" + this.id, action: this.btnIsolateClick, position: 3 });
-
-		this.controls.addButton({ label: "Select", identifier: "select" + this.id, action: this.btnSelectClick, position: 8 });
-		this.controls.addButton({ label: "Dissect", identifier: "dissect" + this.id, action: this.btnDissectClick, position: 9 });
-		this.controls.addButton({ label: "Reset", identifier: "reset" + this.id, action: this.btnResetClick, position: 10 });
 		
+		this.controls.addButton({type: "normal", position: 1, identifier: "Normal", label: "Norm"});
+		this.controls.addButton({type: "x-ray", position: 2, identifier: "x-ray", label: "X-ray"});
+		this.controls.addButton({type: "isolate", position: 3, identifier: "isolate", label: "Iso"});
+		this.controls.addButton({type: "reset", position: 4, identifier: "Reset", label: "Reset"});
+
+		this.controls.addButton({type: "play", position: 5, identifier: "PlayButton", label: "Play"});
+		this.controls.addButton({type: "play-pause", position: 6, identifier: "play-pause"});
+		this.controls.addButton({type: "next", position: 7, identifier: "Next"});
+		this.controls.addButton({type: "prev", position: 8, identifier: "Prev"});
+
+		this.controls.addButton({type: "select", position: 9, identifier: "Select", label:"Sel"});
+		this.controls.addButton({type: "dissect", position: 10, identifier: "Dissect", label:"Dis"});
+		this.controls.addButton({type: "annotate", position: 11, identifier: "Annotate", label:"Anno"});
+		this.controls.addButton({type: "select-group", position: 12, identifier: "SelGru", label:"SelGru"});
+
 		this.controls.finishedAddingControls();
+		console.log(this.controls.addButtonType);
 		this.enableControls = true;
 	},
 		
@@ -363,24 +371,25 @@ var usc_biodigital = SAGE2_App.extend({
 		});
 	},
 
+	//Replaced by widget events.
 	playAnimation: function(){
 		var _this = this;
-		_this.human.send("timeline.play", { loop: true });
+		_this.parent.human.send("timeline.play", { loop: true });
 	},
 
 	pauseAnimation: function(){
 		var _this = this;
-		_this.human.send("timeline.pause", { loop: true });
+		_this.parent.human.send("timeline.pause", { loop: true });
 	},
 		
 	nextChapter: function(){
 		var _this = this;
-		_this.human.send("timeline.nextChapter");		    	
+		_this.parent.human.send("timeline.nextChapter");		    	
 	},
 
 	previousChapter: function(){
 		var _this = this;
-		_this.human.send("timeline.previousChapter");
+		_this.parent.human.send("timeline.previousChapter");
 	},
 							
 	btnResetClick: function(){
@@ -493,7 +502,7 @@ var usc_biodigital = SAGE2_App.extend({
 	event: function(eventType, position, user_id, data, date) {
 		//console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
 		//		eventType, position, user_id, data, this.dragging);
-		//console.log(eventType);
+		//console.log(eventType, data.identifier);
 		if (!('human' in this)) {
 			// NOTE: we append this.id so that each instance has a unique id.
 			// Otherwise the second, third,... instances do not respond to events.
@@ -511,7 +520,8 @@ var usc_biodigital = SAGE2_App.extend({
 			console.log("TEST x:" + position.x + " y: " + position.y);	
 			this.leftClickPosition(position.x, position.y);
 			var _this = this;
-			var posY = position.y - 100;
+			console.log(this.element.clientHeight);
+			var posY = position.y - (this.element.clientHeight * 0.1);
 			var posX = position.x;
 			// click
 			if (this.tool ==  "default"){
@@ -553,7 +563,7 @@ var usc_biodigital = SAGE2_App.extend({
 									//Send the Quiz data to MongoDB Database
 									console.log("score = 3");
 									var xhr = new XMLHttpRequest();
-									xhr.open('GET', 'http://localhost:3000?id=blank+score=3+quizClock='+quizClock);
+									xhr.open('GET', 'http://localhost:3000?id=blank+,+score=3+,+quizClock='+quizClock);
 									xhr.onreadystatechange = function () {
 										var DONE = 4; // readyState 4 means the request is done.
 										var OK = 200; // status 200 is a successful return.
@@ -605,9 +615,6 @@ var usc_biodigital = SAGE2_App.extend({
 			// Scroll events for zoom
 			this.zoomInOut((data.wheelDelta / 10000.0) * -1);
 			this.refresh(date);
-		} else if (eventType === "widgetEvent") {
-			// widget events
-			
 		} else if (eventType === "keyboard") {
 			if (data.character === "r") {
 				this.human.send('camera.reset');
@@ -637,18 +644,70 @@ var usc_biodigital = SAGE2_App.extend({
 			}	
 		} else if (eventType === "pointerDblClick") {
 				//Add code to switch between pointer options
-		} else if (eventType === "widgetEvent"){
-			switch(data.identifier){
-				case "normal":
+		} else if (eventType === "widgetEvent") {
+			console.log(data.identifier);
+			switch (data.identifier) {
+				case "Normal":
 					console.log('usc_biodigital> Normal Widget');
-					this.parent.human.send( 'scene.disableXray');
-					this.parent.human.send("scene.selectionMode", "highlight");
+					this.human.send("scene.disableXray");
+					this.human.send("scene.selectionMode", "highlight");
 					break;
-				case "RewindButton":
-					// Code to be executed when rewind button is clicked
+				case "x-ray":
+					console.log('usc_biodigital> XRay Widget');
+					this.human.send("scene.enableXray");
+					this.human.send("scene.selectionMode", "highlight");
 					break;
-				// Other controls follow
+				case "isolate":
+					console.log('usc_biodigital> isolate Widget');
+					this.human.send("scene.selectionMode", "isolate");
+					break;
+				case "Reset":
+					this.tool = "default"; // select
+					console.log("usc_biodigital> Reset Widget");
+					this.human.send("scene.reset");
+					break;
+				case "Select":
+					this.tool = "highlight"; // select
+					console.log('usc_biodigital> Select Widget');
+					this.changeTool();
+					break;
+				case "Dissect":
+					this.tool = "dissect"; // select
+					console.log('usc_biodigital> Dissect Widget');
+					this.changeTool();
+					break;
+				case "Annotate":
+					this.tool = "annotate"; // select
+					console.log('usc_biodigital> Annotate Widget');
+					this.human.send("input.enable");
+					this.changeTool();
+					break;
+				case "SelGru":
+					this.tool = "highlight"; // select mode
+					console.log('usc_biodigital> Select Group');
+					this.selectGroup();
+					break;
+				case "PlayButton":
+					console.log('usc_biodigital> Play Widget');
+					this.human.send("timeline.play", { loop: true });
+					break;
+				case "play-pause":
+					console.log('usc_biodigital> Pause Widget');
+					this.human.send("timeline.pause", { loop: true });
+					break;
+				case "Next":
+					console.log('usc_biodigital> Next Widget');
+					this.human.send("timeline.nextChapter");
+					break;
+				case "Prev":
+					console.log('usc_biodigital> Previous Widget');
+					this.human.send("timeline.previousChapter");
+					break;
+				default:
+					console.log(eventType, position, user_id, data, date);
+					break;
 			}
+			this.refresh(date);
 		}
 	},
 
