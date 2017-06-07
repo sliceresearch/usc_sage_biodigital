@@ -34,7 +34,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.addWidgetButtons();
 
 		// Set the background to black
-		this.element.style.backgroundColor = '#000000';			
+		this.element.style.backgroundColor = '#87CEEB';			
 		
 		var iframe = document.createElement('iframe');
 		iframe.src = this.state.value;
@@ -143,7 +143,6 @@ var usc_biodigital = SAGE2_App.extend({
 			this.h = document.createElement('span');
 			this.h.id = "hour" + this.id;
 			this.h.style.color = "red";
-			//this.h.style.fontSize = (elem.w * 2 / 3 + "px");
 			divQuiz.appendChild(this.h);
 							
 			this.m = document.createElement('span');
@@ -268,7 +267,7 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	// function used to invoke button actions
-	/*leftClickPosition: function(x, y) {
+	leftClickPosition: function(x, y) {
 		// setting the feedback button color
 		var pressedColor = "white";
 		var defaultBg    = "#77DD77";
@@ -323,7 +322,19 @@ var usc_biodigital = SAGE2_App.extend({
 			}
 		}
 
-	},*/
+	},
+
+	reset: function() {
+		this.human.send("scene.reset");
+		this.changeTool();
+		this.pointerTypeRadioButton.value = "Sel";
+		this.viewTypeRadioButton.value = "Norm";
+		this.isQuiz = false;
+		this.humanIframe.width = this.element.clientWidth;
+		this.element.removeChild(this.humanQuiz);
+		this.humanQuiz = null;
+		this.pauseClock();
+	},
 	
 	event: function(eventType, position, user_id, data, date) {
 		//console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
@@ -474,10 +485,7 @@ var usc_biodigital = SAGE2_App.extend({
 			switch (data.identifier) {
 				case "Reset":
 					console.log("usc_biodigital> Reset Widget");
-					this.human.send("scene.reset");
-					this.changeTool();
-					this.pointerTypeRadioButton.value = "Sel";
-					this.viewTypeRadioButton.value = "Norm";
+					this.reset();
 					break;
 				case "Quiz":
 					console.log("Quiz started!");
@@ -554,10 +562,14 @@ var usc_biodigital = SAGE2_App.extend({
 						case "Heart":
 							console.log("usc_biodigital> Reinitalising with heart model");
 							this.humanIframe.src = "https://human.biodigital.com/widget?be=1to1&background=255,255,255,51,64,77&dk=ae484d517dfdb73aa39b089e0e9f30ff5a1492bb";
+							this.reset();
+							this.pointerTypeRadioButton.value = "Rota";
 							break;
 						case "Male":
 							console.log("usc_biodigital> Reinitalising with male model");
 							this.humanIframe.src = "https://human.biodigital.com/widget?be=1ud8&background=255,255,255,51,64,77&dk=ae484d517dfdb73aa39b089e0e9f30ff5a1492bb";
+							this.reset();
+							this.pointerTypeRadioButton.value = "Rota";
 							break;
 						default:
 							console.log("Error: unknown option");
