@@ -190,20 +190,33 @@ var usc_biodigital = SAGE2_App.extend({
 	addWidgetButtons: function() {
 		// adding widget buttons
 		
-		this.controls.addButton({type: "normal", position: 1, identifier: "Normal", label: "Norm"});
-		this.controls.addButton({type: "x-ray", position: 2, identifier: "x-ray", label: "X-ray"});
-		this.controls.addButton({type: "isolate", position: 3, identifier: "isolate", label: "Iso"});
-		this.controls.addButton({type: "reset", position: 4, identifier: "Reset", label: "Reset"});
+		//this.controls.addButton({type: "normal", position: 1, identifier: "Normal", label: "Norm"});
+		//this.controls.addButton({type: "x-ray", position: 2, identifier: "x-ray", label: "X-ray"});
+		//this.controls.addButton({type: "isolate", position: 3, identifier: "isolate", label: "Iso"});
+		this.controls.addButton({type: "reset", position: 10, identifier: "Reset", label: "Reset"});
 
-		this.controls.addButton({type: "play", position: 5, identifier: "PlayButton", label: "Play"});
-		this.controls.addButton({type: "play-pause", position: 6, identifier: "play-pause"});
-		this.controls.addButton({type: "next", position: 7, identifier: "Next"});
-		this.controls.addButton({type: "prev", position: 8, identifier: "Prev"});
+		this.controls.addButton({type: "play", position: 1, identifier: "PlayButton", label: "Play"});
+		this.controls.addButton({type: "play-pause", position: 2, identifier: "play-pause"});
+		this.controls.addButton({type: "next", position: 6, identifier: "Next"});
+		this.controls.addButton({type: "prev", position: 7, identifier: "Prev"});
 
-		this.controls.addButton({type: "select", position: 9, identifier: "Select", label:"Sel"});
-		this.controls.addButton({type: "dissect", position: 10, identifier: "Dissect", label:"Dis"});
-		this.controls.addButton({type: "annotate", position: 11, identifier: "Annotate", label:"Anno"});
-		this.controls.addButton({type: "select-group", position: 12, identifier: "SelGru", label:"SelGru"});
+		//this.controls.addButton({type: "select", position: 9, identifier: "Select", label:"Sel"});
+		//this.controls.addButton({type: "dissect", position: 10, identifier: "Dissect", label:"Dis"});
+		//this.controls.addButton({type: "annotate", position: 11, identifier: "Annotate", label:"Anno"});
+		//this.controls.addButton({type: "select-group", position: 12, identifier: "SelGru", label:"SelGru"});
+
+		this.viewTypeRadioButton = this.controls.addRadioButton({identifier: "ViewType",
+			label: "View",
+			options: ["Norm", "X-ray", "Iso"],
+			default: "Norm"
+		});
+
+		//Would like to add pan in future
+		this.pointerTypeRadioButton = this.controls.addRadioButton({identifier: "PointerType",
+			label: "Pointer",
+			options: ["Sel", "Dis", "Rota"],
+			default: "Rota"
+		});
 
 		this.controls.finishedAddingControls();
 		console.log(this.controls.addButtonType);
@@ -507,15 +520,16 @@ var usc_biodigital = SAGE2_App.extend({
 		});
 	},
 
+	/*Does nothing different
 	selectGroup: function(){
 		var _this = this;
 		_this.changeTool();
-		_this.human.send("scene.selectionMode", _this.tool);
+		_this.human.send("scene.selectionMode", "highlight");
 		    	
 	    _this.human.on("scene.selectionModeUpdated", function(event) {
 			console.log("Enabling " + event.selectionMode + " mode. Click to " + event.selectionMode + " an object");
 		});
-	},
+	},*/
 
 	//Replaced by widget events.
 	playAnimation: function(){
@@ -793,7 +807,15 @@ var usc_biodigital = SAGE2_App.extend({
 		} else if (eventType === "widgetEvent") {
 			console.log(data.identifier);
 			switch (data.identifier) {
-				case "Normal":
+				case "Reset":
+					console.log("usc_biodigital> Reset Widget");
+					this.human.send("scene.reset");
+					this.changeTool();
+					console.log(this.pointerTypeRadioButton);
+					this.pointerTypeRadioButton.value = "Sel";
+					this.viewTypeRadioButton.value = "Norm";
+					break;
+				/*case "Normal":
 					console.log('usc_biodigital> Normal Widget');
 					this.human.send("scene.disableXray");
 					this.human.send("scene.selectionMode", "highlight");
@@ -806,11 +828,6 @@ var usc_biodigital = SAGE2_App.extend({
 				case "isolate":
 					console.log('usc_biodigital> isolate Widget');
 					this.human.send("scene.selectionMode", "isolate");
-					break;
-				case "Reset":
-					this.tool = "default"; // select
-					console.log("usc_biodigital> Reset Widget");
-					this.human.send("scene.reset");
 					break;
 				case "Select":
 					this.tool = "highlight"; // select
@@ -832,7 +849,7 @@ var usc_biodigital = SAGE2_App.extend({
 					this.tool = "highlight"; // select mode
 					console.log('usc_biodigital> Select Group');
 					this.selectGroup();
-					break;
+					break;*/
 				case "PlayButton":
 					console.log('usc_biodigital> Play Widget');
 					this.human.send("timeline.play", { loop: true });
@@ -848,6 +865,56 @@ var usc_biodigital = SAGE2_App.extend({
 				case "Prev":
 					console.log('usc_biodigital> Previous Widget');
 					this.human.send("timeline.previousChapter");
+					break;
+				case "ViewType":
+					console.log(data.value);
+					switch (data.value) {
+						case "Norm":
+							console.log('usc_biodigital> Normal Widget');
+							this.human.send("scene.disableXray");
+							this.human.send("scene.selectionMode", "highlight");
+							break;
+						case "X-ray":
+							console.log('usc_biodigital> XRay Widget');
+							this.human.send("scene.enableXray");
+							this.human.send("scene.selectionMode", "highlight");
+							break;
+						case "Iso":
+							console.log('usc_biodigital> isolate Widget');
+							this.human.send("scene.selectionMode", "isolate");
+							break;
+						default:
+							console.log("Error: unknown option");
+							break;
+					}	
+				 	break;
+				case "PointerType":
+					switch (data.value) {
+						case "Sel":
+							this.tool = "highlight";
+							console.log('usc_biodigital> Select Option');
+							this.changeTool();
+							break;
+						case "Dis":
+							this.tool = "dissect";
+							console.log('usc_biodigital> Dissect Option');
+							this.changeTool();
+							break;
+						case "Rota":
+							this.tool = "default";
+							console.log('usc_biodigital> Dissect Widget');
+							this.changeTool();
+							break;
+						//For future development
+						/*case "Pan":
+							this.tool = "pan";
+							console.log('usc_biodigital> Dissect Widget');
+							this.changeTool();
+							break;*/
+						default:
+							console.log("Error: unknown option");
+							break;
+					}
 					break;
 				default:
 					console.log("Error: unkown widget");
