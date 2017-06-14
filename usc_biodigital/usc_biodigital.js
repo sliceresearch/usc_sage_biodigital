@@ -14,6 +14,7 @@ var PAN_STEP = 1.0;
 // a list of scene objects
 var sceneObjects = {};
 
+
 var usc_biodigital = SAGE2_App.extend({
 	init: function(data) {
 		// Create div into the DOM
@@ -52,7 +53,9 @@ var usc_biodigital = SAGE2_App.extend({
 		iframe.setAttribute("style", "float:left");*/
 		var iframe_id = IFRAME_ID + this.id;
 		//this.element.appendChild(iframe);
-		this.element.innerHTML = `<iframe id="${iframe_id}" src="${this.state.value}" width="100%" height="100%">
+		var source = `${this.state.value}&dk=${this.state.dk}`;
+		console.log("developer key", source);
+		this.element.innerHTML = `<iframe id="${iframe_id}" src="${source}" width="100%" height="100%">
 			</iframe>
 			<script src="https://developer.biodigital.com/builds/api/2/human-api.min.js"></script>
 			<div id="panel">
@@ -154,19 +157,19 @@ var usc_biodigital = SAGE2_App.extend({
   	  			  	  
 	btnQuizClick: function(){
 		var _this = this;
-		//changes iframe to the example quiz code widget
-		this.humanIframe.src = "https://human.biodigital.com/widget/?be=1fLs&pre=false&dk=ae484d517dfdb73aa39b089e0e9f30ff5a1492bb";
+		// changes iframe to the example quiz code widget
+		// todo load src from quiz.json model + dk
 		// declare objects to select
-		var QUIZ_OBJECTS = [{name: "Maxilla"}, {name: "Right temporal"}, {name: "Occipital"}, {name: "Mandible"}, {name: "Left Zygomatic"}];
+		this["QUIZ_OBJECTS"] = [{name: "Maxilla"}, {name: "Right temporal"}, {name: "Occipital"}, {name: "Mandible"}, {name: "Left Zygomatic"}];
+		console.log(this.QUIZ_OBJECTS);
 		// a list of object selections
-		var selectedIndex = 0;
+		this["selectedIndex"] = 0;
 		
 		// DOM elements
 		var panel = document.getElementById("panel");
 		var submitBtn = document.getElementById("submitBtn");
 		var nextBtn = document.getElementById("nextBtn");
 		var findSubmit = submitBtn.getBoundingClientRect();
-		console.log("Submit button", submitBtn, findSubmit);
 		panel.style.display = 'block';
 		
 		// get a random object in the list
@@ -176,15 +179,22 @@ var usc_biodigital = SAGE2_App.extend({
 		}
 
 		// track human selection vs user selection
-		var selectedObject;
-		var userSelectedObject;
+		this["selectedObject"] = null;
+		this["userSelectedObject"] = null;
 
 		// disable labels + tooltips + annotations
-		_this.human.send("labels.setEnabled", {enable: false});
-		_this.human.send("tooltips.setEnabled", {enable: false});
-		_this.human.send("annotations.setShown", {enable: false});
+		this.human.send("labels.setEnabled", {enable: false});
+		this.human.send("tooltips.setEnabled", {enable: false});
+		this.human.send("annotations.setShown", {enable: false});
 		
-		_this.human.on("human.ready", function() {
+		this.human.on("scene.picked", function(event) {
+			console.log("'scene.picked' event: " + JSON.stringify(event));
+			var pickedObjectId = event.objectId;
+			var pickedObject = sceneObjects[pickedObjectId];
+			_this.setUserSelection(pickedObject);  
+		});
+
+		this.human.on("human.ready", function() {
 			// get a list of objects
 			this.send("scene.info", function(data) {
 				// get global objects
@@ -192,16 +202,16 @@ var usc_biodigital = SAGE2_App.extend({
 				for (var objectId in sceneObjects) {
 					var object = sceneObjects[objectId];
 					// for each of our quiz objects, find matching scene object
-					for (var i = 0; i < QUIZ_OBJECTS.length; i++) {
-						var quizObject = QUIZ_OBJECTS[i];
-						var objectFound = this.matchNames(object.name, quizObject.name);
+					for (var i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+						var quizObject = _this.QUIZ_OBJECTS[i];
+						var objectFound = _this.matchNames(object.name, quizObject.name);
 						if (objectFound) {
 							quizObject.objectId = objectId;
 						}
 					}
 				}
 				// start quiz
-				this.nextSelection();
+				_this.nextSelection();
 			});
 		});
 
@@ -210,16 +220,16 @@ var usc_biodigital = SAGE2_App.extend({
 			console.log("'scene.picked' event: " + JSON.stringify(event));
 			var pickedObjectId = event.objectId;
 			var pickedObject = sceneObjects[pickedObjectId];
-			this.setUserSelection(pickedObject);  
+			_this.setUserSelection(pickedObject);  
 		});
 
 		submitBtn.addEventListener("click", function(e) {
-			if (!userSelectedObject) {
+			if (!_this.userSelectedObject) {
 				alert("Please select an object.")
 			} else {
 				// check if quiz selection matches user selection
-				var isCorrect = this.matchNames(selectedObject.objectId, userSelectedObject.objectId);
-				this.setResponse(isCorrect, true, submitBtn);
+				var isCorrect = this.matchNames(_this.selectedObject.objectId, _this.userSelectedObject.objectId);
+				_this.setResponse(isCorrect, true, submitBtn);
 			}
 			// prevent submit
 			e.preventDefault();
@@ -230,7 +240,7 @@ var usc_biodigital = SAGE2_App.extend({
 			_this.human.send('scene.selectObjects', { replace: true });
 			// reset camera and proceed to next
 			_this.human.send('camera.reset', function() {
-				this.nextSelection();
+				_this.nextSelection();
 			});
 			// prevent submit
 			e.preventDefault();
@@ -325,10 +335,10 @@ var usc_biodigital = SAGE2_App.extend({
 		this.setResponse(false, false);
 		
 		// get the next object (within range)
-		selectedIndex++;
-		var randomObjectIndex = selectedIndex % QUIZ_OBJECTS.length;
-		selectedObject = QUIZ_OBJECTS[randomObjectIndex];
-		selectedObjectDOM.innerHTML = selectedObject.name;
+		this.selectedIndex++;
+		var randomObjectIndex = this.selectedIndex % this.QUIZ_OBJECTS.length;
+		this.selectedObject = this.QUIZ_OBJECTS[randomObjectIndex];
+		selectedObjectDOM.innerHTML = this.selectedObject.name;
 	},
 
 	// For Quiz
@@ -336,13 +346,14 @@ var usc_biodigital = SAGE2_App.extend({
 		// DOM Element
 		var userSelected = document.getElementById("userSelectedObject");
 
-		userSelectedObject = object;
+		this.userSelectedObject = object;
 		userSelected.innerHTML = object ? object.name : "";
 	},
 
 	// For Quiz
 	setResponse: function(isCorrect, doShow, submitBtn){
 		// DOM Elements
+		var submitBtn = document.getElementById("submitBtn");
 		var responsePanel = document.getElementById("response-panel");
 		var responseLabel = document.getElementById("response-label");
 		var responseSelection = document.getElementById("response-selection");
@@ -379,22 +390,10 @@ var usc_biodigital = SAGE2_App.extend({
 	},*/
 		
 	changeTool: function(){
-		var _this = this;
-		_this.human.send("scene.pickingMode", _this.tool);
+		this.human.send("scene.pickingMode", this.tool);
 	    
-	    _this.human.on("scene.pickingModeUpdated", function(event) {
+	    this.human.on("scene.pickingModeUpdated", function(event) {
 			console.log("Enabling " + event.pickingMode + " mode. Click to " + event.pickingMode + " an object");
-		});
-	},
-
-	pickTool: function(posX, posY){
-		this.human.send("scene.pick", { x: posX, y: posY, triggerActions: true});
-		// listen to object pick event
-		this.human.on("scene.picked", function(event) {
-			console.log("'scene.picked' event: " + JSON.stringify(event));
-			var pickedObjectId = event.objectId;
-			var pickedObject = sceneObjects[pickedObjectId];
-			this.setUserSelection(pickedObject);  
 		});
 	},
 		
@@ -438,15 +437,11 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	// function used to invoke button actions
-	leftClickPosition: function(x, y) {
-		var submitBtn = document.getElementById("submitBtn");
-		var findSubmit = submitBtn.getBoundingClientRect();
-		console.log("Submit button", submitBtn, findSubmit);
-
-		if (y >= findSubmit.top && y <= findSubmit.bottom && x >= findSubmit.left && x <= findSubmit.right){
-
-		}
-
+	inButton: function(x, y, buttonId) {
+		var btn = document.getElementById(buttonId);
+		var findBtn = btn.getBoundingClientRect();
+		console.log("Submit button", btn, findBtn);
+		return (findBtn.top <= y && y <= findBtn.bottom && findBtn.left <= x && x <= findBtn.right);
 	},
 
 	reset: function() {
@@ -489,79 +484,71 @@ var usc_biodigital = SAGE2_App.extend({
 				this.dragging = true;
 				this.dragFromX = position.x;
 				this.dragFromY = position.y;
+			} else if (inButton(posX, posY, "submitBtn")){
+				console.log("You got the submit button");
+			} else if (inButton(posX, posY, "nextBtn")){
+				console.log("You got the next button");
 			} else {
-		    	_this.human.send("scene.pick", { x: posX, y: posY},
-			        function (hit) {
-			            if (hit) {
-			            	var obj = JSON.parse(JSON.stringify(hit))
-			            	var str = obj.objectId;
-			                //console.log("Hit: " + JSON.stringify(hit));
-			                console.log(str);
-							/*	
-							var li = document.createElement('li');
-							li.appendChild(document.createTextNode(str));
-							li.style.backgroundColor = 'green';
-							console.log(li);
-							_this.humanQuiz.appendChild(li);
-							_this.refresh(date);
-							*/
-							var nm = str + _this.id;
-							var el = document.getElementById(nm);	
-							if (el != null){
-								el.style.backgroundColor = "purple";
-								_this.correctAnswers++;
-								console.log(_this.correctAnswers + " " + _this.numQuestions);
-								// finish quiz
-								if (_this.correctAnswers == _this.numQuestions){
-									var quizClock = this.interval;
-									console.log(quizClock);
-									_this.pauseClock();
-									var win = document.createElement('p');
-									win.style.color = "green";
-									win.appendChild(document.createTextNode("YOU WIN!"));
-									_this.humanQuiz.appendChild(win);	
-									//Send the Quiz data to MongoDB Database
-									console.log("score = 3");
-									var xhr = new XMLHttpRequest();
-									xhr.open('GET', 'http://localhost:3000?id=blank+,+score=3+,+quizClock='+quizClock);
-									xhr.onreadystatechange = function () {
-										var DONE = 4; // readyState 4 means the request is done.
-										var OK = 200; // status 200 is a successful return.
-										if (xhr.readyState === DONE) {
-											if (xhr.status === OK) 	{
-												console.log(xhr.responseText); // 'This is the returned text.'
-											} else {
-												console.log('error'+xhr.responseText);
-											}
+		    	_this.human.send("scene.pick", { x: posX, y: posY}, function (hit) {
+					if (hit) {
+						var obj = JSON.parse(JSON.stringify(hit))
+						var str = obj.objectId;
+						console.log("Hit: " + JSON.stringify(hit));
+						//console.log(str);
+						var nm = str + _this.id;
+						var el = document.getElementById(nm);	
+						if (el == null){
+							hit = null;
+						} else {
+							el.style.backgroundColor = "purple";
+							_this.correctAnswers++;
+							console.log(_this.correctAnswers + " " + _this.numQuestions);
+							// finish quiz
+							if (_this.correctAnswers == _this.numQuestions){
+								var quizClock = this.interval;
+								console.log(quizClock);
+								_this.pauseClock();
+								var win = document.createElement('p');
+								win.style.color = "green";
+								win.appendChild(document.createTextNode("YOU WIN!"));
+								_this.humanQuiz.appendChild(win);	
+								//Send the Quiz data to MongoDB Database
+								console.log("score = 3");
+								var xhr = new XMLHttpRequest();
+								xhr.open('GET', 'http://localhost:3000?id=blank+,+score=3+,+quizClock='+quizClock);
+								xhr.onreadystatechange = function () {
+									var DONE = 4; // readyState 4 means the request is done.
+									var OK = 200; // status 200 is a successful return.
+									if (xhr.readyState === DONE) {
+										if (xhr.status === OK) 	{
+											console.log(xhr.responseText); // 'This is the returned text.'
 										} else {
-											console.log('Error: ' + xhr.status); // An error occurred during the request.
+											console.log('error'+xhr.responseText);
 										}
+									} else {
+										console.log('Error: ' + xhr.status); // An error occurred during the request.
 									}
-									xhr.send(null);	
 								}
-							} else {
-								if (_this.isQuiz){
-									_this.missed++;
-				            		document.getElementById("missed" + _this.id).textContent = "Missed: " + _this.missed;
-			            		}
+								xhr.send(null);	
 							}
-			            } else {
+						/*} else {
 							if (_this.isQuiz){
 								_this.missed++;
-				            	document.getElementById("missed" + _this.id).textContent = "Missed: " + _this.missed;
-			            	}
-			                console.log("Miss");
-			            }
-			        });
-				this.pickTool(posX, posY);
-			   /* _this.human.send("scene.pick", { x: posX, y: posY, triggerActions: true});
-				// listen to object pick event
-				_this.human.on("scene.picked", function(event) {
-					console.log("'scene.picked' event: " + JSON.stringify(event));
-					var pickedObjectId = event.objectId;
-					var pickedObject = sceneObjects[pickedObjectId];
-					this.setUserSelection(pickedObject);  
-				});*/
+								document.getElementById("missed" + _this.id).textContent = "Missed: " + _this.missed;
+							}
+						}*/
+						}
+					}
+					if (!hit) {
+						if (_this.isQuiz){
+							_this.missed++;
+							document.getElementById("missed" + _this.id).textContent = "Missed: " + _this.missed;
+						}
+						console.log("Miss");
+					}
+				});
+				// todo is this needed?
+				_this.human.send("scene.pick", {x: posX, y: posY, triggerActions: true});
 			}
 		} else if (eventType === "pointerMove" && this.dragging) {
 			if (this.tool ==  "default"){
@@ -691,13 +678,13 @@ var usc_biodigital = SAGE2_App.extend({
 					switch (data.value) {
 						case "Heart":
 							console.log("usc_biodigital> Reinitalising with heart model");
-							this.humanIframe.src = "https://human.biodigital.com/widget?be=1to1&background=255,255,255,51,64,77&dk=ae484d517dfdb73aa39b089e0e9f30ff5a1492bb";
+							this.humanIframe.src = "https://human.biodigital.com/widget?be=1to1&background=255,255,255,51,64,77&dk="+this.state.dk;
 							this.reset();
 							this.pointerTypeRadioButton.value = "Rota";
 							break;
 						case "Male":
 							console.log("usc_biodigital> Reinitalising with male model");
-							this.humanIframe.src = "https://human.biodigital.com/widget?be=1ud8&background=255,255,255,51,64,77&dk=ae484d517dfdb73aa39b089e0e9f30ff5a1492bb";
+							this.humanIframe.src = "https://human.biodigital.com/widget?be=1ud8&background=255,255,255,51,64,77&dk="+this.state.dk;
 							this.reset();
 							this.pointerTypeRadioButton.value = "Rota";
 							break;

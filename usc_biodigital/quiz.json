@@ -1,6 +1,7 @@
 { 	"name": "Quiz", 
 	"author": "SM", 
 	"copyright": "SM", 
+	"model": "https://human.biodigital.com/widget/?be=1fLs&pre=false",
 	"fontsize": 20, 
 	"window": 0.35, 
 	"number": 3,
