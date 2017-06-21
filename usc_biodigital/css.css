@@ -11,14 +11,17 @@ body {
 
 iframe {
   border: none;
-  height: 99%;
+  height: 100%;
 }
 
 h2 {
+  font-size: 20px;
+}
+h3 {
   font-size: 16px;
 }
 
-#panel {
+#quizPanel {
   width: 275px;
   position: absolute;
   top: 10px;
@@ -29,10 +32,7 @@ h2 {
   box-shadow: 3px 3px 5px rgba(0,0,0,0.15);
   display: none;
 }
-#response-panel {
-  display: none;
-}
-#response-label {
+#quizResponse {
   font-size: 16px;
   text-align: center;
   display: block;
@@ -50,14 +50,13 @@ button {
   border: 1px solid #ccc;
 }
 
-#submitBtn, #nextBtn {
+#quizNextBtn {
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 5px;
   background: none;
   border: 1px solid #ccc;
 }
-
-#submitBtn:hover, #nextBtn:hover {
+#quizNextBtn:hover {
   background: #efefef;
 }
