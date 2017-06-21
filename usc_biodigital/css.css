@@ -15,10 +15,12 @@ iframe {
 }
 
 h2 {
-  font-size: 20px;
+  font-size: 36px;
+  text-align: center;
 }
 h3 {
-  font-size: 16px;
+  font-size: 36px;
+  text-align: center;
 }
 
 #quizPanel {

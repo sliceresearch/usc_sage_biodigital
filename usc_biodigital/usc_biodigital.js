@@ -59,12 +59,12 @@ var usc_biodigital = SAGE2_App.extend({
 			</iframe>
 			<script src="https://developer.biodigital.com/builds/api/2/human-api.min.js"></script>
 			<div id="quizPanel">
-			<h2><b><span id="quizResponse"></span></b></h2>
-			<!-- display only after response -->
-			<h3>Select the <b><span id="quizTarget"></span></b></h3>
-			<form id="questions-form">
-				<button id="quizNextBtn">Next</button>
-			</form>
+				<h2><b><span id="quizResponse"></span></b></h2>
+				<!-- display only after response -->
+				<h3 id="quizSel">Select the <b><span id="quizTarget"></span></b></h3>
+				<form id="questions-form">
+					<button id="quizNextBtn">Next</button>
+				</form>
 
 			</div>`;
 
@@ -73,8 +73,8 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizPanelDOM = document.getElementById("quizPanel");
 		this.quizNextBtnDOM = document.getElementById("quizNextBtn");
 		this.quizTargetDOM = document.getElementById("quizTarget");
+		this.quizSelDOM = document.getElementById("quizSel");
 		this.humanIframe = document.getElementById(iframe_id);
-		
 
 		//console.log(this.humanIframe);
 						
@@ -82,13 +82,14 @@ var usc_biodigital = SAGE2_App.extend({
 		this.isQuiz = false;
 		this.window = 0.0;
 		this.interval = 0;
-		this.h = 0;
-		this.m = 0;
-		this.s = 0;
-		this.missed = -1;
-		this.numQuestions = 0;
-		this.correctAnswers = 0;
-		this.lenName = 0;
+		this.fontSize = this.element.clientHeight * 0.03;
+		//this.h = 0;
+		//this.m = 0;
+		//this.s = 0;
+		//this.missed = -1;
+		//this.numQuestions = 0;
+		//this.correctAnswers = 0;
+		//this.lenName = 0;
 
 		// initialise our own object state.
 		this.currentZoom = 0.3;
@@ -167,6 +168,9 @@ var usc_biodigital = SAGE2_App.extend({
 		// a list of object selections
 		this.selectedIndex = 0;
 		this.quizResponseDOM.innerHTML = "Starting Quiz!";
+		this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 +"px";
+		this.quizTargetDOM.style.fontSize = this.fontSize+"px";
+		this.quizSelDOM.style.fontSize = this.fontSize+"px";
 		this.quizPanelDOM.style.display = 'block';
 		
 		// get a random object in the list
@@ -346,21 +350,25 @@ var usc_biodigital = SAGE2_App.extend({
 		// Called when window is resized
 		var w = this.element.clientWidth;
 		var h = this.element.clientHeight;
+		this.fontSize = this.element.clientHeight * 0.03;
+		this.quizResponseDOM.style.fontSize = this.fontSize+"px";
+		this.quizTargetDOM.style.fontSize = this.fontSize+"px";
+		this.quizSelDOM.style.fontSize = this.fontSize+"px";
 		
 		console.log(this.window + " " + this.isQuiz);
-		if (this.isQuiz) {
-			this.humanIframe.width = (1-this.window) * w;
-			this.btnQuizClick();
-		}
-		else
-			this.humanIframe.width = w;
-			//this.btnQuizClick();
+		// if (this.isQuiz) {
+		// 	this.humanIframe.width = (1-this.window) * w;
+		// 	this.btnQuizClick();
+		// }
+		// else
+		this.humanIframe.width = w;
+		//this.btnQuizClick();
 		
 		this.humanIframe.setAttribute("style", "width:" + w + "px");
 		this.humanIframe.setAttribute("style", "height:" + h + "px");
-		if (this.isQuiz) {
-			this.humanQuiz.style.fontSize = (this.element.clientWidth / 30 + "px");
-		}
+		// if (this.isQuiz) {
+		// 	this.humanQuiz.style.fontSize = (this.element.clientWidth / 30 + "px");
+		// }
 		this.refresh(date);
 	},
 
@@ -395,7 +403,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.nextSelection();
 		} else {
 			//todo need to improve object string
-			this.quizResponseDOM.innerHTML = "Incorrect. That is" + object;
+			this.quizResponseDOM.innerHTML = "Incorrect. That is " + object;
 		}
 		
 	},
