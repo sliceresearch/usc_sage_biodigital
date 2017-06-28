@@ -8,8 +8,8 @@
 	"dependencies": [
 	],
 	"load": {
-	"value": "https://human.biodigital.com/widget/?be=1fLs&pre=false&background=255,255,255,51,64,77",
-	"dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb"
+	"value": "https://human.biodigital.com/widget/?be=1ud8&pre=false&background=255,255,255,51,64,77",
+	"dk": "<Your developer key>"
 	},
 	"title": "usc_biodigital",
 	"version": "1.0.2",
