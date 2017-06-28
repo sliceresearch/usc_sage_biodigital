@@ -1,0 +1,17 @@
+{ 	"name": "Posterior Quiz", 
+	"author": "Lee Daffin", 
+	"copyright": "USC 2017", 
+	"model": "https://human.biodigital.com/widget/?be=1ud8&pre=false",
+	"fontsize": 20, 
+	"window": 0.35, 
+	"number": 7,
+	"questions":[
+	    { "name": "Right scapula" },
+	    { "name": "Right ishial tuberosity" },
+	    { "name": "Left sciatic nerve" },
+	    { "name": "Left deltoid" },
+	    { "name": "Left extensor digitorum" },
+	    { "name": "Right gluteus medius" },
+	    { "name": "Right ulnar nerve" }
+	]
+}
