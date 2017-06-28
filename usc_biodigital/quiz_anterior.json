@@ -1,0 +1,17 @@
+{ 	"name": "Anterior Quiz", 
+	"author": "Lee Daffin", 
+	"copyright": "USC 2017", 
+	"model": "https://human.biodigital.com/widget/?be=1ud8&pre=false",
+	"fontsize": 20, 
+	"window": 0.35, 
+	"number": 7,
+	"questions":[
+	    { "name": "Right rectus femoris" },
+	    { "name": "Right tibialis anterior" },
+	    { "name": "Right orbicularis oculi" },
+	    { "name": "Left radius" },
+	    { "name": "Left greater trochanter" },
+	    { "name": "Talis" },
+	    { "name": "Left biceps brachii" }
+	] 
+}
