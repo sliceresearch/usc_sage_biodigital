@@ -5,6 +5,8 @@
 	"fontsize": 20, 
 	"window": 0.35, 
 	"number": 4,
+	"canSpin": false,
+	"canDissect": false,
 	"questions":[
 		{
 	        "id": "human_02_male_muscular_system-left_pectoralis_major_ID",

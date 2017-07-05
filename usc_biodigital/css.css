@@ -23,7 +23,16 @@ h3 {
   text-align: center;
 }
 
-#quizPanel {
+.quizMisses {
+  color: red;
+  font-weight: bold;
+}
+
+.quizClock {
+  font-weight: bold;
+}
+
+.quizPanel {
   width: 95%;
   position: absolute;
   top: 10px;
@@ -34,11 +43,11 @@ h3 {
   box-shadow: 3px 3px 5px rgba(0,0,0,0.15);
   display: none;
 }
-#quizResponse {
+.quizResponse {
   text-align: center;
   display: block;
 }
-#quizList{
+.quizList{
   padding: 30px;
   text-align: left;
   display: block;
@@ -56,14 +65,19 @@ button {
   border: 1px solid #ccc;
 }
 
-#quizNextBtn {
+.quizDisplaySeleced {
+  color: purple;
+  font-weight: bold;
+}
+
+.quizRestartBtn {
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 5px;
   background: none;
   border: 1px solid #ccc;
 }
-#quizNextBtn:hover {
+.quizRestartBtn:hover {
   background: #efefef;
 }
 .label-container-header>span {

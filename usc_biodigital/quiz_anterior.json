@@ -1,7 +1,7 @@
 { 	"name": "Anterior Quiz", 
 	"author": "Lee Daffin", 
 	"copyright": "USC 2017", 
-	"model": "https://human.biodigital.com/widget/?be=1ud8&pre=false",
+	"model": "https://human.biodigital.com/widget/?be=1wnw&pre=false&background=255,255,255,51,64,77&dk=",
 	"fontsize": 20, 
 	"window": 0.35, 
 	"number": 7,
