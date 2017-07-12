@@ -13,5 +13,6 @@
 	    { "name": "Left ischium" },
 	    { "name": "Left talus" },
 	    { "name": "Left biceps brachii" }
-	] 
+	] ,
+	"timeLimitMin": 10
 }

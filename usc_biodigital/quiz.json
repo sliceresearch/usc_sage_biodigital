@@ -20,5 +20,6 @@
 		{
 		"name": "right orbicularis oculi"
 		}
-	] 
+	],
+	"timeLimitMin": 10
 }

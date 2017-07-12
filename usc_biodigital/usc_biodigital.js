@@ -63,19 +63,20 @@ var usc_biodigital = SAGE2_App.extend({
 				<!-- display only after response -->
 				<h3 id="quizSel_${this.id}" class="quizSel"><b><span id="quizTarget_${this.id}" class="quizTarget"></span></b></h3>
 				<div id="quizItems_${this.id}" class="quizItems"><ul id="quizList_${this.id}" class="quizList"></ul></div>
-				<form id="questions-form_${this.id}" class="questions-form">
-					<button id="quizRestartBtn_${this.id}" class="quizRestartBtn">Restart Quiz</button>
-				</form>
 				<div id="quizClock_${this.id}" class="quizClock">Clock
-					<span id="min_${this.id}" class="min"></span>:
-					<span id="sec_${this.id}" class="sec"></span>
+					<span id="min_${this.id}" class="min">00</span>:
+					<span id="sec_${this.id}" class="sec">00</span>
+					<span id="quizMisses_${this.id}" class="quizMisses">Misses: 
+						<span id="misses_${this.id}" class="misses">00</span>
+					</span>
 				</div>
-				<div id="quizMisses_${this.id}" class="quizMisses">Misses: 
-					<span id="misses_${this.id}" class="misses"></span>
-				</div>
-				<div id="quizDisplaySelected_${this.id}" class="quizDisplaySelected">Last body part selected was:
+				<div id="quizDisplaySelected_${this.id}" class="quizDisplaySelected">Last selected:<br/>
 					<span id="quizLastSelected_${this.id}" class="quizLastSelected"></span>
 				</div>
+			</div>
+			<div id="brandingPanel">
+				<h4>Slice Profect 2017</h4>
+				<p>Coded by: Mark Utting, Svetlana Mandler, Levi Kotzur</p>
 			</div>`;
 
 		// DOM Elements
@@ -104,6 +105,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.missed = -1;
 		this.numQuestions = 0;
 		this.correctAnswers = 0;
+		this.quizTimeLimit = 0;
 		//this.lenName = 0;
 
 		// initialise our own object state.
@@ -164,18 +166,37 @@ var usc_biodigital = SAGE2_App.extend({
 		//console.log(this.controls.addButtonType);
 		this.enableControls = true;
 	},
+
+	checkTime: function(i) {
+	if (i < 10) {
+		i = "0" + i;
+	}
+	return i;
+	},
 		
 	startClock: function () {
 		var _this = this;
 		var totalSeconds = 0;
+		var min = 0;
+		var sec = 0;
 		
 		this.interval = setInterval(function () {
-		totalSeconds += 1;
+			totalSeconds += 1;
 
-		//document.getElementById("hour" + self.id).textContent = ("Time: " + Math.floor(totalSeconds / 3600) + " : ");
-		_this.quizMinDOM.textContent = Math.floor(totalSeconds / 60 % 60);
-		_this.quizSecDOM.textContent = parseInt(totalSeconds % 60);
+			min = Math.floor(totalSeconds / 60 % 60);
+			sec = parseInt(totalSeconds % 60);
+
+			//document.getElementById("hour" + self.id).textContent = ("Time: " + Math.floor(totalSeconds / 3600) + " : ");
+			_this.quizMinDOM.textContent = _this.checkTime(min);
+			_this.quizSecDOM.textContent = _this.checkTime(sec);
+			
+			// Stop clock at timelimit
+			if (_this.quizTimeLimit != 0 && min == _this.quizTimeLimit) {
+				_this.pauseClock();
+			}
 		}, 1000);
+		
+		
 	},
 
 	pauseClock: function () {
@@ -185,150 +206,159 @@ var usc_biodigital = SAGE2_App.extend({
 	},
   	  			  	  
 	btnQuizClick: function(){
-		// if (!this.isQuiz) {
-			var _this = this;
-			this.isQuiz = true;
-			// this.quizList = [];
-			this.missed = 0;
-			//reads quiz .json file and adds items to quizList
-			var quizPath = this.resrcPath + this.state.quizName+".json";
-			//	console.log(quizPath);
-			
-			
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function() {
-				if ( xhr.readyState === 4 ) {
-					if ( xhr.status === 200 || xhr.status === 0 ) {
-						var jsonObject = JSON.parse( xhr.responseText );
-						
-						var list = document.createElement('ul');
-						var obj = JSON.parse(xhr.responseText);
-						_this.window = obj.window;
-						_this.numQuestions = obj.number;
-
-						_this.quizResponseDOM.innerHTML = obj.name;
-						_this.quizTargetDOM.innerHTML = "Find all these items:";
-						
-						// console.log(_this.quizListDOM);
-						_this.QUIZ_OBJECTS = obj.questions;
-						// console.log(_this.QUIZ_OBJECTS);
-						_this.humanIframe.src = obj.model + _this.state.dk;
-						// console.log(_this.humanIframe.src);
-						
-						//var test = _this.element.clientWidth - _this.window * _this.element.clientWidth;
-						// divQuiz.width = _this.window * _this.element.clientWidth;
-						// _this.humanIframe.width = _this.element.clientWidth - divQuiz.width;
-					}
-				}
-			};
-				
-			xhr.open("GET", quizPath, false);
-			xhr.setRequestHeader("Content-Type", "text/plain");
-			xhr.send(null);
-			// changes iframe to the example quiz code widget
-			// todo load src from quiz.json model + dk
-			// declare objects to select
-
-			// a list of object selections
-			this.selectedIndex = 0;
-			this.quizResponseDOM.innerHTML = "Starting Quiz!";
-			this.quizPanelDOM.style.fontSize = this.fontSize + "px";
-			this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 +"px";
-			this.quizTargetDOM.style.fontSize = this.fontSize+"px";
-			this.quizSelDOM.style.fontSize = this.fontSize+"px";
-			this.quizListDOM.style.fontSize = this.fontSize+"px";
-			this.quizPanelDOM.style.display = "block";
-			
-			// get a random object in the list
-			function getRandomObject(objects) {
-				var object = objects[Math.floor(Math.random() * objects.length)];
-				return object;
-			}
-
-			// track human selection vs user selection
-			this.selectedObject = null;
-
-			// todo human reloads with model from quiz
-			this.human.send("scene.reset");
-			console.log("Quiz will start in 10 seconds.");
-			setTimeout(function(){
-				_this.quizSetup();
-			},(10*1000));
-			// this.human.on("human.ready", function(){
-			// 	_this.quizSetup();
-			// });
-		// }
-
-		// // listen to object pick event
-		// _this.human.on("scene.picked", function(event) {
-		// 	console.log("'scene.picked' event: " + JSON.stringify(event));
-		// 	var pickedObjectId = event.objectId;
-		// 	var pickedObject = sceneObjects[pickedObjectId];
-		// 	_this.setUserSelection(pickedObject);  
-		// });
-
-		// nextBtn.addEventListener('click', function(e) {
-		// 	// reset selections
-		// 	_this.human.send('scene.selectObjects', { replace: true });
-		// 	// reset camera and proceed to next
-		// 	_this.human.send('camera.reset', function() {
-		// 		_this.nextSelection();
-		// 	});
-		// 	// prevent submit
-		// 	e.preventDefault();
-		// });
-		
-		// old quiz code starts here
-		/*// read info for the quiz from quiz.json
+		if (this.isQuiz) {
+			this.pauseClock();
+			this.quizMinDOM.textContent = "00";
+			this.quizSecDOM.textContent = "00";
+			this.quizListDOM.innerHTML = "";
+		}
 		var _this = this;
+		this.isQuiz = true;
+		// this.quizList = [];
+		this.missed = 0;
+		//reads quiz .json file and adds items to quizList
+		var quizPath = this.resrcPath + this.state.quizName+".json";
+		//	console.log(quizPath);
 		
-		if (!_this.isQuiz) {
-			_this.isQuiz = true;
-			
-			var divQuiz = document.createElement('div');
-			divQuiz.id = "quizPanel" + this.id;
-			divQuiz.height = _this.humanIframe.height;
-			divQuiz.setAttribute("style", "float:right");	
-							
-			this.h = document.createElement('span');
-			this.h.id = "hour" + this.id;
-			this.h.style.color = "red";
-			divQuiz.appendChild(this.h);
-							
-			this.m = document.createElement('span');
-			this.m.id = "min" + this.id;
-			this.m.style.color = "red";
-			divQuiz.appendChild(this.m);
-			
-			this.s = document.createElement('span');
-			this.s.id = "sec" + this.id;
-			this.s.style.color = "red";
-			divQuiz.appendChild(this.s);	
-			
-			this.miss = document.createElement('p');
-			this.miss.id = "missed" + this.id;
-			this.miss.style.color = "red";
-			divQuiz.appendChild(this.miss);	
-			*/				 	  
-			
-			
-			
-			//	d3.select("#" + liName).attr("fill", "blue");;
-			//
-			//this.humanQuiz = divQuiz;
-			//this.element.appendChild(this.humanQuiz);
-			
-		//}	
+		
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if ( xhr.readyState === 4 ) {
+				if ( xhr.status === 200 || xhr.status === 0 ) {
+					var jsonObject = JSON.parse( xhr.responseText );
+					
+					var list = document.createElement('ul');
+					var obj = JSON.parse(xhr.responseText);
+					_this.window = obj.window;
+					_this.numQuestions = obj.number;
+					_this.quizTimeLimit = obj.timeLimitMin;
+
+					_this.quizResponseDOM.innerHTML = obj.name;
+					_this.quizTargetDOM.innerHTML = "Find all these items:";
+					
+					// console.log(_this.quizListDOM);
+					_this.QUIZ_OBJECTS = obj.questions;
+					// console.log(_this.QUIZ_OBJECTS);
+					_this.humanIframe.src = obj.model + _this.state.dk;
+					// console.log(_this.humanIframe.src);
+					
+					//var test = _this.element.clientWidth - _this.window * _this.element.clientWidth;
+					// divQuiz.width = _this.window * _this.element.clientWidth;
+					// _this.humanIframe.width = _this.element.clientWidth - divQuiz.width;
+				}
+			}
+		};
+		
+		xhr.open("GET", quizPath, false);
+		xhr.setRequestHeader("Content-Type", "text/plain");
+		xhr.send(null);
+		// changes iframe to the example quiz code widget
+		// todo load src from quiz.json model + dk
+		// declare objects to select
+
+		// a list of object selections
+		this.selectedIndex = 0;
+		this.quizResponseDOM.innerHTML = "Starting Quiz!";
+		this.quizPanelDOM.style.fontSize = this.fontSize + "px";
+		this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 +"px";
+		this.quizTargetDOM.style.fontSize = this.fontSize+"px";
+		this.quizSelDOM.style.fontSize = this.fontSize+"px";
+		this.quizListDOM.style.fontSize = this.fontSize+"px";
+		this.quizPanelDOM.style.display = "block";
+		
+		// get a random object in the list
+		function getRandomObject(objects) {
+			var object = objects[Math.floor(Math.random() * objects.length)];
+			return object;
+		}
+
+		// track human selection vs user selection
+		this.selectedObject = null;
+
+		// todo human reloads with model from quiz
+		this.human.send("scene.reset");
+		console.log("Quiz will start in 10 seconds.");
+		setTimeout(function(){
+			_this.quizSetup();
+		},(10*1000));
+		// this.human.on("human.ready", function(){
+		// 	_this.quizSetup();
+		// });
+	// }
+
+	// // listen to object pick event
+	// _this.human.on("scene.picked", function(event) {
+	// 	console.log("'scene.picked' event: " + JSON.stringify(event));
+	// 	var pickedObjectId = event.objectId;
+	// 	var pickedObject = sceneObjects[pickedObjectId];
+	// 	_this.setUserSelection(pickedObject);  
+	// });
+
+	// nextBtn.addEventListener('click', function(e) {
+	// 	// reset selections
+	// 	_this.human.send('scene.selectObjects', { replace: true });
+	// 	// reset camera and proceed to next
+	// 	_this.human.send('camera.reset', function() {
+	// 		_this.nextSelection();
+	// 	});
+	// 	// prevent submit
+	// 	e.preventDefault();
+	// });
+	
+	// old quiz code starts here
+	/*// read info for the quiz from quiz.json
+	var _this = this;
+	
+	if (!_this.isQuiz) {
+		_this.isQuiz = true;
+		
+		var divQuiz = document.createElement('div');
+		divQuiz.id = "quizPanel" + this.id;
+		divQuiz.height = _this.humanIframe.height;
+		divQuiz.setAttribute("style", "float:right");	
+						
+		this.h = document.createElement('span');
+		this.h.id = "hour" + this.id;
+		this.h.style.color = "red";
+		divQuiz.appendChild(this.h);
+						
+		this.m = document.createElement('span');
+		this.m.id = "min" + this.id;
+		this.m.style.color = "red";
+		divQuiz.appendChild(this.m);
+		
+		this.s = document.createElement('span');
+		this.s.id = "sec" + this.id;
+		this.s.style.color = "red";
+		divQuiz.appendChild(this.s);	
+		
+		this.miss = document.createElement('p');
+		this.miss.id = "missed" + this.id;
+		this.miss.style.color = "red";
+		divQuiz.appendChild(this.miss);	
+		*/				 	  
+		
+		
+		
+		//	d3.select("#" + liName).attr("fill", "blue");;
+		//
+		//this.humanQuiz = divQuiz;
+		//this.element.appendChild(this.humanQuiz);
 	},
 
 	quizSetup : function() {
 		var _this = this;
 		this.quizResponseDOM.innerHTML = "Quiz Started!";
-		this.quizMissesDOM.innerHTML = this.missed;
+		this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 		// disable labels + tooltips + annotations
 		// this.human.send("labels.setEnabled", {enable: false});
 		this.human.send("tooltips.setEnabled", {enable: false});
 		this.human.send("annotations.setShown", {enable: false});
+		this.human.send("camera.info", function(camera) {
+			// console.log("Gathering camera info:");
+			// console.log(JSON.stringify(camera));
+			_this.currentZoom = camera.zoom;
+		});
 
 		//todo add misses and hits
 	
@@ -500,7 +530,7 @@ var usc_biodigital = SAGE2_App.extend({
 		}
 		if (!isCorrect) {
 			this.missed++
-			this.quizMissesDOM.innerHTML = this.missed;
+			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 			incorrect.play();
 		};
 		// if (isCorrect) {
@@ -549,6 +579,10 @@ var usc_biodigital = SAGE2_App.extend({
 				// console.log(JSON.stringify(camera));
 				_this.currentZoom = camera.zoom;
 			});
+			
+			// Removing Navigation from Biodigital UI
+			var displayConfig = { all: false, info: false };
+			this.human.send("ui.setDisplay", displayConfig);
 		}
 
 		if (eventType === "pointerPress" && (data.button === "left")) {

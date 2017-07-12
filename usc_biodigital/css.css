@@ -20,7 +20,7 @@ h2 {
 }
 h3 {
   font-size: 36px;
-  text-align: center;
+  text-align: left;
 }
 
 .quizMisses {
@@ -33,15 +33,17 @@ h3 {
 }
 
 .quizPanel {
-  width: 95%;
+  width: 35%;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 2.5%;
+  right: 2.5%;
   background-color: white;
   padding: 10px 15px;
   border-radius: 4px;
   box-shadow: 3px 3px 5px rgba(0,0,0,0.15);
   display: none;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
 }
 .quizResponse {
   text-align: center;
@@ -89,4 +91,18 @@ button {
   height: 60px;
   line-height: 60px;
   font-size: 50px;
+}
+.container-header>span {
+    font-size: 160px;
+}
+#navigator-toggle.circular {
+  display: none;
+}
+#brandingPanel{
+  color: darkgrey;
+  padding: 10px;
+  position: relative;
+  height: 50px;
+  bottom: 110px;
+  width: 200px;
 }

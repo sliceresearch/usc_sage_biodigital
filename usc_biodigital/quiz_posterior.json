@@ -13,5 +13,6 @@
 	    { "name": "Left extensor digitorum" },
 	    { "name": "Right gluteus medius" },
 	    { "name": "Right ulnar nerve" }
-	]
+	],
+	"timeLimitMin": 10
 }
