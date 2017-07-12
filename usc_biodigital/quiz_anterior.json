@@ -1,7 +1,7 @@
 { 	"name": "Anterior Quiz", 
 	"author": "Lee Daffin", 
 	"copyright": "USC 2017", 
-	"model": "https://human.biodigital.com/widget/?be=1wnw&pre=false&background=255,255,255,51,64,77&dk=",
+	"model": "https://human.biodigital.com/widget/?be=1xLC&pre=false&background=255,255,255,51,64,77&dk=",
 	"fontsize": 20, 
 	"window": 0.35, 
 	"number": 7,
@@ -10,8 +10,9 @@
 	    { "name": "Right tibialis anterior" },
 	    { "name": "Right orbicularis oculi" },
 	    { "name": "Left radius" },
-	    { "name": "Left ischium" },
-	    { "name": "Left talus" },
+	    { "name": "Left femur" },
+	    { "name": "Left interosseous membrane of leg" },
 	    { "name": "Left biceps brachii" }
-	] 
+	] ,
+	"timeLimitMin": 10
 }

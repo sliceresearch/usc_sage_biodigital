@@ -1,7 +1,7 @@
 { 	"name": "Posterior Quiz", 
 	"author": "Lee Daffin", 
 	"copyright": "USC 2017", 
-	"model": "https://human.biodigital.com/widget/?be=1wnv&pre=false&background=255,255,255,51,64,77&dk=",
+	"model": "https://human.biodigital.com/widget/?be=1xL6&pre=false&background=255,255,255,51,64,77&dk=",
 	"fontsize": 20, 
 	"window": 0.35, 
 	"number": 7,
@@ -13,5 +13,6 @@
 	    { "name": "Left extensor digitorum" },
 	    { "name": "Right gluteus medius" },
 	    { "name": "Right ulnar nerve" }
-	]
+	],
+	"timeLimitMin": 10
 }
