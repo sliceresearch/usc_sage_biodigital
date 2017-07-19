@@ -26,3 +26,8 @@ setTimeout(function(){
 this.human.on("human.ready", function(){
     _this.quizSetup();
 });
+Tried code sugested by biodigital.
+human.on("scene.restored", function() {
+    _this.quizStetup();
+});
+returns error from human.rpc.enabledEvent.

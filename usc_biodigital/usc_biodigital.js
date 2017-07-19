@@ -56,6 +56,7 @@ var usc_biodigital = SAGE2_App.extend({
 		var source = `${this.state.value}&dk=${this.state.dk}`;
 		//console.log("developer key", source);
 		this.element.innerHTML = `<iframe id="${iframe_id}" src="${source}" width="600" height="1000">
+			<link type="text/css" href="${this.resrcPath}css.css" rel="stylesheet"></link>
 			</iframe>
 			<script src="https://developer.biodigital.com/builds/api/2/human-api.min.js"></script>
 			<div id="quizPanel_${this.id}" class="quizPanel">
@@ -75,8 +76,8 @@ var usc_biodigital = SAGE2_App.extend({
 				</div>
 			</div>
 			<div id="brandingPanel">
-				<h4>Slice Profect 2017</h4>
-				<p>Coded by: Mark Utting, Svetlana Mandler, Levi Kotzur</p>
+				<h4>SLICE Project 2017</h4>
+				<p>Mark Utting, Svetlana Mandler, Levi Kotzur, Jacqui Blake, Dion Keetley</p>
 			</div>`;
 
 		// DOM Elements
@@ -206,14 +207,16 @@ var usc_biodigital = SAGE2_App.extend({
 	},
   	  			  	  
 	btnQuizClick: function(){
-		if (this.isQuiz) {
+		if (this.beenQuiz) {
 			this.pauseClock();
 			this.quizMinDOM.textContent = "00";
 			this.quizSecDOM.textContent = "00";
 			this.quizListDOM.innerHTML = "";
+			this.correctAnswers = 0;
 		}
 		var _this = this;
 		this.isQuiz = true;
+		this.beenQuiz = true;
 		// this.quizList = [];
 		this.missed = 0;
 		//reads quiz .json file and adds items to quizList
@@ -229,6 +232,7 @@ var usc_biodigital = SAGE2_App.extend({
 					
 					var list = document.createElement('ul');
 					var obj = JSON.parse(xhr.responseText);
+					
 					_this.window = obj.window;
 					_this.numQuestions = obj.number;
 					_this.quizTimeLimit = obj.timeLimitMin;
@@ -249,7 +253,7 @@ var usc_biodigital = SAGE2_App.extend({
 			}
 		};
 		
-		xhr.open("GET", quizPath, false);
+		xhr.open("GET", quizPath, true);
 		xhr.setRequestHeader("Content-Type", "text/plain");
 		xhr.send(null);
 		// changes iframe to the example quiz code widget
@@ -277,11 +281,12 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// todo human reloads with model from quiz
 		this.human.send("scene.reset");
-		console.log("Quiz will start in 10 seconds.");
+		console.log("Quiz will start in 30 seconds.");
 		setTimeout(function(){
 			_this.quizSetup();
-		},(10*1000));
-		// this.human.on("human.ready", function(){
+		},(30*1000));
+		// console.log("Quiz will start when the scene is restored.");
+		// this.human.on("human.restored", function(){
 		// 	_this.quizSetup();
 		// });
 	// }
@@ -360,8 +365,6 @@ var usc_biodigital = SAGE2_App.extend({
 			_this.currentZoom = camera.zoom;
 		});
 
-		//todo add misses and hits
-	
 		for (var i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
 			var quizObject = _this.QUIZ_OBJECTS[i];
 			quizObject.count = 0;
@@ -555,6 +558,8 @@ var usc_biodigital = SAGE2_App.extend({
 		//this.element.removeChild(this.humanQuiz);
 		this.humanQuiz = null;
 		this.pauseClock();
+		var displayConfig = { all: false, info: false };
+		this.human.send("ui.setDisplay", displayConfig);
 	},
 
 	toCamelCase: function(str){
