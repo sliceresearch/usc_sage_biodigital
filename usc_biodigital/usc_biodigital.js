@@ -1,17 +1,17 @@
 //
 // SAGE2 application: usc_biodigital
 // by: Mark Utting <utting@usc.edu.au>
+//     Svetlana Mandler
+//     Levi Kotzur <lkotzur@usc.edu.au>
 //
 // Copyright (c) 2016
-//
 
 "use strict";
 
 /* global HumanAPI */
 var IFRAME_ID = 'embedded-human';
 var PAN_STEP = 1.0;
-// For Quiz
-// a list of scene objects
+// For Quiz": a list of scene objects
 var sceneObjects = {};
 
 
@@ -20,7 +20,6 @@ var usc_biodigital = SAGE2_App.extend({
 		// Create div into the DOM
 		this.SAGE2Init("div", data);
 		this.data = data;
-		
 		this.tool = "highlight"; // default tool
 		
 		// load the BioDigital HumanAPI
