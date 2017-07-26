@@ -107,6 +107,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.correctAnswers = 0;
 		this.quizTimeLimit = 0;
 		//this.lenName = 0;
+		this.correctList = [];
 
 		// initialise our own object state.
 		this.currentZoom = 0.3;
@@ -212,6 +213,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.quizSecDOM.textContent = "00";
 			this.quizListDOM.innerHTML = "";
 			this.correctAnswers = 0;
+			this.quizListDOM.style.color = "black";
 		}
 		var _this = this;
 		this.isQuiz = true;
@@ -508,6 +510,8 @@ var usc_biodigital = SAGE2_App.extend({
 	submitClick: function(object) {
 		// check if quiz selection matches user selection
 		var isCorrect = false;
+		var isCorrectOut = false;
+		var answerObject;
 		// console.log(this.selectedObject);
 		// console.log(object, this.selectedObject.id, isCorrect);
 
@@ -518,19 +522,26 @@ var usc_biodigital = SAGE2_App.extend({
 		for (var i = 0; i < this.QUIZ_OBJECTS.length; i++) {
 			var objectItem = this.QUIZ_OBJECTS[i];
 			isCorrect = this.matchNames(object, objectItem.id);
-			if (isCorrect) {
+			if (this.correctList.indexOf(objectItem) > -1) {
 				this.answer = document.getElementById(objectItem.id+this.id);
 				this.answer.style.color = "green";
-				this.correctAnswers++;
-				// console.log(this.QUIZ_OBJECTS);
-				objectItem.found = true;
-				// console.log(this.QUIZ_OBJECTS);
-				// console.log(this.id);
-				correct.play();
-				break;
+			};
+			if (isCorrect){
+				answerObject = objectItem;
+				isCorrectOut = true;
 			};
 		}
-		if (!isCorrect) {
+		if (isCorrectOut) {
+			this.answer = document.getElementById(answerObject.id+this.id);
+			this.answer.style.color = "green";
+			this.correctAnswers++;
+			this.correctList.push(answerObject);
+			// console.log(this.QUIZ_OBJECTS);
+			answerObject.found = true;
+			// console.log(this.QUIZ_OBJECTS);
+			// console.log(this.id);
+			correct.play();
+		} else if (!isCorrect) {
 			this.missed++
 			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 			incorrect.play();
@@ -569,8 +580,8 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 	
 	event: function(eventType, position, user_id, data, date) {
-		//console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
-		//		eventType, position, user_id, data, this.dragging);
+		// console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
+		// 		eventType, position, user_id, data, this.dragging);
 		//console.log(eventType, data.identifier);
 		if (!('human' in this)) {
 			// NOTE: we append this.id so that each instance has a unique id.
@@ -600,8 +611,8 @@ var usc_biodigital = SAGE2_App.extend({
 				this.dragging = true;
 				this.dragFromX = position.x;
 				this.dragFromY = position.y;
-			} else if (this.inButton(posX, posY, "quizRestartBtn")){
-				console.log("You got the Quiz Restart button");
+			// } else if (this.inButton(posX, posY, "quizRestartBtn")){
+			// 	console.log("You got the Quiz Restart button");
 			} else {
 		    	_this.human.send("scene.pick", { x: posX, y: posY}, function (hit) {
 					if (hit) {
@@ -627,10 +638,9 @@ var usc_biodigital = SAGE2_App.extend({
 								var quizClock = _this.interval;
 								console.log(quizClock);
 								_this.pauseClock();
-								var win = document.createElement("li");
-								win.style.color = "green";
-								win.appendChild(document.createTextNode("YOU WIN!"));
-								_this.quizListDOM.appendChild(win);	
+								_this.quizListDOM.style.fontSize = (_this.fontSize*5)+"px";
+								_this.quizListDOM.style.color = "green";
+								_this.quizListDOM.innerHTML = "YOU WIN!!!";	
 								// var misses = document.createElement("li");
 								// misses.style.color = "red";
 								// misses.appendChild(document.createTextNode("Misses: "+_this.missed));
