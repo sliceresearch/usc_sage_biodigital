@@ -9,7 +9,7 @@
 	],
 	"load": {
 		"value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
-		"dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+		"dk": "<Your Developer Key>",
 		"quizName": "quiz_anterior"
 	},
 	"title": "usc_biodigital",

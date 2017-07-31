@@ -4,6 +4,17 @@
 //     Svetlana Mandler
 //     Levi Kotzur <lkotzur@usc.edu.au>
 //
+// This app extends BioDigital Human to support timed quizzes.
+// The widgets have the following behaviour:
+//    "post" / "ante" loads .json file and starts to load that model.
+//    "start" should be done after model is fully loaded.
+//                (cannot find a way to automate this in the API).
+//           It matches .json body part names to the model body part IDs.
+//           It displays the quiz panel and the items.
+//           It starts the clock timer and sets misses to zero.
+//    "stop" stops the counter, leaving display unchanged.
+//           And prevents users answering more questions.
+//
 // Copyright (c) 2016
 
 "use strict";
@@ -95,7 +106,7 @@ var usc_biodigital = SAGE2_App.extend({
 		//console.log(this.humanIframe);
 						
 		this.humanQuiz = null;
-		this.isQuiz = false;
+		this.isQuizRunning = false;
 		this.window = 0.0;
 		this.interval = 0;
 		this.fontSize = this.element.clientHeight * 0.015;
@@ -105,9 +116,6 @@ var usc_biodigital = SAGE2_App.extend({
 		this.missed = -1;
 		this.numQuestions = 0;
 		this.correctAnswers = 0;
-		this.quizTimeLimit = 0;
-		//this.lenName = 0;
-		this.correctList = [];
 
 		// initialise our own object state.
 		this.currentZoom = 0.3;
@@ -120,6 +128,8 @@ var usc_biodigital = SAGE2_App.extend({
 		//
 		// Control the frame rate for an animation application
 		this.maxFPS = 2.0;
+		// Set up the default quiz
+		this.quizSetup();
 	},
 		
 	addWidgetButtons: function() {
@@ -128,7 +138,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.controls.addButton({type: "reset", position: 1, identifier: "Reset", label: "Reset"});
 		this.controls.addButton({type: "quizAnte", position: 4, identifier: "Ante", label: "Ante"});
 		this.controls.addButton({type: "quizPost", position: 10, identifier: "Post", label: "Post"});
-		this.controls.addButton({type: "quizReset", position: 7, identifier: "All", label: "All"});
+		this.controls.addButton({type: "quizStart", position: 7, identifier: "Start", label: "Start"});
 		/*
 		this.controls.addButton({type: "play", position: 1, identifier: "PlayButton", label: "Play"});
 		this.controls.addButton({type: "play-pause", position: 2, identifier: "play-pause"});
@@ -193,7 +203,7 @@ var usc_biodigital = SAGE2_App.extend({
 			_this.quizSecDOM.textContent = _this.checkTime(sec);
 			
 			// Stop clock at timelimit
-			if (_this.quizTimeLimit != 0 && min == _this.quizTimeLimit) {
+			if (min === _this.quizTimeLimit) {
 				_this.pauseClock();
 			}
 		}, 1000);
@@ -207,8 +217,8 @@ var usc_biodigital = SAGE2_App.extend({
 	    delete this.interval;
 	},
   	  			  	  
-	btnQuizClick: function(){
-		if (this.beenQuiz) {
+	quizSetup: function(){
+		if (this.quizBeenSetup) {
 			this.pauseClock();
 			this.quizMinDOM.textContent = "00";
 			this.quizSecDOM.textContent = "00";
@@ -217,22 +227,16 @@ var usc_biodigital = SAGE2_App.extend({
 			this.quizListDOM.style.color = "black";
 		}
 		var _this = this;
-		this.isQuiz = true;
-		this.beenQuiz = true;
-		// this.quizList = [];
+		this.quizBeenSetup = true;
 		this.missed = 0;
+		this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 		//reads quiz .json file and adds items to quizList
 		var quizPath = this.resrcPath + this.state.quizName + ".json";
-		//	console.log(quizPath);
-		
 		
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if ( xhr.readyState === 4 ) {
 				if ( xhr.status === 200 || xhr.status === 0 ) {
-					var jsonObject = JSON.parse( xhr.responseText );
-					
-					var list = document.createElement('ul');
 					var obj = JSON.parse(xhr.responseText);
 					
 					_this.window = obj.window;
@@ -242,23 +246,21 @@ var usc_biodigital = SAGE2_App.extend({
 					_this.quizResponseDOM.innerHTML = obj.name;
 					_this.quizTargetDOM.innerHTML = "Find all these items:";
 					
-					// console.log(_this.quizListDOM);
 					_this.QUIZ_OBJECTS = obj.questions;
-					// _this.humanIframe.src = obj.model + _this.state.dk;
-					
-					//var test = _this.element.clientWidth - _this.window * _this.element.clientWidth;
-					// divQuiz.width = _this.window * _this.element.clientWidth;
-					// _this.humanIframe.width = _this.element.clientWidth - divQuiz.width;
+					_this.model = obj.model + _this.state.dk;
+					_this.humanIframe.src = obj.model;
 				}
 			}
 		};
 		
 		xhr.open("GET", quizPath, true);
 		xhr.setRequestHeader("Content-Type", "text/plain");
-		xhr.send(null);
-		// changes iframe to the example quiz code widget
-		// todo load src from quiz.json model + dk
-		// declare objects to select
+		xhr.send(null);	
+	},
+
+	quizStart : function() {
+		var _this = this;
+		this.isQuizRunning = true;
 
 		// a list of object selections
 		this.selectedIndex = 0;
@@ -268,76 +270,9 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizTargetDOM.style.fontSize = this.fontSize+"px";
 		this.quizSelDOM.style.fontSize = this.fontSize+"px";
 		this.quizListDOM.style.fontSize = this.fontSize+"px";
+		this.quizListDOM.innerHTML = "";
 		this.quizPanelDOM.style.display = "block";
 
-		// track human selection vs user selection
-		this.selectedObject = null;
-
-		// todo human reloads with model from quiz
-		// this.human.send("scene.reset");
-		console.log(this.QUIZ_OBJECTS);
-		console.log("Quiz will start in 5 seconds.");
-		setTimeout(function(){
-			_this.quizSetup();
-		},(5*1000));
-		
-		// console.log("Quiz will start when the scene is ready.");
-		// this.human.on("human.ready", function(){
-		// 	_this.quizSetup();
-		// });
-		// }
-
-		// // listen to object pick event
-		// _this.human.on("scene.picked", function(event) {
-		// 	console.log("'scene.picked' event: " + JSON.stringify(event));
-		// 	var pickedObjectId = event.objectId;
-		// 	var pickedObject = sceneObjects[pickedObjectId];
-		// 	_this.setUserSelection(pickedObject);  
-		// });
-		
-		// old quiz code starts here
-		/*// read info for the quiz from quiz.json
-		var _this = this;
-		
-		if (!_this.isQuiz) {
-			_this.isQuiz = true;
-			
-			var divQuiz = document.createElement('div');
-			divQuiz.id = "quizPanel" + this.id;
-			divQuiz.height = _this.humanIframe.height;
-			divQuiz.setAttribute("style", "float:right");	
-							
-			this.h = document.createElement('span');
-			this.h.id = "hour" + this.id;
-			this.h.style.color = "red";
-			divQuiz.appendChild(this.h);
-							
-			this.m = document.createElement('span');
-			this.m.id = "min" + this.id;
-			this.m.style.color = "red";
-			divQuiz.appendChild(this.m);
-			
-			this.s = document.createElement('span');
-			this.s.id = "sec" + this.id;
-			this.s.style.color = "red";
-			divQuiz.appendChild(this.s);	
-			
-			this.miss = document.createElement('p');
-			this.miss.id = "missed" + this.id;
-			this.miss.style.color = "red";
-			divQuiz.appendChild(this.miss);	
-			*/				 	  
-			
-			
-			
-			//	d3.select("#" + liName).attr("fill", "blue");;
-			//
-			//this.humanQuiz = divQuiz;
-			//this.element.appendChild(this.humanQuiz);
-	},
-
-	quizSetup : function() {
-		var _this = this;
 		this.quizResponseDOM.innerHTML = "Quiz Started!";
 		console.log("Quiz started!");
 		this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
@@ -416,9 +351,9 @@ var usc_biodigital = SAGE2_App.extend({
 		this.parent.changeTool();
 	},*/
 		
-	changeTool: function(){
-		this.human.send("scene.pickingMode", this.tool);
-	    
+	changeTool: function(tool){
+		this.human.send("scene.pickingMode", tool);
+		this.tool = tool;
 	    this.human.on("scene.pickingModeUpdated", function(event) {
 			console.log("Enabling " + event.pickingMode + " mode. Click to " + event.pickingMode + " an object");
 		});
@@ -442,21 +377,12 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizTargetDOM.style.fontSize = this.fontSize+"px";
 		this.quizSelDOM.style.fontSize = this.fontSize+"px";
 		this.quizListDOM.style.fontSize = this.fontSize+"px";
-		
-		console.log(this.window + " " + this.isQuiz);
-		// if (this.isQuiz) {
-		// 	this.humanIframe.width = (1-this.window) * w;
-		// 	this.btnQuizClick();
-		// }
-		// else
+
 		this.humanIframe.width = w;
-		//this.btnQuizClick();
+		//this.quizSetup();
 		
 		this.humanIframe.setAttribute("style", "width:" + w + "px");
 		this.humanIframe.setAttribute("style", "height:" + h + "px");
-		// if (this.isQuiz) {
-		// 	this.humanQuiz.style.fontSize = (this.element.clientWidth / 30 + "px");
-		// }
 		this.refresh(date);
 	},
 
@@ -470,12 +396,9 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	submitClick: function(object) {
+		// Object is the ID of the body part clicked on
 		// check if quiz selection matches user selection
-		var isCorrect = false;
 		var isCorrectOut = false;
-		var answerObject;
-		// console.log(this.selectedObject);
-		// console.log(object, this.selectedObject.id, isCorrect);
 
 		// audio
 		var correct = new Audio(this.resrcPath + "correct_sound.wav");
@@ -483,28 +406,19 @@ var usc_biodigital = SAGE2_App.extend({
 
 		for (var i = 0; i < this.QUIZ_OBJECTS.length; i++) {
 			var objectItem = this.QUIZ_OBJECTS[i];
-			isCorrect = this.matchNames(object, objectItem.id);
-			if (this.correctList.indexOf(objectItem) > -1) {
-				this.answer = document.getElementById(objectItem.id+this.id);
-				this.answer.style.color = "green";
-			};
-			if (isCorrect){
-				answerObject = objectItem;
+			if (this.matchNames(object, objectItem.id)){
 				isCorrectOut = true;
+				if (!(objectItem.found)) {
+					this.answer = document.getElementById(answerObject.id+this.id);
+					this.answer.style.color = "green";
+					this.correctAnswers++;
+					correct.play();
+					objectItem.found = true;
+				};
 			};
-		}
-		if (isCorrectOut) {
-			this.answer = document.getElementById(answerObject.id+this.id);
-			this.answer.style.color = "green";
-			this.correctAnswers++;
-			this.correctList.push(answerObject);
-			// console.log(this.QUIZ_OBJECTS);
-			answerObject.found = true;
-			// console.log(this.QUIZ_OBJECTS);
-			// console.log(this.id);
-			correct.play();
-		} else if (!isCorrect) {
-			this.missed++
+		};
+		if (!isCorrectOut) {
+			this.missed++;
 			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 			incorrect.play();
 		};
@@ -512,10 +426,10 @@ var usc_biodigital = SAGE2_App.extend({
 
 	reset: function() {
 		this.human.send("scene.reset");
-		this.changeTool();
+		this.changeTool("default");
 		// this.pointerTypeRadioButton.value = "Sel";
 		// this.viewTypeRadioButton.value = "Norm";
-		this.isQuiz = false;
+		this.isQuizRunning = false;
 		this.quizPanelDOM.style.display = "none";
 		this.quizListDOM.innerHTML = "";
 		this.humanIframe.width = this.element.clientWidth;
@@ -527,7 +441,7 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	restartAllQuiz: function() {
-		this.isQuiz = false;
+		this.isQuizRunning = false;
 		for (i = 0; i++; i < 10) {
 			document.getElementById("quizPanel_app" + i) = "none";
 			document.getElementById("quizList_app" + i) = "";
@@ -556,19 +470,17 @@ var usc_biodigital = SAGE2_App.extend({
 			//console.log('usc_biodigital> CREATED human:', this.human, 'this.id=', this.id);
 			var _this = this;
 			this.human.send("camera.info", function(camera) {
-				// console.log("Gathering camera info:");
-				// console.log(JSON.stringify(camera));
 				_this.currentZoom = camera.zoom;
 			});
-			
 			// Removing Navigation from Biodigital UI
 			var displayConfig = { all: false, info: false };
 			this.human.send("ui.setDisplay", displayConfig);
-		} else if ('human' in this && !(this.beenQuiz)){
-			this.human.on("human.ready", function() {
-				_this.btnQuizClick();
-			});
-		};
+		}
+		// } else if ('human' in this && !(this.quizBeenSetup)){
+		// 	this.human.on("human.ready", function() {
+		// 		_this.quizSetup();
+		// 	});
+		// };
 
 		if (eventType === "pointerPress" && (data.button === "left")) {
 			//console.log("TEST x:" + position.x + " y: " + position.y);	
@@ -587,7 +499,7 @@ var usc_biodigital = SAGE2_App.extend({
 						var obj = JSON.parse(JSON.stringify(hit))
 						var str = obj.objectId;
 						// console.log("Hit: " + JSON.stringify(hit));
-						if (_this.isQuiz){
+						if (_this.isQuizRunning){
 							_this.submitClick(str);
 							// console.log("Hit Submited " + str);
 							var str1 = str.split("-");
@@ -601,14 +513,13 @@ var usc_biodigital = SAGE2_App.extend({
 						} else {
 							//el.style.backgroundColor = "purple";
 							// finish quiz
-							if (_this.correctAnswers == _this.numQuestions && _this.isQuiz){
-								_this.isQuiz = false;
+							if (_this.correctAnswers == _this.numQuestions && _this.isQuizRunning){
+								_this.isQuizRunning = false;
 								var quizClock = _this.interval;
-								console.log(quizClock);
 								_this.pauseClock();
 								_this.quizListDOM.style.fontSize = (_this.fontSize*5)+"px";
 								_this.quizListDOM.style.color = "green";
-								_this.quizListDOM.innerHTML = "YOU WIN!!!";	
+								_this.quizListDOM.innerHTML = "Success!";	
 								// var misses = document.createElement("li");
 								// misses.style.color = "red";
 								// misses.appendChild(document.createTextNode("Misses: "+_this.missed));
@@ -634,12 +545,6 @@ var usc_biodigital = SAGE2_App.extend({
 								// }
 								// xhr.send(null);	
 							};
-						};
-					};
-					if (!hit) {
-						if (_this.isQuiz){
-							//_this.missed++;
-							//document.getElementById("missed" + _this.id).textContent = "Missed: " + _this.missed;
 						};
 					};
 				});
@@ -703,7 +608,7 @@ var usc_biodigital = SAGE2_App.extend({
 					break;
 				case "Quiz":
 					console.log("Quiz started!");
-					this.btnQuizClick();
+					this.quizSetup();
 					break;
 				case "PlayButton":
 					console.log('usc_biodigital> Play Widget');
@@ -724,16 +629,20 @@ var usc_biodigital = SAGE2_App.extend({
 				case "Ante":
 					console.log("usc_biodigital> Starting Anterior Quiz");
 					this.state.quizName = "quiz_anterior";
-					this.btnQuizClick();
+					this.quizSetup();
+					this.reset();
+					this.quizBeenSetup = false;
 					break;
 				case "Post":
 					console.log("usc_biodigital> Starting Posterior Quiz");
 					this.state.quizName = "quiz_posterior";
-					this.btnQuizClick();
+					this.quizSetup();
+					this.reset();
+					this.quizBeenSetup = false;
 					break;
-				case "All":
-					console.log("usc_biodigital> Restarting all quizzes");
-					this.restartAllQuiz();
+				case "Start":
+					console.log("usc_biodigital> Starting the quiz");
+					this.quizStart();
 					break;
 				case "ViewType":
 					console.log(data.value);
@@ -760,19 +669,16 @@ var usc_biodigital = SAGE2_App.extend({
 				case "PointerType":
 					switch (data.value) {
 						case "Sel":
-							this.tool = "highlight";
 							console.log('usc_biodigital> Select Option');
-							this.changeTool();
+							this.changeTool("highlight");
 							break;
 						case "Dis":
-							this.tool = "dissect";
 							console.log('usc_biodigital> Dissect Option');
-							this.changeTool();
+							this.changeTool("dissect");
 							break;
 						case "Spin":
-							this.tool = "default";
 							console.log('usc_biodigital> Spin Option');
-							this.changeTool();
+							this.changeTool("default");
 							break;
 						default:
 							console.log("Error: unknown option");
@@ -808,12 +714,12 @@ var usc_biodigital = SAGE2_App.extend({
 						case "Ante":
 							console.log("usc_biodigital> Starting Anterior Quiz");
 							this.state.quizName = "quiz_anterior";
-							this.btnQuizClick();
+							this.quizSetup();
 							break;
 						case "Post":
 							console.log("usc_biodigital> Starting Posterior Quiz");
 							this.state.quizName = "quiz_posterior";
-							this.btnQuizClick();
+							this.quizSetup();
 							break;
 						default:
 							console.log("Error: unkown quiz");
