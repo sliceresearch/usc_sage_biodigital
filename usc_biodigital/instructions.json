@@ -13,7 +13,7 @@
 		"quizName": "quiz_anterior"
 	},
 	"title": "usc_biodigital",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "SAGE2 application usc_biodigital",
 	"keywords": [ "sage2", "usc_biodigital" ],
 	"author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
