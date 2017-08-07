@@ -102,8 +102,6 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizMinDOM = document.getElementById("min_" + this.id);
 		this.quizSecDOM = document.getElementById("sec_" + this.id);
 		this.humanIframe = document.getElementById(iframe_id);
-
-		//console.log(this.humanIframe);
 						
 		this.humanQuiz = null;
 		this.isQuizRunning = false;
@@ -245,7 +243,7 @@ var usc_biodigital = SAGE2_App.extend({
 					
 					_this.QUIZ_OBJECTS = obj.questions;
 					_this.model = obj.model + _this.state.dk;
-					_this.humanIframe.src = obj.model;
+					_this.humanIframe.src = _this.model;
 				}
 			}
 		};
