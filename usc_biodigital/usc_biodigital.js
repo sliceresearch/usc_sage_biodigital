@@ -31,8 +31,9 @@ var usc_biodigital = SAGE2_App.extend({
 		// Create div into the DOM
 		this.SAGE2Init("div", data);
 		this.data = data;
-		this.tool = "highlight"; // default tool
-		
+		this.defaultTool = "highlight"; // default tool
+		this.tool = this.defaultTool;
+
 		// load the BioDigital HumanAPI
 		var s = document.createElement('script');
 		s.type = 'text/javascript';
@@ -269,7 +270,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizPanelDOM.style.display = "block";
 
 		this.quizResponseDOM.innerHTML = "Quiz Started!";
-		console.log("Quiz started!");
+		console.log("Quiz started!", this.tool);
 		this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 		// disable labels + tooltips + annotations
 		// this.human.send("labels.setEnabled", {enable: false});
@@ -347,13 +348,14 @@ var usc_biodigital = SAGE2_App.extend({
 	},*/
 		
 	changeTool: function(tool){
+		var oldTool = this.tool;
 		this.human.send("scene.pickingMode", tool);
 		this.tool = tool;
 	    this.human.on("scene.pickingModeUpdated", function(event) {
-			console.log("Enabling " + event.pickingMode + " mode. Click to " + event.pickingMode + " an object");
+			console.log("changed tool to " + event.pickingMode + " (from " + oldTool + ")");
 		});
 	},
-		
+
 	load: function(date) {
 		console.log('usc_biodigital> Load with state value', this.state.value);
 		this.refresh(date);
@@ -404,7 +406,7 @@ var usc_biodigital = SAGE2_App.extend({
 			if (this.matchNames(object, objectItem.id)){
 				isCorrectOut = true;
 				if (!(objectItem.found)) {
-					this.answer = document.getElementById(answerObject.id+this.id);
+					this.answer = document.getElementById(objectItem.id+this.id);
 					this.answer.style.color = "green";
 					this.correctAnswers++;
 					correct.play();
@@ -421,7 +423,7 @@ var usc_biodigital = SAGE2_App.extend({
 
 	reset: function() {
 		this.human.send("scene.reset");
-		this.changeTool("default");
+		this.changeTool(this.defaultTool);
 		// this.pointerTypeRadioButton.value = "Sel";
 		// this.viewTypeRadioButton.value = "Norm";
 		this.isQuizRunning = false;
