@@ -105,11 +105,12 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizMinDOM = document.getElementById("min_" + this.id);
 		this.quizSecDOM = document.getElementById("sec_" + this.id);
 		this.humanIframe = document.getElementById(iframe_id);
-						
-		this.humanQuiz = null;
+
+		this.quizName = null;
+		this.setQuizState("Quiz Unknown");
 		this.isQuizRunning = false;
 		this.window = 0.0;
-		this.interval = 0;
+		this.interval = 0; // not a valid timer ID.
 		this.fontSize = this.element.clientHeight * 0.015;
 		this.missed = -1;
 		this.numQuestions = 0;
@@ -128,8 +129,84 @@ var usc_biodigital = SAGE2_App.extend({
 		this.maxFPS = 2.0;
 		// Set up the default quiz
 		this.quizSetup();
+		this.invariant();
 	},
-		
+
+	// private helper function
+	getQuizState: function() {
+		// currently, we use this visible-on-screen field for the quiz state.
+		return this.quizResponseDOM.innerHTML;
+	},
+
+	// private helper function
+	setQuizState: function(state) {
+		this.quizResponseDOM.innerHTML = state;
+	},
+
+	// This checks the invariant properties of the current quiz state.
+	invariant: function() {
+		var qState = this.getQuizState();
+		switch (qState) {
+		  case "Quiz Unknown":
+			// only at the very start of the program.
+			this.assertEquals(null, this.quizName);
+			break;
+
+		  case "Quiz Loaded":
+			// the quiz name and item names (but not IDs) are known.
+			this.assertTrue(typeof(this.quizName) == "string", "quizName");
+			this.assertEquals(7, this.QUIZ_OBJECTS.length);
+			break;
+
+		  case "Quiz Ready":
+			// all quiz details are known, including item IDs.
+			this.assertEquals(7, this.QUIZ_OBJECTS.length); // ONLY FOR LFS122 QUIZZES
+			this.assertEquals(this.numQuestions, this.QUIZ_OBJECTS.length);
+			this.assertTrue(typeof(this.QUIZ_OBJECTS[0].id) === "string", "QUIZ_OBJECTS[0].id");
+			this.assertEquals(0, this.interval);
+			break;
+
+		  case "Quiz Started":
+		  case "Anterior Quiz":
+		  case "Posterior Quiz":
+			// quiz is running, with timer ticking.
+			console.log(typeof(this.interval));
+			this.assertTrue(this.interval !== 0, "interval");
+			break;
+
+		  case "Quiz Stopped":
+			// quiz has stopped (but still displayed) and timer is stopped.
+			this.assertEquals(0, this.interval);
+			break;
+
+		default:
+			this.showError("Illegal quiz state: " + qState);
+		}
+	},
+
+	// private helper function for assertions.
+	assertTrue: function(truth, msg) {
+		if (!truth) {
+			this.showError("incorrect " + msg);
+		}
+	},
+
+	// private helper function for assertions.
+	assertEquals: function(expected, actual) {
+		if (expected !== actual) {
+			this.showError("Expected " + expected + " !== " + actual);
+		}
+	},
+
+	showError: function (msg) {
+		var err = "ASSERT ERROR: " + msg;
+		console.log(err);
+		// we also show error messages on the quiz panel (temporarily?)
+		this.quizTargetDOM.innerHTML = err;
+		// and (in development mode) throw an exception:
+		throw err;
+	},
+
 	addWidgetButtons: function() {
 
 		// adding widget buttons
@@ -177,13 +254,15 @@ var usc_biodigital = SAGE2_App.extend({
 		this.enableControls = true;
 	},
 
+	// private helper function that pads out a given number to two digits.
 	checkTime: function(i) {
 		if (i < 10) {
 			i = "0" + i;
 		}
 		return i;
 	},
-		
+
+	// private helper function to start the clock ticking.
 	startClock: function () {
 		var _this = this;
 		var totalSeconds = 0;
@@ -208,13 +287,16 @@ var usc_biodigital = SAGE2_App.extend({
 		}, 1000);
 	},
 
+	// private helper function to stop the clock.
 	pauseClock: function () {
 		//console.log(this.interval);
-	    clearInterval(this.interval);
-		delete this.interval;
-		this.quizResponseDOM.innerHTML = "Quiz Stopped";
+		if (this.interval !== 0) {
+		    clearInterval(this.interval);
+			this.interval = 0;
+		}
+		this.setQuizState("Quiz Stopped");
 	},
-  	  			  	  
+
 	quizSetup: function(){
 		if (this.quizBeenSetup) {
 			this.pauseClock();
@@ -241,7 +323,8 @@ var usc_biodigital = SAGE2_App.extend({
 					_this.numQuestions = obj.number;
 					_this.quizTimeLimit = obj.timeLimitMin;
 
-					_this.quizResponseDOM.innerHTML = obj.name;
+					_this.quizName = obj.name;
+					_this.setQuizState("Quiz Loaded");
 					_this.quizTargetDOM.innerHTML = "Find all these items:";
 					
 					_this.QUIZ_OBJECTS = obj.questions;
@@ -249,11 +332,13 @@ var usc_biodigital = SAGE2_App.extend({
 					_this.humanIframe.src = _this.model;
 				}
 			}
+			_this.invariant();
 		};
 		
 		xhr.open("GET", quizPath, true);
 		xhr.setRequestHeader("Content-Type", "text/plain");
-		xhr.send(null);	
+		xhr.send(null);
+		this.invariant();
 	},
 
 	quizStart : function() {
@@ -262,7 +347,9 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// a list of object selections
 		this.selectedIndex = 0;
-		this.quizResponseDOM.innerHTML = "Setting up Quiz...";
+		// this.quizResponseDOM.innerHTML = "Setting up Quiz..."; ???
+		// TODO: check that quiz has not already been started?
+
 		this.quizPanelDOM.style.fontSize = this.fontSize + "px";
 		this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 +"px";
 		this.quizTargetDOM.style.fontSize = this.fontSize+"px";
@@ -330,13 +417,15 @@ var usc_biodigital = SAGE2_App.extend({
 					li.appendChild(document.createTextNode(_this.QUIZ_OBJECTS[i].name + "\n"));
 					_this.quizListDOM.appendChild(li);
 				}
+				_this.invariant();
 			});
-			_this.quizResponseDOM.innerHTML = "Quiz Started!";
 			_this.startClock();
+			_this.setQuizState("Quiz Started"); // or _this.quizName
 		});
+		this.invariant();
 	},
 
-	// For Quiz
+	// private helper function, for Quiz
 	// returns if a names match or contains b as a substring
 	matchNames: function(a, b){
 		return a === b || a.trim().toLowerCase().indexOf(b.trim().toLowerCase()) > -1;
@@ -349,7 +438,8 @@ var usc_biodigital = SAGE2_App.extend({
 		this.parent.human.send("input.enable");
 		this.parent.changeTool();
 	},*/
-		
+
+	// private helper function
 	changeTool: function(tool){
 		var oldTool = this.tool;
 		this.getHumanAPI().send("scene.pickingMode", tool);
@@ -362,6 +452,7 @@ var usc_biodigital = SAGE2_App.extend({
 	load: function(date) {
 		console.log('usc_biodigital> Load with state value', this.state.value);
 		this.refresh(date);
+		this.invariant();
 	},
 
 	draw: function(date) {
@@ -384,11 +475,13 @@ var usc_biodigital = SAGE2_App.extend({
 		this.humanIframe.setAttribute("style", "width:" + w + "px");
 		this.humanIframe.setAttribute("style", "height:" + h + "px");
 		this.refresh(date);
+		this.invariant();
 	},
 
 	move: function(date) {
 		// Called when window is moved (set moveEvents to continuous)
 		this.refresh(date);
+		this.invariant();
 	},
 
 	quit: function() {
@@ -422,6 +515,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 			incorrect.play();
 		};
+		this.invariant();
 	},
 
 	reset: function() {
@@ -433,11 +527,10 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizPanelDOM.style.display = "none";
 		this.quizListDOM.innerHTML = "";
 		this.humanIframe.width = this.element.clientWidth;
-		//this.element.removeChild(this.humanQuiz);
-		this.humanQuiz = null;
 		this.pauseClock();
 		var displayConfig = { all: false, info: false };
 		this.getHumanAPI().send("ui.setDisplay", displayConfig);
+		this.invariant();
 	},
 
 	restartAllQuiz: function() {
@@ -449,8 +542,10 @@ var usc_biodigital = SAGE2_App.extend({
 			// var displayConfig = { all: false, info: false };
 			// this.getHumanAPI().send("ui.setDisplay", displayConfig);
 		};
+		this.invariant();
 	},
 
+	// private helper function
 	toCamelCase: function(str){
 		return str.split("_").map(function(word,index){
 			// If it not the first word only upper case the first char and lowercase the rest.
@@ -458,6 +553,7 @@ var usc_biodigital = SAGE2_App.extend({
 		}).join(" ");
 	},
 	
+	// private helper function
 	// gets the BioDigital API, and creates it if necessary.
 	getHumanAPI: function() {
 		if (!('human' in this)) {
@@ -485,9 +581,25 @@ var usc_biodigital = SAGE2_App.extend({
 	event: function(eventType, position, user_id, data, date) {
 		// console.log('usc_biodigital> eventType, pos, user_id, data, dragging',
 		// 		eventType, position, user_id, data, this.dragging);
-		//console.log(eventType, data.identifier);
 		var _this = this;
 
+		if (eventType === "pointerMove") {
+			if (this.tool ==  "default" && this.dragging){
+				// move (orbit camera)
+				var dx = (position.x - this.dragFromX) * -1;
+				var dy = (position.y - this.dragFromY)*200/this.element.clientHeight;
+				this.getHumanAPI().send('camera.orbit', { yaw: dx});
+				this.dragFromX = position.x;
+				this.getHumanAPI().send("camera.pan", {y: dy});
+				this.dragFromY = position.y;
+				this.refresh(date);
+			}
+			// All other events check the invariant.
+			// But pointer moves are common and usually boring, so we skip the invariant.
+			return;
+		}
+
+		console.log(eventType, data.identifier);
 		if (eventType === "pointerPress" && (data.button === "left")) {
 
 		// TODO: startQuiz here if not already running?
@@ -556,20 +668,10 @@ var usc_biodigital = SAGE2_App.extend({
 							};
 						};
 					};
+					_this.invariant();
 				});
 				// todo is this needed?
 				_this.getHumanAPI().send("scene.pick", {x: posX, y: posY, triggerActions: true});
-			}
-		} else if (eventType === "pointerMove" && this.dragging) {
-			if (this.tool ==  "default"){
-				// move (orbit camera)
-				var dx = (position.x - this.dragFromX) * -1;
-				var dy = (position.y - this.dragFromY)*200/this.element.clientHeight;
-				this.getHumanAPI().send('camera.orbit', { yaw: dx});
-				this.dragFromX = position.x;
-				this.getHumanAPI().send("camera.pan", {y: dy});
-				this.dragFromY = position.y;
-				this.refresh(date);
 			}
 		} else if (eventType === "pointerRelease" && (data.button === "left")) {
 			// click release
@@ -741,6 +843,7 @@ var usc_biodigital = SAGE2_App.extend({
 			}
 			this.refresh(date);
 		}
+		this.invariant();
 	},
 
 	zoomInOut: function(delta) {
@@ -749,5 +852,6 @@ var usc_biodigital = SAGE2_App.extend({
 		this.currentZoom = Math.max(0.0, Math.min(1.0, this.currentZoom + delta));
 		this.getHumanAPI().send('camera.zoom', this.currentZoom);
 		//console.log('usc_biodigital> scroll to zoom', this.currentZoom);
+		this.invariant();
 	}
 });
