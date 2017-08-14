@@ -22,9 +22,6 @@
 /* global HumanAPI */
 var IFRAME_ID = 'embedded-human';
 var PAN_STEP = 1.0;
-// For Quiz": a list of scene objects
-var sceneObjects = {};
-
 
 var usc_biodigital = SAGE2_App.extend({
 	init: function(data) {
@@ -344,18 +341,8 @@ var usc_biodigital = SAGE2_App.extend({
 
 	// private helper function
 	quizSetup: function(){
-		// if (this.quizBeenSetup) {
-		// 	this.pauseClock();
-		// 	this.quizMinDOM.textContent = "00";
-		// 	this.quizSecDOM.textContent = "00";
-		// 	this.quizListDOM.innerHTML = "";
-		// 	this.correctAnswers = 0;
-		// 	this.quizListDOM.style.color = "black";
-		// }
 		var _this = this;
 		// this.quizBeenSetup = true;
-		this.missed = 0;
-		this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 		//reads quiz .json file and adds items to quizList
 		var quizPath = this.resrcPath + this.state.quizName + ".json";
 
@@ -390,22 +377,21 @@ var usc_biodigital = SAGE2_App.extend({
 		if (!(this.isQuizShowing)) {
 			var _this = this;
 			this.isQuizShowing = true;
-
-			// a list of object selections
-			this.selectedIndex = 0;
-			// this.quizResponseDOM.innerHTML = "Setting up Quiz..."; ???
-			// TODO: check that quiz has not already been started?
+			this.correctAnswers = 0;
+			this.missed = 0;
 
 			this.quizPanelDOM.style.fontSize = this.fontSize + "px";
 			this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 +"px";
 			this.quizTargetDOM.style.fontSize = this.fontSize+"px";
 			this.quizSelDOM.style.fontSize = this.fontSize+"px";
 			this.quizListDOM.style.fontSize = this.fontSize+"px";
+			this.quizListDOM.style.color = "black";
 			this.quizListDOM.innerHTML = "";
+			this.quizMinDOM.textContent = "00";
+			this.quizSecDOM.textContent = "00";
+			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 			this.quizPanelDOM.style.display = "block";
 
-			// console.log("starting quiz with iframe: " + (IFRAME_ID + this.id), this.human);
-			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 			// disable labels + tooltips + annotations
 			// this.human.send("labels.setEnabled", {enable: false});
 			this.getHumanAPI().send("tooltips.setEnabled", {enable: false});
@@ -417,12 +403,12 @@ var usc_biodigital = SAGE2_App.extend({
 				_this.currentZoom = camera.zoom;
 			});
 
-
 			console.log("on human ready...");
 			this.getHumanAPI().on("human.ready", function() {
 				// get a list of objects
 				console.log("send scene.info...");
 				this.send("scene.info", function(data) {
+					var sceneObjects = {};
 					var i = 0;
 					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
 						var quizObject = _this.QUIZ_OBJECTS[i];
@@ -665,17 +651,15 @@ var usc_biodigital = SAGE2_App.extend({
 			// 	console.log("You got the Quiz Restart button");
 			} else {
 		    	this.getHumanAPI().send("scene.pick", { x: posX, y: posY}, function (hit) {
-					if (hit) {
+					if (hit && _this.interval != 0) {
 						var obj = JSON.parse(JSON.stringify(hit))
 						var str = obj.objectId;
 						// console.log("Hit: " + JSON.stringify(hit));
-						if (_this.isQuizShowing){
-							_this.submitClick(str);
-							// console.log("Hit Submited " + str);
-							var str1 = str.split("-");
-							var str2 = str1[1].substring(0, str1[1].length-3);
-							_this.quizSelDOM.innerHTML = _this.toCamelCase(str2);
-						};
+						_this.submitClick(str);
+						// console.log("Hit Submited " + str);
+						var str1 = str.split("-");
+						var str2 = str1[1].substring(0, str1[1].length-3);
+						_this.quizSelDOM.innerHTML = _this.toCamelCase(str2);
 						var nm = str + _this.id;
 						var el = document.getElementById(nm);	
 						if (el == null){
@@ -689,7 +673,7 @@ var usc_biodigital = SAGE2_App.extend({
 								_this.pauseClock();
 								_this.quizListDOM.style.fontSize = (_this.fontSize*2)+"px";
 								_this.quizListDOM.style.color = "green";
-								_this.quizListDOM.innerHTML = "Success!";	
+								_this.quizListDOM.innerHTML = "Success!";
 								// var misses = document.createElement("li");
 								// misses.style.color = "red";
 								// misses.appendChild(document.createTextNode("Misses: "+_this.missed));
