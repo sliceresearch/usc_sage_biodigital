@@ -31,3 +31,5 @@ human.on("scene.restored", function() {
     _this.quizStetup();
 });
 returns error from human.rpc.enabledEvent.
+
+* Display success on quiz finished outside quizList ui in DOM

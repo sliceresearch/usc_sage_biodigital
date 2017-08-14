@@ -106,9 +106,8 @@ var usc_biodigital = SAGE2_App.extend({
 		this.quizSecDOM = document.getElementById("sec_" + this.id);
 		this.humanIframe = document.getElementById(iframe_id);
 
-		this.quizName = null;
 		this.setQuizState("Quiz Unknown");
-		this.isQuizRunning = false;
+		this.isQuizShowing = false;
 		this.window = 0.0;
 		this.interval = 0; // not a valid timer ID.
 		this.fontSize = this.element.clientHeight * 0.015;
@@ -145,6 +144,7 @@ var usc_biodigital = SAGE2_App.extend({
 	// private helper function
 	setQuizState: function(state) {
 		this.quizResponseDOM.innerHTML = state;
+		console.log(state);
 	},
 
 	// This checks the invariant properties of the current quiz state.
@@ -154,14 +154,14 @@ var usc_biodigital = SAGE2_App.extend({
 		switch (qState) {
 		  case "Quiz Unknown":
 			// only at the very start of the program.
-			this.assertEquals(null, this.quizName);
 			this.assertEquals(0, this.interval);
 			break;
 
 		  case "Quiz Loaded":
 			// the quiz name and item names (but maybe not IDs) are known.
-			this.assertTrue(typeof(this.quizName) == "string", "quizName");
+			this.assertTrue(typeof(this.state.quizName) == "string", "quizName");
 			this.assertEquals(7, this.QUIZ_OBJECTS.length);
+			this.assertEquals(this.numQuestions, this.QUIZ_OBJECTS.length);
 			break;
 
 		  case "Quiz Starting":
@@ -172,10 +172,10 @@ var usc_biodigital = SAGE2_App.extend({
 			this.assertEquals(0, this.correctAnswers);
 			this.assertEquals(0, this.interval); // no timer running
 			for (i = 0; i < this.QUIZ_OBJECTS.length; i++) {
-				var obj = this.QUIZ_OBJECTS[0];
-				this.assertTrue(typeof(obj.id) === "string", "Q[0].id"); // id is known
-				this.assertTrue(!obj.found, "Q[0].found");  // found is false/undef
-				var liId = obj.id + _this.id;
+				var obj = this.QUIZ_OBJECTS[i];
+				this.assertTrue(!obj.id, "Q["+i+"].id"); // id is not known
+				this.assertTrue(!obj.found, "Q["+i+"].found");  // found is false/undef
+				var liId = obj.id + this.id;
 				var li = document.getElementById(liId);
 				if (li) {
 					this.assertTrue(li.style.color !== "green", "li.style.color"); // not green
@@ -187,10 +187,15 @@ var usc_biodigital = SAGE2_App.extend({
 		  case "Anterior Quiz":
 		  case "Posterior Quiz":
 			// quiz is running, with timer ticking.
-			console.log(typeof(this.interval));
 			this.assertTrue(this.interval !== 0, "interval"); // timer is running
 			this.checkQuizItems();
 			break;
+
+		  case "Quiz Finished":
+			this.assertEquals(this.numQuestions, this.correctAnswers);
+			this.assertEquals(0, this.interval);
+			this.assertEquals(this.quizListDOM.innerHTML, "Success!");
+		 	break;
 
 		  case "Quiz Stopped":
 			// quiz has stopped (but still displayed) and timer is stopped.
@@ -230,10 +235,10 @@ var usc_biodigital = SAGE2_App.extend({
 	checkQuizItems: function() {
 		var i = 0;
 		var countFound = 0;
-		console.log(this.QUIZ_OBJECTS);
+		// console.log(this.QUIZ_OBJECTS);
 		for (i = 0; i < this.QUIZ_OBJECTS.length; i++) {
 			var quizItem = this.QUIZ_OBJECTS[i];
-			this.assertTrue(typeof(quizItem.id) === "string", "Q[i].id"); // id is known
+			this.assertTrue(typeof(quizItem.id) === "string", "Q["+i+"].id"); // id is known
 			var liId = quizItem.id + this.id;
 			var li = document.getElementById(liId);
 			this.assertTrue(li != null, "li");  // list item is created
@@ -312,7 +317,7 @@ var usc_biodigital = SAGE2_App.extend({
 		this.interval = setInterval(function () {
 			totalSeconds += 1;
 
-			min = Math.floor(totalSeconds / 60 % 60);
+			min = Math.floor(totalSeconds / 60);
 			sec = parseInt(totalSeconds % 60);
 
 			//document.getElementById("hour" + self.id).textContent = ("Time: " + Math.floor(totalSeconds / 3600) + " : ");
@@ -323,6 +328,7 @@ var usc_biodigital = SAGE2_App.extend({
 			console.log(min, typeof(min), _this.quizTimeLimit, typeof(_this.quizTimeLimit));
 			if (min === _this.quizTimeLimit) {
 				_this.pauseClock();
+				_this.setQuizState("Quiz Stopped");
 			}
 		}, 1000);
 	},
@@ -334,20 +340,20 @@ var usc_biodigital = SAGE2_App.extend({
 		    clearInterval(this.interval);
 			this.interval = 0;
 		}
-		this.setQuizState("Quiz Stopped");
 	},
 
+	// private helper function
 	quizSetup: function(){
-		if (this.quizBeenSetup) {
-			this.pauseClock();
-			this.quizMinDOM.textContent = "00";
-			this.quizSecDOM.textContent = "00";
-			this.quizListDOM.innerHTML = "";
-			this.correctAnswers = 0;
-			this.quizListDOM.style.color = "black";
-		}
+		// if (this.quizBeenSetup) {
+		// 	this.pauseClock();
+		// 	this.quizMinDOM.textContent = "00";
+		// 	this.quizSecDOM.textContent = "00";
+		// 	this.quizListDOM.innerHTML = "";
+		// 	this.correctAnswers = 0;
+		// 	this.quizListDOM.style.color = "black";
+		// }
 		var _this = this;
-		this.quizBeenSetup = true;
+		// this.quizBeenSetup = true;
 		this.missed = 0;
 		this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
 		//reads quiz .json file and adds items to quizList
@@ -363,13 +369,13 @@ var usc_biodigital = SAGE2_App.extend({
 					_this.numQuestions = obj.number;
 					_this.quizTimeLimit = obj.timeLimitMin;
 
-					_this.quizName = obj.name;
-					_this.setQuizState("Quiz Loaded");
 					_this.quizTargetDOM.innerHTML = "Find all these items:";
 					
 					_this.QUIZ_OBJECTS = obj.questions;
 					_this.model = obj.model + _this.state.dk;
 					_this.humanIframe.src = _this.model;
+
+					_this.setQuizState("Quiz Loaded");
 				}
 			}
 			_this.invariant();
@@ -378,94 +384,95 @@ var usc_biodigital = SAGE2_App.extend({
 		xhr.open("GET", quizPath, true);
 		xhr.setRequestHeader("Content-Type", "text/plain");
 		xhr.send(null);
-		this.invariant();
 	},
 
 	quizStart : function() {
-		var _this = this;
-		this.isQuizRunning = true;
+		if (!(this.isQuizShowing)) {
+			var _this = this;
+			this.isQuizShowing = true;
 
-		// a list of object selections
-		this.selectedIndex = 0;
-		// this.quizResponseDOM.innerHTML = "Setting up Quiz..."; ???
-		// TODO: check that quiz has not already been started?
+			// a list of object selections
+			this.selectedIndex = 0;
+			// this.quizResponseDOM.innerHTML = "Setting up Quiz..."; ???
+			// TODO: check that quiz has not already been started?
 
-		this.quizPanelDOM.style.fontSize = this.fontSize + "px";
-		this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 +"px";
-		this.quizTargetDOM.style.fontSize = this.fontSize+"px";
-		this.quizSelDOM.style.fontSize = this.fontSize+"px";
-		this.quizListDOM.style.fontSize = this.fontSize+"px";
-		this.quizListDOM.innerHTML = "";
-		this.quizPanelDOM.style.display = "block";
+			this.quizPanelDOM.style.fontSize = this.fontSize + "px";
+			this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 +"px";
+			this.quizTargetDOM.style.fontSize = this.fontSize+"px";
+			this.quizSelDOM.style.fontSize = this.fontSize+"px";
+			this.quizListDOM.style.fontSize = this.fontSize+"px";
+			this.quizListDOM.innerHTML = "";
+			this.quizPanelDOM.style.display = "block";
 
-		console.log("starting quiz with iframe: " + (IFRAME_ID + this.id), this.human);
-		this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
-		// disable labels + tooltips + annotations
-		// this.human.send("labels.setEnabled", {enable: false});
-		this.getHumanAPI().send("tooltips.setEnabled", {enable: false});
-		this.getHumanAPI().send("annotations.setShown", {enable: false});
-		this.getHumanAPI().send("ui.setDisplay", { all: false, info: false });
-		this.getHumanAPI().send("camera.info", function(camera) {
-			// console.log("Gathering camera info:");
-			// console.log(JSON.stringify(camera));
-			_this.currentZoom = camera.zoom;
-		});
+			// console.log("starting quiz with iframe: " + (IFRAME_ID + this.id), this.human);
+			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
+			// disable labels + tooltips + annotations
+			// this.human.send("labels.setEnabled", {enable: false});
+			this.getHumanAPI().send("tooltips.setEnabled", {enable: false});
+			this.getHumanAPI().send("annotations.setShown", {enable: false});
+			this.getHumanAPI().send("ui.setDisplay", { all: false, info: false });
+			this.getHumanAPI().send("camera.info", function(camera) {
+				// console.log("Gathering camera info:");
+				// console.log(JSON.stringify(camera));
+				_this.currentZoom = camera.zoom;
+			});
 
-		this.setQuizState("Quiz Starting");
-		console.log("on human ready...");
-		this.getHumanAPI().on("human.ready", function() {
-			var i = 0;
-			// get a list of objects
-			console.log("send scene.info...");
-			this.send("scene.info", function(data) {
-				for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-					var quizObject = _this.QUIZ_OBJECTS[i];
-					quizObject.count = 0;
-				}
-				// get global objects
-				sceneObjects = data.objects;
-				console.log("body parts: " + Object.keys(sceneObjects).length);
-				for (var s in sceneObjects) {
-					if (sceneObjects.hasOwnProperty(s)) {
-						var object = sceneObjects[s];
-						// for each of our quiz objects, find matching scene object
-						for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-							quizObject = _this.QUIZ_OBJECTS[i];
-							var objectFound = _this.matchNames(object.name, quizObject.name);
-							if (objectFound) {
-								if (object.shown){
-									quizObject.count++;
-									quizObject.id = object.objectId;
-									// console.log(quizObject, object);
+
+			console.log("on human ready...");
+			this.getHumanAPI().on("human.ready", function() {
+				// get a list of objects
+				console.log("send scene.info...");
+				this.send("scene.info", function(data) {
+					var i = 0;
+					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+						var quizObject = _this.QUIZ_OBJECTS[i];
+						quizObject.count = 0;
+					}
+					// get global objects
+					sceneObjects = data.objects;
+					console.log("body parts: " + Object.keys(sceneObjects).length);
+					for (var s in sceneObjects) {
+						if (sceneObjects.hasOwnProperty(s)) {
+							var object = sceneObjects[s];
+							// for each of our quiz objects, find matching scene object
+							for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+								quizObject = _this.QUIZ_OBJECTS[i];
+								var objectFound = _this.matchNames(object.name, quizObject.name);
+								if (objectFound) {
+									if (object.shown){
+										quizObject.count++;
+										quizObject.id = object.objectId;
+										// console.log(quizObject, object);
+									}
 								}
 							}
 						}
 					}
-				}
-				for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-					quizObject = _this.QUIZ_OBJECTS[i];
-					if (quizObject.count !== 1) {
-						console.log("ambiguous/unknown item: ", quizObject);
-					};
-				}
-				// start quiz
-				for (i = 0; i < _this.QUIZ_OBJECTS.length; i++){
+					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+						quizObject = _this.QUIZ_OBJECTS[i];
+						if (quizObject.count !== 1) {
+							console.log("ambiguous/unknown item: ", quizObject);
+						};
+					}
+					// start quiz
+					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++){
+							
+						var liId = _this.QUIZ_OBJECTS[i].id + _this.id;
+						console.log(liId);
+						var li = document.createElement('li');
+						li.setAttribute('id', liId);
 						
-					var liId = _this.QUIZ_OBJECTS[i].id + _this.id;
-					console.log(liId);
-					var li = document.createElement('li');
-					li.setAttribute('id', liId);
-					
-					li.appendChild(document.createTextNode(_this.QUIZ_OBJECTS[i].name + "\n"));
-					_this.quizListDOM.appendChild(li);
-				}
-				_this.invariant();
+						li.appendChild(document.createTextNode(_this.QUIZ_OBJECTS[i].name + "\n"));
+						_this.quizListDOM.appendChild(li);
+					}
+					_this.startClock();
+					_this.setQuizState("Quiz Started"); // or _this.state.quizName
+					_this.invariant();
+				});
 			});
-			_this.startClock();
-			_this.setQuizState("Quiz Started"); // or _this.quizName
+			this.setQuizState("Quiz Starting");
 			this.invariant();
-		});
-		this.invariant();
+		}
 	},
 
 	// private helper function, for Quiz
@@ -562,21 +569,25 @@ var usc_biodigital = SAGE2_App.extend({
 		this.changeTool(this.defaultTool);
 		// this.pointerTypeRadioButton.value = "Sel";
 		// this.viewTypeRadioButton.value = "Norm";
-		this.isQuizRunning = false;
+		this.isQuizShowing = false;
 		this.quizPanelDOM.style.display = "none";
 		this.quizListDOM.innerHTML = "";
 		this.humanIframe.width = this.element.clientWidth;
 		this.pauseClock();
 		var displayConfig = { all: false, info: false };
 		this.getHumanAPI().send("ui.setDisplay", displayConfig);
+		this.quizSetup();
+		this.setQuizState("Quiz Unknown");
 		this.invariant();
 	},
 
 	restartAllQuiz: function() {
-		this.isQuizRunning = false;
+		this.isQuizShowing = false;
 		for (i = 0; i++; i < 10) {
 			document.getElementById("quizPanel_app" + i) = "none";
 			document.getElementById("quizList_app" + i) = "";
+
+			// Get this code working to do the following on all open apps
 			// this.pauseClock();
 			// var displayConfig = { all: false, info: false };
 			// this.getHumanAPI().send("ui.setDisplay", displayConfig);
@@ -638,7 +649,6 @@ var usc_biodigital = SAGE2_App.extend({
 			return;
 		}
 
-		console.log(eventType, data.identifier);
 		if (eventType === "pointerPress" && (data.button === "left")) {
 
 		// TODO: startQuiz here if not already running?
@@ -659,7 +669,7 @@ var usc_biodigital = SAGE2_App.extend({
 						var obj = JSON.parse(JSON.stringify(hit))
 						var str = obj.objectId;
 						// console.log("Hit: " + JSON.stringify(hit));
-						if (_this.isQuizRunning){
+						if (_this.isQuizShowing){
 							_this.submitClick(str);
 							// console.log("Hit Submited " + str);
 							var str1 = str.split("-");
@@ -673,8 +683,8 @@ var usc_biodigital = SAGE2_App.extend({
 						} else {
 							//el.style.backgroundColor = "purple";
 							// finish quiz
-							if (_this.correctAnswers == _this.numQuestions && _this.isQuizRunning){
-								_this.isQuizRunning = false;
+							if (_this.correctAnswers == _this.numQuestions && _this.isQuizShowing){
+								_this.isQuizShowing = false;
 								var quizClock = _this.interval;
 								_this.pauseClock();
 								_this.quizListDOM.style.fontSize = (_this.fontSize*2)+"px";
@@ -704,6 +714,7 @@ var usc_biodigital = SAGE2_App.extend({
 								// 	}
 								// }
 								// xhr.send(null);	
+								_this.setQuizState("Quiz Finished");
 							};
 						};
 					};
@@ -781,14 +792,14 @@ var usc_biodigital = SAGE2_App.extend({
 					this.state.quizName = "quiz_anterior";
 					this.quizSetup();
 					this.reset();
-					this.quizBeenSetup = false;
+					// this.quizBeenSetup = false;
 					break;
 				case "Post":
 					console.log("usc_biodigital> Starting Posterior Quiz");
 					this.state.quizName = "quiz_posterior";
 					this.quizSetup();
 					this.reset();
-					this.quizBeenSetup = false;
+					// this.quizBeenSetup = false;
 					break;
 				case "Start":
 					console.log("usc_biodigital> Starting the quiz");
