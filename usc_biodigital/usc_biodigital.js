@@ -116,6 +116,10 @@ var usc_biodigital = SAGE2_App.extend({
 		this.numQuestions = 0;
 		this.correctAnswers = 0;
 
+		// audio
+		this.soundCorrect = new Audio(this.resrcPath + "correct_sound.wav");
+		this.soundIncorrect = new Audio(this.resrcPath + "incorrect_sound.wav");
+
 		// initialise our own object state.
 		this.currentZoom = 0.3;
 
@@ -145,25 +149,38 @@ var usc_biodigital = SAGE2_App.extend({
 
 	// This checks the invariant properties of the current quiz state.
 	invariant: function() {
+		var i = 0;
 		var qState = this.getQuizState();
 		switch (qState) {
 		  case "Quiz Unknown":
 			// only at the very start of the program.
 			this.assertEquals(null, this.quizName);
+			this.assertEquals(0, this.interval);
 			break;
 
 		  case "Quiz Loaded":
-			// the quiz name and item names (but not IDs) are known.
+			// the quiz name and item names (but maybe not IDs) are known.
 			this.assertTrue(typeof(this.quizName) == "string", "quizName");
 			this.assertEquals(7, this.QUIZ_OBJECTS.length);
 			break;
 
-		  case "Quiz Ready":
+		  case "Quiz Starting":
 			// all quiz details are known, including item IDs.
 			this.assertEquals(7, this.QUIZ_OBJECTS.length); // ONLY FOR LFS122 QUIZZES
 			this.assertEquals(this.numQuestions, this.QUIZ_OBJECTS.length);
-			this.assertTrue(typeof(this.QUIZ_OBJECTS[0].id) === "string", "QUIZ_OBJECTS[0].id");
-			this.assertEquals(0, this.interval);
+			this.assertEquals(0, this.missed);
+			this.assertEquals(0, this.correctAnswers);
+			this.assertEquals(0, this.interval); // no timer running
+			for (i = 0; i < this.QUIZ_OBJECTS.length; i++) {
+				var obj = this.QUIZ_OBJECTS[0];
+				this.assertTrue(typeof(obj.id) === "string", "Q[0].id"); // id is known
+				this.assertTrue(!obj.found, "Q[0].found");  // found is false/undef
+				var liId = obj.id + _this.id;
+				var li = document.getElementById(liId);
+				if (li) {
+					this.assertTrue(li.style.color !== "green", "li.style.color"); // not green
+				}
+			}
 			break;
 
 		  case "Quiz Started":
@@ -171,12 +188,14 @@ var usc_biodigital = SAGE2_App.extend({
 		  case "Posterior Quiz":
 			// quiz is running, with timer ticking.
 			console.log(typeof(this.interval));
-			this.assertTrue(this.interval !== 0, "interval");
+			this.assertTrue(this.interval !== 0, "interval"); // timer is running
+			this.checkQuizItems();
 			break;
 
 		  case "Quiz Stopped":
 			// quiz has stopped (but still displayed) and timer is stopped.
 			this.assertEquals(0, this.interval);
+			this.checkQuizItems();
 			break;
 
 		default:
@@ -203,8 +222,29 @@ var usc_biodigital = SAGE2_App.extend({
 		console.log(err);
 		// we also show error messages on the quiz panel (temporarily?)
 		this.quizTargetDOM.innerHTML = err;
-		// and (in development mode) throw an exception:
+		// and (in development mode) we throw an exception:
 		throw err;
+	},
+
+	// private helper function to check quiz items in Quiz Started/Stopped state.
+	checkQuizItems: function() {
+		var i = 0;
+		var countFound = 0;
+		console.log(this.QUIZ_OBJECTS);
+		for (i = 0; i < this.QUIZ_OBJECTS.length; i++) {
+			var quizItem = this.QUIZ_OBJECTS[i];
+			this.assertTrue(typeof(quizItem.id) === "string", "Q[i].id"); // id is known
+			var liId = quizItem.id + this.id;
+			var li = document.getElementById(liId);
+			this.assertTrue(li != null, "li");  // list item is created
+			if (quizItem.found) {
+				countFound++;
+				this.assertEquals("green", li.style.color); // found items are green
+			} else {
+				this.assertTrue(li.style.color !== "green"); // others are not green
+			}
+		}
+		this.assertEquals(this.correctAnswers, countFound); // correct number found
 	},
 
 	addWidgetButtons: function() {
@@ -371,15 +411,17 @@ var usc_biodigital = SAGE2_App.extend({
 			_this.currentZoom = camera.zoom;
 		});
 
-		for (var i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-			var quizObject = _this.QUIZ_OBJECTS[i];
-			quizObject.count = 0;
-		}
+		this.setQuizState("Quiz Starting");
 		console.log("on human ready...");
 		this.getHumanAPI().on("human.ready", function() {
+			var i = 0;
 			// get a list of objects
 			console.log("send scene.info...");
 			this.send("scene.info", function(data) {
+				for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+					var quizObject = _this.QUIZ_OBJECTS[i];
+					quizObject.count = 0;
+				}
 				// get global objects
 				sceneObjects = data.objects;
 				console.log("body parts: " + Object.keys(sceneObjects).length);
@@ -387,7 +429,7 @@ var usc_biodigital = SAGE2_App.extend({
 					if (sceneObjects.hasOwnProperty(s)) {
 						var object = sceneObjects[s];
 						// for each of our quiz objects, find matching scene object
-						for (var i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+						for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
 							quizObject = _this.QUIZ_OBJECTS[i];
 							var objectFound = _this.matchNames(object.name, quizObject.name);
 							if (objectFound) {
@@ -400,14 +442,14 @@ var usc_biodigital = SAGE2_App.extend({
 						}
 					}
 				}
-				for (var i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+				for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
 					quizObject = _this.QUIZ_OBJECTS[i];
 					if (quizObject.count !== 1) {
-						console.log("error: ", quizObject);
+						console.log("ambiguous/unknown item: ", quizObject);
 					};
 				}
 				// start quiz
-				for (var i = 0; i < _this.QUIZ_OBJECTS.length; i++){
+				for (i = 0; i < _this.QUIZ_OBJECTS.length; i++){
 						
 					var liId = _this.QUIZ_OBJECTS[i].id + _this.id;
 					console.log(liId);
@@ -421,6 +463,7 @@ var usc_biodigital = SAGE2_App.extend({
 			});
 			_this.startClock();
 			_this.setQuizState("Quiz Started"); // or _this.quizName
+			this.invariant();
 		});
 		this.invariant();
 	},
@@ -488,34 +531,30 @@ var usc_biodigital = SAGE2_App.extend({
 		// Make sure to delete stuff (timers, ...)
 	},
 
+	// private helper function to handle clicks on body parts during a quiz
 	submitClick: function(object) {
 		// Object is the ID of the body part clicked on
 		// check if quiz selection matches user selection
 		var isCorrectOut = false;
 
-		// audio
-		var correct = new Audio(this.resrcPath + "correct_sound.wav");
-		var incorrect = new Audio(this.resrcPath + "incorrect_sound.wav");
-
 		for (var i = 0; i < this.QUIZ_OBJECTS.length; i++) {
-			var objectItem = this.QUIZ_OBJECTS[i];
-			if (this.matchNames(object, objectItem.id)){
+			var quizItem = this.QUIZ_OBJECTS[i];
+			if (this.matchNames(object, quizItem.id)){
 				isCorrectOut = true;
-				if (!(objectItem.found)) {
-					this.answer = document.getElementById(objectItem.id+this.id);
+				if (!(quizItem.found)) {
+					this.answer = document.getElementById(quizItem.id+this.id);
 					this.answer.style.color = "green";
 					this.correctAnswers++;
-					correct.play();
-					objectItem.found = true;
+					quizItem.found = true;
+					this.soundCorrect.play();
 				};
 			};
 		};
 		if (!isCorrectOut) {
 			this.missed++;
 			this.quizMissesDOM.innerHTML = this.checkTime(this.missed);
-			incorrect.play();
+			this.soundIncorrect.play();
 		};
-		this.invariant();
 	},
 
 	reset: function() {
