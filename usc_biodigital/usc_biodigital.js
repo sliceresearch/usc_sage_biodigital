@@ -310,7 +310,7 @@ var usc_biodigital = SAGE2_App.extend({
 		var totalSeconds = 0;
 		var min = 0;
 		var sec = 0;
-		
+
 		this.interval = setInterval(function () {
 			totalSeconds += 1;
 
