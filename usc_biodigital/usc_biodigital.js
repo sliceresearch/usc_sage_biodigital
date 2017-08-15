@@ -289,7 +289,6 @@ var usc_biodigital = SAGE2_App.extend({
 			default: "Ante"
 		});
 		*/
-		
 
 		this.controls.finishedAddingControls();
 		//console.log(this.controls.addButtonType);
