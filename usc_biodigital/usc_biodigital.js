@@ -568,10 +568,14 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	restartAllQuiz: function() {
+		var dom;
 		this.isQuizShowing = false;
 		for (i = 0; i++; i < 10) {
-			document.getElementById("quizPanel_app" + i) = "none";
-			document.getElementById("quizList_app" + i) = "";
+			// TODO: do we need to add '_' before number?
+			dom = document.getElementById("quizPanel_app" + i);
+			dom.innerHTML = "none";
+			dom = document.getElementById("quizList_app" + i);
+			dom.innerHTML = "";
 
 			// Get this code working to do the following on all open apps
 			// this.pauseClock();
