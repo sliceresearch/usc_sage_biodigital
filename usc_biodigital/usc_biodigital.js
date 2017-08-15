@@ -592,7 +592,7 @@ var usc_biodigital = SAGE2_App.extend({
 			return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 		}).join(" ");
 	},
-	
+
 	// private helper function
 	// gets the BioDigital API, and creates it if necessary.
 	getHumanAPI: function() {
