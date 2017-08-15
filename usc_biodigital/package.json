@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "usc_biodigital.js",
   "devDependencies": {
-    "eslint": "latest"
+    "eslint": "^4.4.1"
   },
   "scripts": {
     "lint": "eslint -c eslintrc usc_biodigital.js"
@@ -11,9 +11,17 @@
   "author": "Mark Utting <utting@usc.edu.au>",
   "license": "BSD-2-Clause",
   "description": "SAGE2 app for viewing BioDigital Human Body in USC CAVE.",
-  "keywords": ["USC", "BioDigital", "SAGE2", "Human Body"],
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/sliceresearch/usc_sage_biodigital.git"
+  "keywords": [
+    "USC",
+    "BioDigital",
+    "SAGE2",
+    "CAVE2",
+    "Anatomy",
+    "Human Body",
+    "Quiz"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sliceresearch/usc_sage_biodigital.git"
   }
 }
