@@ -46,13 +46,13 @@ var usc_biodigital = SAGE2_App.extend({
 		this.element.id = "div_" + "usc_biodigital";
 		//console.log('usc_biodigital> id=', this.id, 'init element=', this.element,
 		//    'w=', this.element.clientWidth, 'h=', this.element.clientHeight);
-		
+
 		// generate the widget interface of the usc_biodigital
 		this.addWidgetButtons();
 
 		// Set the background to black
-		this.element.style.backgroundColor = '#87CEEB';			
-		
+		this.element.style.backgroundColor = '#87CEEB';
+
 		/*var iframe = document.createElement('iframe');
 		iframe.src = this.state.value;
 		iframe.id = IFRAME_ID + this.id;
@@ -77,7 +77,7 @@ var usc_biodigital = SAGE2_App.extend({
 				<div id="quizClock_${this.id}" class="quizClock">Clock
 					<span id="min_${this.id}" class="min">00</span>:
 					<span id="sec_${this.id}" class="sec">00</span>
-					<span id="quizMisses_${this.id}" class="quizMisses">Misses: 
+					<span id="quizMisses_${this.id}" class="quizMisses">Misses:
 						<span id="misses_${this.id}" class="misses">00</span>
 					</span>
 				</div>
@@ -281,7 +281,7 @@ var usc_biodigital = SAGE2_App.extend({
 			options: ["Heart", "Male", "Quiz"],
 			default: "Quiz"
 		});
-		
+
 
 		this.modelTypeRadioButton = this.controls.addRadioButton({identifier: "QuizType",
 			label: "Quiz",
@@ -319,7 +319,7 @@ var usc_biodigital = SAGE2_App.extend({
 			//document.getElementById("hour" + self.id).textContent = ("Time: " + Math.floor(totalSeconds / 3600) + " : ");
 			_this.quizMinDOM.textContent = _this.checkTime(min);
 			_this.quizSecDOM.textContent = _this.checkTime(sec);
-			
+
 			// Stop clock at timelimit
 			console.log(min, typeof(min), _this.quizTimeLimit, typeof(_this.quizTimeLimit));
 			if (min === _this.quizTimeLimit) {
@@ -350,13 +350,13 @@ var usc_biodigital = SAGE2_App.extend({
 			if ( xhr.readyState === 4 ) {
 				if ( xhr.status === 200 || xhr.status === 0 ) {
 					var obj = JSON.parse(xhr.responseText);
-					
+
 					_this.window = obj.window;
 					_this.numQuestions = obj.number;
 					_this.quizTimeLimit = obj.timeLimitMin;
 
 					_this.quizTargetDOM.innerHTML = "Find all these items:";
-					
+
 					_this.QUIZ_OBJECTS = obj.questions;
 					_this.model = obj.model + _this.state.dk;
 					_this.humanIframe.src = _this.model;
@@ -366,7 +366,7 @@ var usc_biodigital = SAGE2_App.extend({
 			}
 			_this.invariant();
 		};
-		
+
 		xhr.open("GET", quizPath, true);
 		xhr.setRequestHeader("Content-Type", "text/plain");
 		xhr.send(null);
@@ -441,12 +441,12 @@ var usc_biodigital = SAGE2_App.extend({
 					}
 					// start quiz
 					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++){
-							
+
 						var liId = _this.QUIZ_OBJECTS[i].id + _this.id;
 						console.log(liId);
 						var li = document.createElement('li');
 						li.setAttribute('id', liId);
-						
+
 						li.appendChild(document.createTextNode(_this.QUIZ_OBJECTS[i].name + "\n"));
 						_this.quizListDOM.appendChild(li);
 					}
@@ -506,7 +506,7 @@ var usc_biodigital = SAGE2_App.extend({
 
 		this.humanIframe.width = w;
 		//this.quizSetup();
-		
+
 		this.humanIframe.setAttribute("style", "width:" + w + "px");
 		this.humanIframe.setAttribute("style", "height:" + h + "px");
 		this.refresh(date);
@@ -642,7 +642,7 @@ var usc_biodigital = SAGE2_App.extend({
 
 		// TODO: startQuiz here if not already running?
 
-			//console.log("TEST x:" + position.x + " y: " + position.y);	
+			//console.log("TEST x:" + position.x + " y: " + position.y);
 			//console.log(this.element.clientHeight);
 			var posY = position.y;
 			var posX = position.x;
@@ -664,7 +664,7 @@ var usc_biodigital = SAGE2_App.extend({
 						var str2 = str1[1].substring(0, str1[1].length-3);
 						_this.quizSelDOM.innerHTML = _this.toCamelCase(str2);
 						var nm = str + _this.id;
-						var el = document.getElementById(nm);	
+						var el = document.getElementById(nm);
 						if (el == null){
 							hit = null;
 						} else {
@@ -700,7 +700,7 @@ var usc_biodigital = SAGE2_App.extend({
 								// 		console.log('Error: ' + xhr.status); // An error occurred during the request.
 								// 	}
 								// }
-								// xhr.send(null);	
+								// xhr.send(null);
 								_this.setQuizState("Quiz Finished");
 							};
 						};
@@ -744,7 +744,7 @@ var usc_biodigital = SAGE2_App.extend({
 				this.getHumanAPI().send('camera.pan', { x: 0.0, y: PAN_STEP });
 				// console.log('usc_biodigital> camera.pan down');
 				this.refresh(date);
-			}	
+			}
 		} else if (eventType === "pointerDblClick") {
 				//Add code to switch between pointer options
 		} else if (eventType === "widgetEvent") {
@@ -812,7 +812,7 @@ var usc_biodigital = SAGE2_App.extend({
 						default:
 							console.log("Error: unknown option");
 							break;
-					}	
+					}
 				 	break;
 				case "PointerType":
 					switch (data.value) {
