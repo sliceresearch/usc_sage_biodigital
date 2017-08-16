@@ -379,6 +379,8 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	quizStart: function() {
+		// if the quiz is not showing, we show the quiz panel and fire off on(human.ready).
+		// otherwise, we do nothing, because we are waiting for on(human.ready).
 		if (!(this.isQuizShowing)) {
 			var _this = this;
 			this.isQuizShowing = true;
@@ -418,6 +420,7 @@ var usc_biodigital = SAGE2_App.extend({
 					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
 						var quizObject = _this.QUIZ_OBJECTS[i];
 						quizObject.count = 0;
+						quizObject.found = false;
 					}
 					// get global objects
 					sceneObjects = data.objects;
@@ -539,9 +542,9 @@ var usc_biodigital = SAGE2_App.extend({
 			var quizItem = this.QUIZ_OBJECTS[i];
 			if (this.matchNames(object, quizItem.id)) {
 				isCorrectOut = true;
-				if (!(quizItem.found)) {
-					this.answer = document.getElementById(quizItem.id + this.id);
-					this.answer.style.color = "green";
+				if (!quizItem.found) {
+					var listItem = document.getElementById(quizItem.id + this.id);
+					listItem.style.color = "green";
 					this.correctAnswers++;
 					quizItem.found = true;
 					this.soundCorrect.play();
@@ -677,8 +680,7 @@ var usc_biodigital = SAGE2_App.extend({
 						} else {
 							//el.style.backgroundColor = "purple";
 							// finish quiz
-							if (_this.correctAnswers == _this.numQuestions && _this.isQuizShowing) {
-								_this.isQuizShowing = false;
+							if (_this.correctAnswers == _this.numQuestions && _this.interval != 0) {
 								// var quizClock = _this.interval;
 								_this.pauseClock();
 								_this.quizListDOM.style.fontSize = (_this.fontSize * 2) + "px";
