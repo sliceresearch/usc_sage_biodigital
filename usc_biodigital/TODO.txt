@@ -32,4 +32,11 @@ human.on("scene.restored", function() {
 });
 returns error from human.rpc.enabledEvent.
 
-* Display success on quiz finished outside quizList ui in DOM
+* [DONE] Display success on quiz finished outside quizList ui in DOM
+
+Alternative design:
+* Experiment with just the 'isMaster' loading scene info, and then putting the
+  quiz item IDs into the state, so that SAGE2 synchronises them?
+  This might cut the 200 models loads down to 10.
+* Could also put the quiz state into this.state???
+

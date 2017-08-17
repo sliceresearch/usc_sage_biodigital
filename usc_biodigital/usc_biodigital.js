@@ -146,7 +146,7 @@ var usc_biodigital = SAGE2_App.extend({
 	// private helper function
 	setQuizState: function(state) {
 		this.quizResponseDOM.innerHTML = state;
-		console.log(state);
+		console.log(this.id + " STATE: " + state);
 	},
 
 	// This checks the invariant properties of the current quiz state.
@@ -175,7 +175,7 @@ var usc_biodigital = SAGE2_App.extend({
 				this.assertEquals(0, this.interval); // no timer running
 				for (i = 0; i < this.QUIZ_OBJECTS.length; i++) {
 					var obj = this.QUIZ_OBJECTS[i];
-					this.assertTrue(!obj.id, "Q[" + i + "].id"); // id is not known
+					this.assertTrue(!obj.id, "id=" + obj.id); // id is not known
 					this.assertTrue(!obj.found, "Q[" + i + "].found");  // found is false/undef
 					var liId = obj.id + this.id;
 					var li = document.getElementById(liId);
@@ -193,16 +193,16 @@ var usc_biodigital = SAGE2_App.extend({
 				this.checkQuizItems();
 				break;
 
-			case "Quiz Finished":
-				this.assertEquals(this.numQuestions, this.correctAnswers);
-				this.assertEquals(0, this.interval);
-				this.assertEquals(this.quizListDOM.innerHTML, "Success!");
-				break;
-
 			case "Quiz Stopped":
 				// quiz has stopped (but still displayed) and timer is stopped.
 				this.assertEquals(0, this.interval);
 				this.checkQuizItems();
+				break;
+
+			case "Quiz Finished":
+				this.assertEquals(this.numQuestions, this.correctAnswers);
+				this.assertEquals(0, this.interval);
+				this.assertEquals(this.quizListDOM.innerHTML, "Success!");
 				break;
 
 			default:
@@ -240,7 +240,7 @@ var usc_biodigital = SAGE2_App.extend({
 		// console.log(this.QUIZ_OBJECTS);
 		for (i = 0; i < this.QUIZ_OBJECTS.length; i++) {
 			var quizItem = this.QUIZ_OBJECTS[i];
-			this.assertTrue(typeof(quizItem.id) === "string", "Q[" + i + "].id"); // id is known
+			this.assertTrue(typeof(quizItem.id) === "string", "id=" + quizItem.id); // id is known
 			var liId = quizItem.id + this.id;
 			var li = document.getElementById(liId);
 			this.assertTrue(li != null, "li");  // list item is created
@@ -252,6 +252,7 @@ var usc_biodigital = SAGE2_App.extend({
 			}
 		}
 		this.assertEquals(this.correctAnswers, countFound); // correct number found
+		this.assertEquals("highlight", this.tool);
 	},
 
 	addWidgetButtons: function() {
@@ -327,7 +328,6 @@ var usc_biodigital = SAGE2_App.extend({
 			_this.quizSecDOM.textContent = _this.checkTime(sec);
 
 			// Stop clock at timelimit
-			console.log(min, typeof(min), _this.quizTimeLimit, typeof(_this.quizTimeLimit));
 			if (min === _this.quizTimeLimit) {
 				_this.pauseClock();
 				_this.setQuizState("Quiz Stopped");
@@ -386,6 +386,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.isQuizShowing = true;
 			this.correctAnswers = 0;
 			this.missed = 0;
+			this.resetQuizItems();
 
 			this.quizPanelDOM.style.fontSize = this.fontSize + "px";
 			this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 + "px";
@@ -410,63 +411,66 @@ var usc_biodigital = SAGE2_App.extend({
 				_this.currentZoom = camera.zoom;
 			});
 
-			console.log("on human ready...");
+			console.log("on human ready...  " + this.id);
 			this.getHumanAPI().on("human.ready", function() {
 				// get a list of objects
-				console.log("send scene.info...");
-				this.send("scene.info", function(data) {
-					var sceneObjects = {};
-					var i = 0;
-					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-						var quizObject = _this.QUIZ_OBJECTS[i];
-						quizObject.count = 0;
-						quizObject.found = false;
-					}
-					// get global objects
-					sceneObjects = data.objects;
-					console.log("body parts: " + Object.keys(sceneObjects).length);
-					for (var s in sceneObjects) {
-						if (sceneObjects.hasOwnProperty(s)) {
-							var object = sceneObjects[s];
-							// for each of our quiz objects, find matching scene object
-							for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-								quizObject = _this.QUIZ_OBJECTS[i];
-								var objectFound = _this.matchNames(object.name, quizObject.name);
-								if (objectFound) {
-									if (object.shown) {
-										quizObject.count++;
-										quizObject.id = object.objectId;
-										// console.log(quizObject, object);
-									}
-								}
-							}
-						}
-					}
-					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-						quizObject = _this.QUIZ_OBJECTS[i];
-						if (quizObject.count !== 1) {
-							console.log("ambiguous/unknown item: ", quizObject);
-						}
-					}
-					// start quiz
-					for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
-
-						var liId = _this.QUIZ_OBJECTS[i].id + _this.id;
-						console.log(liId);
-						var li = document.createElement('li');
-						li.setAttribute('id', liId);
-
-						li.appendChild(document.createTextNode(_this.QUIZ_OBJECTS[i].name + "\n"));
-						_this.quizListDOM.appendChild(li);
-					}
-					_this.startClock();
-					_this.setQuizState("Quiz Started"); // or _this.state.quizName
-					_this.invariant();
-				});
+				this.send("scene.info", this.onHumanReady);
 			});
 			this.setQuizState("Quiz Starting");
 			this.invariant();
 		}
+	},
+
+	onHumanReady: function(data) {
+		console.log("got scene.info...  " + _this.id);
+		var sceneObjects = {};
+		var i = 0;
+		for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+			var quizObject = _this.QUIZ_OBJECTS[i];
+			quizObject.count = 0;
+			quizObject.found = false;
+		}
+		// get global objects
+		sceneObjects = data.objects;
+		console.log("body parts: " + Object.keys(sceneObjects).length);
+		for (var s in sceneObjects) {
+			if (sceneObjects.hasOwnProperty(s)) {
+				var object = sceneObjects[s];
+				// for each of our quiz objects, find matching scene object
+				for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+					quizObject = _this.QUIZ_OBJECTS[i];
+					var objectFound = _this.matchNames(object.name, quizObject.name);
+					if (objectFound) {
+						if (object.shown) {
+							quizObject.count++;
+							quizObject.id = object.objectId;
+							// console.log(quizObject, object);
+						}
+					}
+				}
+			}
+		}
+		for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+			quizObject = _this.QUIZ_OBJECTS[i];
+			if (quizObject.count !== 1) {
+				console.log("ambiguous/unknown item: ", quizObject);
+			}
+		}
+		// start quiz
+		for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
+
+			var liId = _this.QUIZ_OBJECTS[i].id + _this.id;
+			console.log(liId);
+			var li = document.createElement('li');
+			li.setAttribute('id', liId);
+
+			li.appendChild(document.createTextNode(_this.QUIZ_OBJECTS[i].name + "\n"));
+			_this.quizListDOM.appendChild(li);
+		}
+		_this.startClock();
+		_this.changeTool("highlight");
+		_this.setQuizState("Quiz Started"); // or _this.state.quizName
+		_this.invariant();
 	},
 
 	// private helper function, for Quiz
@@ -530,6 +534,7 @@ var usc_biodigital = SAGE2_App.extend({
 
 	quit: function() {
 		// Make sure to delete stuff (timers, ...)
+		this.pauseClock();
 	},
 
 	// private helper function to handle clicks on body parts during a quiz
@@ -558,8 +563,20 @@ var usc_biodigital = SAGE2_App.extend({
 		}
 	},
 
+	/* private helper function to reset 'found' and 'id' fields of quiz items. */
+	resetQuizItems: function() {
+		if (this.QUIZ_OBJECTS) {
+			for (var i = 0; i < this.QUIZ_OBJECTS.length; i++) {
+				var quizItem = this.QUIZ_OBJECTS[i];
+				quizItem.found = false;
+				quizItem.id = null;
+			}
+		}
+	},
+
+	// hides the quiz panel and goes to state: Quiz Unknown.
 	reset: function() {
-		this.getHumanAPI().send("scene.reset");
+		// this.getHumanAPI().send("scene.reset");
 		this.changeTool(this.defaultTool);
 		// this.pointerTypeRadioButton.value = "Sel";
 		// this.viewTypeRadioButton.value = "Norm";
@@ -570,20 +587,33 @@ var usc_biodigital = SAGE2_App.extend({
 		this.pauseClock();
 		var displayConfig = { all: false, info: false };
 		this.getHumanAPI().send("ui.setDisplay", displayConfig);
-		this.quizSetup();
+		this.resetQuizItems();
 		this.setQuizState("Quiz Unknown");
 		this.invariant();
 	},
 
 	restartAllQuiz: function() {
+		if (isMaster) {
+			// This is an experiment hack, for up to 10 BioDigital Human apps.
+			// It relies on the current SAGE2 app ID convention: app_NNN.
+			// It will only work if not too many other apps have been created.
+			// Is there a nicer way of finding all the running apps?
+			
+			//console.log("restartAllQuiz.");
+			//for (var i = 0; i < 10; i++) {
+			//	console.log("broadcast quizStart() to app_" + i);
+			//	broadcast({app: "app_" + i, func: "quizStart", data: {}});
+			//}
+		}
+		/*
 		var i;
 		var dom;
 		this.isQuizShowing = false;
 		for (i = 0; i++; i < 10) {
 			// TODO: do we need to add '_' before number?
-			dom = document.getElementById("quizPanel_app" + i);
+			dom = document.getElementById("quizPanel_app_" + i);
 			dom.innerHTML = "none";
-			dom = document.getElementById("quizList_app" + i);
+			dom = document.getElementById("quizList_app_" + i);
 			dom.innerHTML = "";
 
 			// Get this code working to do the following on all open apps
@@ -591,7 +621,9 @@ var usc_biodigital = SAGE2_App.extend({
 			// var displayConfig = { all: false, info: false };
 			// this.getHumanAPI().send("ui.setDisplay", displayConfig);
 		}
-		this.invariant();
+		// this.setQuizState("Quiz Unknown");
+		// this.invariant();
+		*/
 	},
 
 	// private helper function
@@ -732,6 +764,13 @@ var usc_biodigital = SAGE2_App.extend({
 				this.getHumanAPI().send('camera.reset');
 				this.refresh(date);
 			}
+			else if (data.character === "s") {
+				this.reset(); // clear old found and id flags
+				this.quizStart(); // go straight to Start without reloading quiz or model.
+			}
+			else if (data.character === "a") {
+				this.restartAllQuiz();
+			}
 		} else if (eventType === "specialKey") {
 			if (data.code === 37 && data.state === "down") {
 				// left
@@ -765,7 +804,7 @@ var usc_biodigital = SAGE2_App.extend({
 					break;
 
 				case "Quiz":
-					console.log("Quiz started!");
+					console.log("usc_biodigital> Quiz started!");
 					this.quizSetup();
 					break;
 
@@ -792,26 +831,25 @@ var usc_biodigital = SAGE2_App.extend({
 				case "Ante":
 					console.log("usc_biodigital> Starting Anterior Quiz");
 					this.state.quizName = "quiz_anterior";
-					this.quizSetup();
 					this.reset();
-					// this.quizBeenSetup = false;
+					this.quizSetup();
 					break;
 
 				case "Post":
 					console.log("usc_biodigital> Starting Posterior Quiz");
 					this.state.quizName = "quiz_posterior";
-					this.quizSetup();
 					this.reset();
-					// this.quizBeenSetup = false;
+					this.quizSetup();
 					break;
 
 				case "Start":
 					console.log("usc_biodigital> Starting the quiz");
-					this.quizStart();
+					this.reset(); // clear old found and id flags
+					this.quizStart(); // go straight to Start without reloading quiz or model.
 					break;
 
 				case "ViewType":
-					console.log(data.value);
+					// console.log(data.value);
 					switch (data.value) {
 						case "Norm":
 							console.log('usc_biodigital> Normal Option');
@@ -831,7 +869,7 @@ var usc_biodigital = SAGE2_App.extend({
 							break;
 
 						default:
-							console.log("Error: unknown option");
+							console.log("Error: unknown ViewType option");
 							break;
 
 					}
@@ -855,7 +893,7 @@ var usc_biodigital = SAGE2_App.extend({
 							break;
 
 						default:
-							console.log("Error: unknown option");
+							console.log("Error: unknown PointerType option");
 							break;
 					}
 					break;
@@ -890,7 +928,7 @@ var usc_biodigital = SAGE2_App.extend({
 							break;
 
 						default:
-							console.log("Error: unknown option");
+							console.log("Error: unknown ModelType option");
 							break;
 					}
 					break;
@@ -910,7 +948,7 @@ var usc_biodigital = SAGE2_App.extend({
 							break;
 
 						default:
-							console.log("Error: unkown quiz");
+							console.log("Error: unkown QuizType option");
 							break;
 					}
 					break;
