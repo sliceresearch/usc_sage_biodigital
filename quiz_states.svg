@@ -22,6 +22,20 @@
   <defs
      id="defs2">
     <marker
+       inkscape:isstock="true"
+       style="overflow:visible;"
+       id="marker1036"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#000000;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         id="path1034" />
+    </marker>
+    <marker
        inkscape:stockid="Arrow2Mend"
        orient="auto"
        refY="0.0"
@@ -31,36 +45,6 @@
        inkscape:isstock="true">
       <path
          id="path1580"
-         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#000000;stroke-opacity:1;fill:#000000;fill-opacity:1"
-         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
-         transform="scale(0.6) rotate(180) translate(0,0)" />
-    </marker>
-    <marker
-       inkscape:isstock="true"
-       style="overflow:visible;"
-       id="marker1492"
-       refX="0.0"
-       refY="0.0"
-       orient="auto"
-       inkscape:stockid="Arrow2Mend"
-       inkscape:collect="always">
-      <path
-         transform="scale(0.6) rotate(180) translate(0,0)"
-         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
-         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#000000;stroke-opacity:1;fill:#000000;fill-opacity:1"
-         id="path1490" />
-    </marker>
-    <marker
-       inkscape:stockid="Arrow2Mend"
-       orient="auto"
-       refY="0.0"
-       refX="0.0"
-       id="marker1013"
-       style="overflow:visible;"
-       inkscape:isstock="true"
-       inkscape:collect="always">
-      <path
-         id="path1011"
          style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#000000;stroke-opacity:1;fill:#000000;fill-opacity:1"
          d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
          transform="scale(0.6) rotate(180) translate(0,0)" />
@@ -219,8 +203,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="529.49953"
-     inkscape:cy="383.61597"
+     inkscape:cx="479.35166"
+     inkscape:cy="405.64881"
      inkscape:document-units="mm"
      inkscape:current-layer="g4578"
      showgrid="false"
@@ -230,7 +214,7 @@
      inkscape:window-y="4"
      inkscape:window-maximized="0"
      inkscape:snap-others="true"
-     inkscape:snap-global="true"
+     inkscape:snap-global="false"
      inkscape:snap-bbox="true"
      inkscape:snap-nodes="true"
      inkscape:bbox-nodes="false"
@@ -256,84 +240,89 @@
     <g
        id="g4578"
        transform="translate(-2.6458333,21.960417)">
-      <rect
-         rx="5"
-         y="104.64312"
-         x="32.558334"
-         height="37.041668"
-         width="46.831249"
-         id="rect4560"
-         style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <text
-         id="text4564"
-         y="113.90834"
-         x="56.711777"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="113.90834"
+      <g
+         id="g970"
+         transform="translate(1.7051875,85.195835)">
+        <rect
+           style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.53507942;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect4560"
+           width="49.432915"
+           height="40.188942"
+           x="32.556557"
+           y="98.860321"
+           rx="5.27777"
+           ry="0" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
            x="56.711777"
-           id="tspan4562"
-           sodipodi:role="line">&quot;Quiz Unknown&quot;</tspan></text>
-      <text
-         id="text4568"
-         y="119.66805"
-         x="33.469452"
-         style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           style="stroke-width:0.26458332"
+           y="113.90834"
+           id="text4564"><tspan
+             sodipodi:role="line"
+             id="tspan4562"
+             x="56.711777"
+             y="113.90834"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332">&quot;Quiz Unknown&quot;</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="35.321537"
            y="119.66805"
-           x="33.469452"
-           sodipodi:role="line"
-           id="tspan13399">QUIZ_OBJECTS undef</tspan><tspan
-           id="tspan4570"
-           style="stroke-width:0.26458332"
-           y="124.07777"
-           x="33.469452"
-           sodipodi:role="line">timer not running</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="128.48749"
-           x="33.469452"
-           sodipodi:role="line"
-           id="tspan1912">quiz panel NOT showing</tspan></text>
+           id="text4568"><tspan
+             id="tspan13399"
+             sodipodi:role="line"
+             x="35.321537"
+             y="119.66805"
+             style="stroke-width:0.26458332">QUIZ_OBJECTS undef</tspan><tspan
+             sodipodi:role="line"
+             x="35.321537"
+             y="124.07777"
+             style="stroke-width:0.26458332"
+             id="tspan4570">timer not running</tspan><tspan
+             id="tspan1912"
+             sodipodi:role="line"
+             x="35.321537"
+             y="128.4875"
+             style="stroke-width:0.26458332">quiz panel NOT showing</tspan></text>
+      </g>
       <rect
          style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.54917794;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4599"
          width="56.571655"
          height="36.992489"
-         x="111.14959"
-         y="105.20167"
+         x="28.888014"
+         y="104.93229"
          rx="6.039947" />
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="134.76387"
-         y="113.64375"
+         x="54.330536"
+         y="113.90834"
          id="text4603"><tspan
            sodipodi:role="line"
            id="tspan4601"
-           x="134.76387"
-           y="113.64375"
+           x="54.330536"
+           y="113.90834"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332">&quot;Quiz Loaded&quot;</tspan></text>
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="116.15209"
-         y="120.7875"
+         x="34.123665"
+         y="120.38168"
          id="text4609"><tspan
            sodipodi:role="line"
-           x="116.15209"
-           y="120.7875"
+           x="34.123665"
+           y="120.38168"
            style="stroke-width:0.26458332"
            id="tspan4613">QUIZ_OBJECTS is loaded</tspan><tspan
            sodipodi:role="line"
-           x="116.15209"
-           y="125.19722"
+           x="34.123665"
+           y="124.7914"
            style="stroke-width:0.26458332"
            id="tspan4621">but quiz IDs not known</tspan><tspan
            sodipodi:role="line"
-           x="116.15209"
-           y="129.60695"
+           x="34.123665"
+           y="129.20113"
            style="stroke-width:0.26458332"
            id="tspan1910">quiz panel NOT showing</tspan></text>
       <text
@@ -347,61 +336,84 @@
            x="142.61043"
            y="124.49168"
            style="stroke-width:0.26458332" /></text>
-      <rect
-         rx="6.0359421"
-         y="104.95583"
-         x="206.68292"
-         height="42.246643"
-         width="56.534145"
-         id="rect4623"
-         style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <text
-         id="text4627"
-         y="111.52708"
-         x="230.27844"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="111.52708"
+      <g
+         id="g988"
+         transform="translate(-92.049491,-1.6567827)">
+        <rect
+           style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect4623"
+           width="56.534145"
+           height="42.246643"
+           x="206.68292"
+           y="104.95583"
+           rx="6.0359421" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
            x="230.27844"
-           id="tspan4625"
-           sodipodi:role="line">&quot;Quiz Starting&quot;</tspan></text>
-      <text
-         id="text4635"
-         y="118.67083"
-         x="211.66667"
-         style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           id="tspan4631"
-           style="stroke-width:0.26458332"
+           y="111.52708"
+           id="text4627"><tspan
+             sodipodi:role="line"
+             id="tspan4625"
+             x="230.27844"
+             y="111.52708"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332">&quot;Quiz Starting&quot;</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="211.66667"
            y="118.67083"
-           x="211.66667"
-           sodipodi:role="line">QUIZ_OBJECTS is loaded</tspan><tspan
-           id="tspan4633"
-           style="stroke-width:0.26458332"
-           y="123.08055"
-           x="211.66667"
-           sodipodi:role="line">quiz IDs are known</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="127.49027"
-           x="211.66667"
-           sodipodi:role="line"
-           id="tspan4643">missed = 0</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="131.89999"
-           x="211.66667"
-           sodipodi:role="line"
-           id="tspan4645">correctAnswers = 0</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="136.30972"
-           x="211.66667"
-           sodipodi:role="line"
-           id="tspan4641">timer not running</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="140.71944"
-           x="211.66667"
-           sodipodi:role="line"
-           id="tspan1902">shows quiz panel</tspan></text>
+           id="text4635"><tspan
+             sodipodi:role="line"
+             x="211.66667"
+             y="118.67083"
+             style="stroke-width:0.26458332"
+             id="tspan4631">QUIZ_OBJECTS is loaded</tspan><tspan
+             sodipodi:role="line"
+             x="211.66667"
+             y="123.08055"
+             style="stroke-width:0.26458332"
+             id="tspan4633">quiz IDs are NOT known</tspan><tspan
+             id="tspan4643"
+             sodipodi:role="line"
+             x="211.66667"
+             y="127.49027"
+             style="stroke-width:0.26458332">missed = 0</tspan><tspan
+             id="tspan4645"
+             sodipodi:role="line"
+             x="211.66667"
+             y="131.89999"
+             style="stroke-width:0.26458332">correctAnswers = 0</tspan><tspan
+             id="tspan4641"
+             sodipodi:role="line"
+             x="211.66667"
+             y="136.30972"
+             style="stroke-width:0.26458332">timer not running</tspan><tspan
+             id="tspan1902"
+             sodipodi:role="line"
+             x="211.66667"
+             y="140.71944"
+             style="stroke-width:0.26458332">shows quiz panel</tspan></text>
+        <rect
+           style="fill:none;stroke:#000000;stroke-width:0.25;stroke-miterlimit:0;stroke-dasharray:0.50000001, 0.50000001;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect1040"
+           width="156.89792"
+           height="135.73125"
+           x="202.90991"
+           y="99.16095"
+           rx="0" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="255.03281"
+           y="239.12553"
+           id="text1044"><tspan
+             sodipodi:role="line"
+             id="tspan1042"
+             x="255.03281"
+             y="239.12553"
+             style="font-size:4.23333311px;stroke-width:0.26458332">this.isQuizShowing == true</tspan></text>
+      </g>
       <text
          id="text4639"
          y="122.37502"
@@ -423,56 +435,60 @@
              height="235"
              x="739"
              y="56.700806" /></flowRegion><flowPara
-           id="flowPara4653" /></flowRoot>      <rect
-         style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect4655"
-         width="56.534145"
-         height="42.246643"
-         x="207.21208"
-         y="190.15166"
-         rx="6.0359421" />
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="230.8076"
-         y="196.72292"
-         id="text4659"><tspan
-           sodipodi:role="line"
-           id="tspan4657"
-           x="230.8076"
+           id="flowPara4653" /></flowRoot>      <g
+         id="g999"
+         transform="translate(-0.48367377,-85.710636)">
+        <rect
+           rx="6.0359421"
+           y="190.15166"
+           x="207.21208"
+           height="42.246643"
+           width="56.534145"
+           id="rect4655"
+           style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <text
+           id="text4659"
            y="196.72292"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332">&quot;Quiz Started&quot;</tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="212.19583"
-         y="203.86665"
-         id="text4673"><tspan
-           sodipodi:role="line"
-           x="212.19583"
+           x="230.8076"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           xml:space="preserve"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332"
+             y="196.72292"
+             x="230.8076"
+             id="tspan4657"
+             sodipodi:role="line">&quot;Quiz Started&quot;</tspan></text>
+        <text
+           id="text4673"
            y="203.86665"
-           style="stroke-width:0.26458332"
-           id="tspan4663">QUIZ_OBJECTS is loaded</tspan><tspan
-           id="tspan4669"
-           sodipodi:role="line"
            x="212.19583"
-           y="208.27638"
-           style="stroke-width:0.26458332">quiz IDs are known</tspan><tspan
-           sodipodi:role="line"
-           x="212.19583"
-           y="212.6861"
-           style="stroke-width:0.26458332"
-           id="tspan13615">clicks increment counters</tspan><tspan
-           id="tspan4671"
-           sodipodi:role="line"
-           x="212.19583"
-           y="217.09583"
-           style="stroke-width:0.26458332">timer is running</tspan><tspan
-           sodipodi:role="line"
-           x="212.19583"
-           y="221.50554"
-           style="stroke-width:0.26458332"
-           id="tspan1904">shows quiz panel and items</tspan></text>
+           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           xml:space="preserve"><tspan
+             id="tspan4663"
+             style="stroke-width:0.26458332"
+             y="203.86665"
+             x="212.19583"
+             sodipodi:role="line">QUIZ_OBJECTS is loaded</tspan><tspan
+             style="stroke-width:0.26458332"
+             y="208.27638"
+             x="212.19583"
+             sodipodi:role="line"
+             id="tspan4669">quiz IDs are known</tspan><tspan
+             id="tspan13615"
+             style="stroke-width:0.26458332"
+             y="212.6861"
+             x="212.19583"
+             sodipodi:role="line">clicks increment counters</tspan><tspan
+             style="stroke-width:0.26458332"
+             y="217.09583"
+             x="212.19583"
+             sodipodi:role="line"
+             id="tspan4671">timer is running</tspan><tspan
+             id="tspan1904"
+             style="stroke-width:0.26458332"
+             y="221.50554"
+             x="212.19583"
+             sodipodi:role="line">shows quiz panel and items</tspan></text>
+      </g>
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -484,61 +500,6 @@
            x="238.65416"
            y="207.57085"
            style="stroke-width:0.26458332" /></text>
-      <rect
-         rx="6.0359421"
-         y="190.41624"
-         x="111.43291"
-         height="42.246643"
-         width="56.534145"
-         id="rect4683"
-         style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <text
-         id="text4687"
-         y="196.9875"
-         x="135.02844"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332"
-           y="196.9875"
-           x="135.02844"
-           id="tspan4685"
-           sodipodi:role="line">&quot;Quiz Stopped&quot;</tspan></text>
-      <text
-         id="text4697"
-         y="204.13124"
-         x="116.41666"
-         style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           id="tspan4691"
-           style="stroke-width:0.26458332"
-           y="204.13124"
-           x="116.41666"
-           sodipodi:role="line">QUIZ_OBJECTS is loaded</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="208.54097"
-           x="116.41666"
-           sodipodi:role="line"
-           id="tspan4703">quiz IDs are known</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="212.95068"
-           x="116.41666"
-           sodipodi:role="line"
-           id="tspan4707">scores are displayed</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="217.36041"
-           x="116.41666"
-           sodipodi:role="line"
-           id="tspan4695">timer is not running</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="221.77013"
-           x="116.41666"
-           sodipodi:role="line"
-           id="tspan1908">shows quiz panel and items</tspan><tspan
-           style="stroke-width:0.26458332"
-           y="226.17986"
-           x="116.41666"
-           sodipodi:role="line"
-           id="tspan1906" /></text>
       <text
          id="text4701"
          y="207.83543"
@@ -552,109 +513,109 @@
            sodipodi:role="line" /></text>
       <path
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker13303)"
-         d="m 19.91081,122.69902 c 0,0.26459 11.641667,0.52917 11.641667,0.52917"
+         d="m 22.409748,207.89485 c 0,0.26459 11.641667,0.52917 11.641667,0.52917"
          id="path4713"
          inkscape:connector-curvature="0" />
       <path
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
-         d="M 79.639582,123.16876 H 110.59584"
+         d="m 58.213111,183.7729 8e-6,-40.48125"
          id="path4715"
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="cc" />
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="95.487061"
-         y="121.1311"
+         x="45.112564"
+         y="169.02234"
          id="text5075"><tspan
            sodipodi:role="line"
            id="tspan5073"
-           x="95.487061"
-           y="121.1311"
+           x="45.112564"
+           y="169.02234"
            style="stroke-width:0.26458332">read quiz.json</tspan></text>
       <path
          inkscape:connector-curvature="0"
          id="path5077"
-         d="m 206.95655,196.19376 -38.62916,-0.26458"
+         d="m 228.91697,146.4521 v 34.66042"
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker5085)"
          sodipodi:nodetypes="cc" />
       <text
          id="text5081"
-         y="193.9187"
-         x="186.86884"
+         y="157.93536"
+         x="221.79384"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
          xml:space="preserve"><tspan
            style="stroke-width:0.26458332"
-           y="193.9187"
-           x="186.86884"
+           y="157.93536"
+           x="221.79384"
            id="tspan5079"
            sodipodi:role="line">[Stop]</tspan></text>
       <path
          sodipodi:nodetypes="cc"
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker6067)"
-         d="m 234.95,146.98126 0.0433,43.1704"
+         d="m 171.45,123.69793 34.70372,-0.22127"
          id="path6059"
          inkscape:connector-curvature="0" />
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="233.8015"
-         y="169.91753"
+         x="201.33231"
+         y="115.94253"
          id="text6063"><tspan
            sodipodi:role="line"
            id="tspan6061"
-           x="233.8015"
-           y="169.91753"
+           x="201.33231"
+           y="115.94253"
            style="text-align:end;text-anchor:end;stroke-width:0.26458332">on human.ready</tspan></text>
       <path
          sodipodi:nodetypes="cc"
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker12173)"
-         d="m 206.91702,211.51685 -38.62916,-0.26458"
+         d="m 254.27744,146.16477 v 35.18958"
          id="path12165"
          inkscape:connector-curvature="0" />
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="186.8293"
-         y="209.24179"
+         x="246.09596"
+         y="153.41472"
          id="text12169"><tspan
            sodipodi:role="line"
            id="tspan12167"
-           x="186.8293"
-           y="209.24179"
+           x="246.09596"
+           y="153.41472"
            style="stroke-width:0.26458332">timeout</tspan></text>
       <path
          inkscape:connector-curvature="0"
          id="path12325"
-         d="m 206.91702,226.06893 c -64.82967,46.24831 -93.4001,27.60182 -119.856244,-0.52917"
-         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker12333)"
+         d="m 212.04286,146.51015 c 0.22707,24.86992 -12.32006,43.13408 -39.93195,43.21832"
+         style="fill:none;stroke:#000000;stroke-width:0.3861447;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker12333)"
          sodipodi:nodetypes="cc" />
       <text
          id="text12329"
-         y="240.02515"
-         x="187.35846"
+         y="163.0314"
+         x="194.7668"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
          xml:space="preserve"><tspan
            style="stroke-width:0.26458332"
-           y="240.02515"
-           x="187.35846"
+           y="163.0314"
+           x="194.7668"
            id="tspan12327"
            sodipodi:role="line">all-items-found</tspan></text>
       <path
          sodipodi:nodetypes="cc"
          inkscape:connector-curvature="0"
          id="path12533"
-         d="m 168.44594,123.42109 37.64411,0.26693"
+         d="m 85.206853,121.83223 29.706617,0.26693"
          style="fill:none;stroke:#000000;stroke-width:0.49576816;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker12541)" />
       <text
          id="text12537"
-         y="121.91175"
-         x="187.64275"
+         y="120.32288"
+         x="104.40366"
          style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
          xml:space="preserve"><tspan
            style="stroke-width:0.26458332"
-           y="121.91175"
-           x="187.64275"
+           y="120.32288"
+           x="104.40366"
            id="tspan12535"
            sodipodi:role="line">[Start]</tspan></text>
       <text
@@ -674,155 +635,165 @@
          d="M 118.04749,190.41625 74.126664,142.8056"
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker13625)"
          sodipodi:nodetypes="cc" />
-      <text
-         id="text13621"
-         y="164.99228"
-         x="90.009918"
-         style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
-           style="text-align:end;text-anchor:end;stroke-width:0.26458332"
+      <g
+         id="g976"
+         transform="translate(6.630568,4.2333334)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="90.009918"
            y="164.99228"
-           x="90.009918"
-           id="tspan13619"
-           sodipodi:role="line">[Ante]</tspan><tspan
-           style="text-align:end;text-anchor:end;stroke-width:0.26458332"
-           y="169.40201"
-           x="90.009918"
-           sodipodi:role="line"
-           id="tspan14257">[Post]</tspan><tspan
-           style="text-align:end;text-anchor:end;stroke-width:0.26458332"
-           y="173.81172"
-           x="90.009918"
-           sodipodi:role="line"
-           id="tspan1890">(from all states)</tspan></text>
-      <rect
-         style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect110"
-         width="56.534145"
-         height="42.246643"
-         x="30.205824"
-         y="190.15166"
-         rx="6.0359421" />
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="53.801357"
-         y="196.72292"
-         id="text114"><tspan
-           sodipodi:role="line"
-           id="tspan112"
-           x="53.801357"
+           id="text13621"><tspan
+             sodipodi:role="line"
+             id="tspan13619"
+             x="90.009918"
+             y="164.99228"
+             style="text-align:end;text-anchor:end;stroke-width:0.26458332">[Ante]</tspan><tspan
+             id="tspan14257"
+             sodipodi:role="line"
+             x="90.009918"
+             y="169.40201"
+             style="text-align:end;text-anchor:end;stroke-width:0.26458332">[Post]</tspan><tspan
+             id="tspan1890"
+             sodipodi:role="line"
+             x="90.009918"
+             y="173.81172"
+             style="text-align:end;text-anchor:end;stroke-width:0.26458332">(from all states)</tspan></text>
+      </g>
+      <g
+         id="g961"
+         transform="translate(85.195834,-7.3946473)">
+        <rect
+           rx="6.0359421"
+           y="190.15166"
+           x="30.205824"
+           height="42.246643"
+           width="56.534145"
+           id="rect110"
+           style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <text
+           id="text114"
            y="196.72292"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332">&quot;Quiz Finished&quot;</tspan></text>
+           x="53.801357"
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           xml:space="preserve"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332"
+             y="196.72292"
+             x="53.801357"
+             id="tspan112"
+             sodipodi:role="line">&quot;Quiz Finished&quot;</tspan></text>
+        <text
+           id="text124"
+           y="203.86665"
+           x="33.60207"
+           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           xml:space="preserve"><tspan
+             id="tspan116"
+             style="stroke-width:0.26458332"
+             y="203.86665"
+             x="33.60207"
+             sodipodi:role="line">QUIZ_OBJECTS is loaded</tspan><tspan
+             style="stroke-width:0.26458332"
+             y="208.27638"
+             x="33.60207"
+             sodipodi:role="line"
+             id="tspan118">quiz IDs are known</tspan><tspan
+             style="stroke-width:0.26458332"
+             y="212.6861"
+             x="33.60207"
+             sodipodi:role="line"
+             id="tspan120">scores are displayed</tspan><tspan
+             style="stroke-width:0.26458332"
+             y="217.09583"
+             x="33.60207"
+             sodipodi:role="line"
+             id="tspan122">timer is not running</tspan><tspan
+             id="tspan126"
+             style="stroke-width:0.26458332"
+             y="221.50554"
+             x="33.60207"
+             sodipodi:role="line">quiz panel shows &quot;SUCCESS&quot;</tspan></text>
+      </g>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1036)"
+         d="m 163.32855,182.42336 c -0.52672,-8.52017 0.52016,-15.39479 -9.78957,-20.10833 -12.19188,-6.01238 -10.62805,-9.01151 -11.37708,-16.40416"
+         id="path138"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccc" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="35.189571"
-         y="203.86665"
-         id="text124"><tspan
+         style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         x="138.33112"
+         y="163.14897"
+         id="text1161"><tspan
            sodipodi:role="line"
-           x="35.189571"
-           y="203.86665"
+           id="tspan1159"
+           x="138.33112"
+           y="163.14897"
+           style="stroke-width:0.26458332">[Start]</tspan><tspan
+           sodipodi:role="line"
+           x="138.33112"
+           y="167.5587"
            style="stroke-width:0.26458332"
-           id="tspan116">QUIZ_OBJECTS is loaded</tspan><tspan
-           id="tspan118"
-           sodipodi:role="line"
-           x="35.189571"
-           y="208.27638"
-           style="stroke-width:0.26458332">quiz IDs are known</tspan><tspan
-           id="tspan120"
-           sodipodi:role="line"
-           x="35.189571"
-           y="212.6861"
-           style="stroke-width:0.26458332">scores are displayed</tspan><tspan
-           id="tspan122"
-           sodipodi:role="line"
-           x="35.189571"
-           y="217.09583"
-           style="stroke-width:0.26458332">timer is not running</tspan><tspan
-           sodipodi:role="line"
-           x="35.189571"
-           y="221.50554"
-           style="stroke-width:0.26458332"
-           id="tspan126">&quot;SUCCESS&quot; is displayed</tspan></text>
+           id="tspan1038">(from all states)</tspan></text>
       <g
-         id="g1298">
-        <path
-           sodipodi:nodetypes="ccc"
-           inkscape:connector-curvature="0"
-           id="path138"
-           d="m 257.70416,147.24583 c -0.26214,8.94233 -3.18402,12.12188 -7.67291,11.90625 -6.37105,0.33762 -8.51139,-3.45526 -9.26042,-10.84791"
-           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1013)" />
-        <text
-           id="text1161"
-           y="162.10269"
-           x="248.84628"
-           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-           xml:space="preserve"><tspan
-             style="stroke-width:0.26458332"
-             y="162.10269"
-             x="248.84628"
-             id="tspan1159"
-             sodipodi:role="line">[Start]</tspan></text>
+         id="g1015"
+         transform="translate(95.77917,-7.9292154)">
+        <rect
+           style="fill:#cae3c6;fill-opacity:1;stroke:#450000;stroke-width:0.58668959;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect4683"
+           width="56.534145"
+           height="42.246643"
+           x="111.43291"
+           y="190.41624"
+           rx="6.0359421" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-           x="58.473759"
-           y="247.55583"
-           id="text1894"><tspan
+           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="135.02844"
+           y="196.9875"
+           id="text4687"><tspan
              sodipodi:role="line"
-             id="tspan1892"
-             x="58.473759"
-             y="247.55583"
-             style="stroke-width:0.26458332">[Start]</tspan></text>
-      </g>
-      <g
-         id="g1306"
-         transform="translate(-13.366268,85.45314)">
-        <path
-           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1492)"
-           d="m 257.70416,147.24583 c -0.26214,8.94233 -3.18402,12.12188 -7.67291,11.90625 -6.37105,0.33762 -8.51139,-3.45526 -9.26042,-10.84791"
-           id="path1300"
-           inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccc" />
+             id="tspan4685"
+             x="135.02844"
+             y="196.9875"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle;stroke-width:0.26458332">&quot;Quiz Stopped&quot;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-           x="248.84628"
-           y="162.10269"
-           id="text1304"><tspan
+           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           x="116.41666"
+           y="204.13124"
+           id="text4697"><tspan
              sodipodi:role="line"
-             id="tspan1302"
-             x="248.84628"
-             y="162.10269"
-             style="stroke-width:0.26458332">[Start]</tspan></text>
-        <path
-           sodipodi:nodetypes="ccc"
-           inkscape:connector-curvature="0"
-           id="path1578"
-           d="m 80.697902,147.24583 c -0.26214,8.94233 -3.18402,12.12188 -7.67291,11.90625 -6.37105,0.33762 -8.51139,-3.45526 -9.26042,-10.84791"
-           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1582)" />
-      </g>
-      <g
-         transform="translate(-109.14544,85.717728)"
-         id="g1314">
-        <path
-           sodipodi:nodetypes="ccc"
-           inkscape:connector-curvature="0"
-           id="path1308"
-           d="m 257.70416,147.24583 c -0.26214,8.94233 -3.18402,12.12188 -7.67291,11.90625 -6.37105,0.33762 -8.51139,-3.45526 -9.26042,-10.84791"
-           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1013)" />
-        <text
-           id="text1312"
-           y="162.10269"
-           x="248.84628"
-           style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-           xml:space="preserve"><tspan
+             x="116.41666"
+             y="204.13124"
              style="stroke-width:0.26458332"
-             y="162.10269"
-             x="248.84628"
-             id="tspan1310"
-             sodipodi:role="line">[Start]</tspan></text>
+             id="tspan4691">QUIZ_OBJECTS is loaded</tspan><tspan
+             id="tspan4703"
+             sodipodi:role="line"
+             x="116.41666"
+             y="208.54097"
+             style="stroke-width:0.26458332">quiz IDs are known</tspan><tspan
+             id="tspan4707"
+             sodipodi:role="line"
+             x="116.41666"
+             y="212.95068"
+             style="stroke-width:0.26458332">scores are displayed</tspan><tspan
+             id="tspan4695"
+             sodipodi:role="line"
+             x="116.41666"
+             y="217.36041"
+             style="stroke-width:0.26458332">timer is not running</tspan><tspan
+             id="tspan1908"
+             sodipodi:role="line"
+             x="116.41666"
+             y="221.77013"
+             style="stroke-width:0.26458332">shows quiz panel and items</tspan><tspan
+             id="tspan1906"
+             sodipodi:role="line"
+             x="116.41666"
+             y="226.17986"
+             style="stroke-width:0.26458332" /></text>
       </g>
     </g>
   </g>
