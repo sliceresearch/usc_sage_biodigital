@@ -410,11 +410,14 @@ var usc_biodigital = SAGE2_App.extend({
 				// console.log(JSON.stringify(camera));
 				_this.currentZoom = camera.zoom;
 			});
-
+			
 			console.log("on human ready...  " + this.id);
 			this.getHumanAPI().on("human.ready", function() {
 				// get a list of objects
-				this.send("scene.info", this.onHumanReady);
+				this.send("scene.info", function (data){
+					console.log(data);
+					_this.onHumanReady(data);
+				});
 			});
 			this.setQuizState("Quiz Starting");
 			this.invariant();
@@ -422,6 +425,7 @@ var usc_biodigital = SAGE2_App.extend({
 	},
 
 	onHumanReady: function(data) {
+		var _this = this;
 		console.log("got scene.info...  " + _this.id);
 		var sceneObjects = {};
 		var i = 0;
