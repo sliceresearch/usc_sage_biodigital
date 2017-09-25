@@ -301,6 +301,51 @@ var usc_biodigital = SAGE2_App.extend({
 		//console.log(this.controls.addButtonType);
 		this.enableControls = true;
 	},
+	
+	/**
+	* To enable right click context menu support this function needs to be present.
+	*
+	* Must return an array of entries. An entry is an object with three properties:
+	*	description: what is to be displayed to the viewer.
+	*	callback: String containing the name of the function to activate in the app. It must exist.
+	*	parameters: an object with specified datafields to be given to the function.
+	*		The following attributes will be automatically added by server.
+	*			serverDate, on the return back, server will fill this with time object.
+	*			clientId, unique identifier (ip and port) for the client that selected entry.
+	*			clientName, the name input for their pointer. Note: users are not required to do so.
+	*			clientInput, if entry is marked as input, the value will be in this property. See pdf_viewer.js for example.
+	*		Further parameters can be added. See pdf_view.js for example.
+	*/
+	getContextEntries: function() {
+		var entries = [];
+
+		var entry   = {};
+		// label of them menu
+		entry.description = "Type a location:";
+		// callback
+		entry.callback = "setLocation";
+		// parameters of the callback function
+		entry.parameters     = {};
+		entry.inputField     = true;
+		entry.inputFieldSize = 20;
+		entries.push(entry);
+
+		entry = {};
+		entry.description = "Save current location";
+		entry.callback = "setDefault";
+		entry.parameters = {};
+		entries.push(entry);
+
+		entry = {};
+		entry.description = "Load saved location";
+		entry.callback = "loadDefault";
+		entry.parameters = {};
+		entries.push(entry);
+
+		entries.push({description: "separator"});
+
+		return entries;
+	},
 
 	// private helper function that pads out a given number to two digits.
 	checkTime: function(i) {
@@ -331,6 +376,7 @@ var usc_biodigital = SAGE2_App.extend({
 			if (min === _this.quizTimeLimit) {
 				_this.pauseClock();
 				_this.setQuizState("Quiz Stopped");
+				_this.invariant();
 			}
 		}, 1000);
 	},
@@ -391,6 +437,7 @@ var usc_biodigital = SAGE2_App.extend({
 			this.quizPanelDOM.style.fontSize = this.fontSize + "px";
 			this.quizResponseDOM.style.fontSize = this.fontSize * 1.05 + "px";
 			this.quizTargetDOM.style.fontSize = this.fontSize + "px";
+			this.quizTargetDOM.innerHTML = "Find all these items:";
 			this.quizSelDOM.style.fontSize = this.fontSize + "px";
 			this.quizListDOM.style.fontSize = this.fontSize + "px";
 			this.quizListDOM.style.color = "black";
@@ -414,8 +461,9 @@ var usc_biodigital = SAGE2_App.extend({
 			console.log("on human ready...  " + this.id);
 			this.getHumanAPI().on("human.ready", function() {
 				// get a list of objects
+				console.log("got human ready...  ", _this);
+				// this.send("scene.info", _this.onHumanReady);
 				this.send("scene.info", function (data){
-					console.log(data);
 					_this.onHumanReady(data);
 				});
 			});
@@ -426,7 +474,7 @@ var usc_biodigital = SAGE2_App.extend({
 
 	onHumanReady: function(data) {
 		var _this = this;
-		console.log("got scene.info...  " + _this.id);
+		console.log("got scene.info...  ", _this);
 		var sceneObjects = {};
 		var i = 0;
 		for (i = 0; i < _this.QUIZ_OBJECTS.length; i++) {
