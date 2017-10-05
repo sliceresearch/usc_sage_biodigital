@@ -301,7 +301,7 @@ var usc_biodigital = SAGE2_App.extend({
 		//console.log(this.controls.addButtonType);
 		this.enableControls = true;
 	},
-	
+
 	/**
 	* To enable right click context menu support this function needs to be present.
 	*
@@ -321,16 +321,14 @@ var usc_biodigital = SAGE2_App.extend({
 
 		var entry   = {};
 		// label of them menu
-		entry.description = "Type a location:";
+		entry.description = "Start quiz: " + this.state.quizName;
 		// callback
-		entry.callback = "setLocation";
+		entry.callback = "quizStart";
 		// parameters of the callback function
 		entry.parameters     = {};
-		entry.inputField     = true;
-		entry.inputFieldSize = 20;
 		entries.push(entry);
 
-		entry = {};
+		/*entry = {};
 		entry.description = "Save current location";
 		entry.callback = "setDefault";
 		entry.parameters = {};
@@ -340,7 +338,7 @@ var usc_biodigital = SAGE2_App.extend({
 		entry.description = "Load saved location";
 		entry.callback = "loadDefault";
 		entry.parameters = {};
-		entries.push(entry);
+		entries.push(entry);*/
 
 		entries.push({description: "separator"});
 
