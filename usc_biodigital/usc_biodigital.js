@@ -328,13 +328,13 @@ var usc_biodigital = SAGE2_App.extend({
 		entry.parameters     = {};
 		entries.push(entry);
 
-		/*entry = {};
-		entry.description = "Save current location";
-		entry.callback = "setDefault";
+		entry = {};
+		entry.description = "Reset";
+		entry.callback = "reset";
 		entry.parameters = {};
 		entries.push(entry);
 
-		entry = {};
+		/*entry = {};
 		entry.description = "Load saved location";
 		entry.callback = "loadDefault";
 		entry.parameters = {};
