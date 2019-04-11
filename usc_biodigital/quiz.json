@@ -1,9 +1,12 @@
 { 	"name": "Quiz", 
 	"author": "SM", 
 	"copyright": "SM", 
+	"model": "https://human.biodigital.com/widget/?be=1fLs&pre=false",
 	"fontsize": 20, 
 	"window": 0.35, 
-	"number": 3,
+	"number": 4,
+	"canSpin": false,
+	"canDissect": false,
 	"questions":[
 		{
 	        "id": "human_02_male_muscular_system-left_pectoralis_major_ID",
@@ -13,6 +16,10 @@
         	"name": "left rectus femoris"},
 		{
 	        "id": "human_02_male_muscular_system-right_external_oblique_ID",
-        	"name": "right external oblique"}
-	] 
+        	"name": "right external oblique"},
+		{
+		"name": "right orbicularis oculi"
+		}
+	],
+	"timeLimitMin": 10
 }

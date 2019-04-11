@@ -1,0 +1,538 @@
+{
+    "apps": [
+        {
+            "id": "app_0",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/zip",
+            "url": "http://192.168.10.10:9292//user%255Capps%255Cusc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 0,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 575.4,
+            "previous_top": 2.3681125439626385,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital_1501045843262.zip",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:10:44.265Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_1",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 2755.5261430246187,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 3330.926143024619,
+            "previous_top": 64.05627198124267,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:11:38.209Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_2",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 5477.9177022274325,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 6053.317702227432,
+            "previous_top": 192.16881594372808,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:11:47.798Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_3",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 8232.337397420868,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 8807.737397420868,
+            "previous_top": 384.33763188745604,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:11:58.990Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_4",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 10986.757092614302,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 11562.157092614301,
+            "previous_top": 864.7596717467761,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:12:11.927Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_5",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 13677.120515826495,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 14252.520515826494,
+            "previous_top": 800.7033997655335,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:12:23.046Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_6",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 16463.56834701055,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 17038.968347010552,
+            "previous_top": 768.6752637749119,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:12:35.877Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_7",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 19153.93177022274,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 19729.331770222743,
+            "previous_top": 416.36576787807735,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:12:42.967Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_8",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 21908.351465416174,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 22483.751465416175,
+            "previous_top": 128.11254396248535,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:12:52.669Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        },
+        {
+            "id": "app_9",
+            "title": "usc_biodigital",
+            "application": "usc_biodigital",
+            "icon": "\\user\\assets\\apps\\usc_biodigital",
+            "type": "application/custom",
+            "url": "http://192.168.10.10:9292/user/apps/usc_biodigital",
+            "data": {
+                "value": "https://human.biodigital.com/widget/?be=1xL9&pre=false&background=255,255,255,51,64,77",
+                "dk": "ae484d517dfdb73aa39b089e0e9f30ff5a1492bb",
+                "quizName": "quiz_anterior"
+            },
+            "resrc": [],
+            "left": 24694.79929660023,
+            "top": 77,
+            "width": 1750.8,
+            "height": 2918,
+            "native_width": 600,
+            "native_height": 1000,
+            "previous_left": 25270.199296600233,
+            "previous_top": 448.39390386869866,
+            "previous_width": 600,
+            "previous_height": 1000,
+            "maximized": true,
+            "aspect": 0.6,
+            "animation": false,
+            "metadata": {
+                "title": "usc_biodigital",
+                "version": "1.0.5",
+                "description": "SAGE2 application usc_biodigital",
+                "author": "Mark Utting <utting@usc.edu.au>, Levi Kotzur <lkotzur@usc.edu.au>, Svetlana Mandler",
+                "license": "SAGE2-Software-License",
+                "keywords": [
+                    "sage2",
+                    "usc_biodigital"
+                ],
+                "fileTypes": [],
+                "removeFromLauncher": false
+            },
+            "resizeMode": "free",
+            "file": "C:\\Users\\exx\\Documents\\SAGE2_Media\\apps\\usc_biodigital",
+            "sage2URL": "/user/apps/usc_biodigital",
+            "date": "2017-07-26T05:13:02.526Z",
+            "contextMenu": [
+                {
+                    "description": "Close application",
+                    "callback": "SAGE2DeleteElement",
+                    "parameters": {}
+                }
+            ],
+            "ptnHovered": null,
+            "maximizeConstraint": "height"
+        }
+    ],
+    "numapps": 10,
+    "partitions": [],
+    "numpartitions": 0,
+    "date": 1501046066639
+}

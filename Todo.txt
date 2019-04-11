@@ -1,0 +1,8 @@
+Features to be added
+Quizs
+display message if quiz object are not in the model
+
+Refactoring code
+seperate model id in instructions.json and widgetevent.
+Break code into modules/classes
+todo need to improve object string

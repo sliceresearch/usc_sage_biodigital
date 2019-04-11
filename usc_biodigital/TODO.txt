@@ -1,0 +1,42 @@
+Main Task: Develop BioDigital Human app for CAVE, with Quiz facilities.
+
+QUIZ1: get a single instance of our BioDigital Human app running so that we can type in 10 body part names, and then run the quiz, to show him how it will work on his data.
+
+Breaking this up into smaller tasks, I think these are our priorities:
+
+* [DONE] display all 5-10 quiz items (however many are in the quiz.json file) on the one quiz panel.
+* [DONE] allow the items to be ticked off (or change colour to green) in any order, as the user selects the correct body part.
+* [DONE] show the user-friendly body part name (i.e. not the ID, but the name) in the quiz panel each time any selection is made (even better would be to just use the existing BioDigital popup label next to the selected part, if we can override the CSS to make that a bit bigger).
+* [DONE] count and always display the 'misses' - all the selection clicks that the user makes that do NOT match any quiz item.
+* [DONE] get app and quiz working correctly with multiple apps in CAVE.
+
+And in the 'would be nice to have' category:
+
+* [DONE] rotate body around central axis only (when mouse moves along X axis), and pan up/down (when mouse moves along Y axis).
+* [DONE] have the timer running and displaying while they are doing the quiz.
+* [DONE] have two short sounds play: one when they miss (a short descending sound) and one when they hit (a longer ascending sound).
+* [manualy add widget buttons and code]??use a right-click Sage menu to choose between the different available quizzes.
+
+When scene.reset reloads, start quiz on human.ready. Currently starts instantly.
+this.human.send("scene.reset");
+console.log("Quiz will start in 10 seconds.");
+setTimeout(function(){
+    _this.quizSetup();
+},(10*1000));
+this.human.on("human.ready", function(){
+    _this.quizSetup();
+});
+Tried code sugested by biodigital.
+human.on("scene.restored", function() {
+    _this.quizStetup();
+});
+returns error from human.rpc.enabledEvent.
+
+* [DONE] Display success on quiz finished outside quizList ui in DOM
+
+Alternative design:
+* Experiment with just the 'isMaster' loading scene info, and then putting the
+  quiz item IDs into the state, so that SAGE2 synchronises them?
+  This might cut the 200 models loads down to 10.
+* Could also put the quiz state into this.state???
+

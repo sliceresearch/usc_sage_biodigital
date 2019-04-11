@@ -1,0 +1,32 @@
+Sage 2 Wiki
+
+https://bitbucket.org/sage2/sage2/wiki/browse/
+
+three sage widget types 
+	button, sliders, and radio
+
+WidgetTypes included in Sage sorce code. 
+	remote:
+	stop: 
+	weather: 
+	traffic: 
+	closeBar: 
+	new: 
+	duplicate: 
+	shareScreen: 
+	prev: 
+	next: 
+	"up-arrow": 
+	"down-arrow":
+	rewind: 
+	fastforward: 
+	mute: 
+	loop: 
+	"play-pause": 
+	"zoom-in": 
+	"zoom-out": 
+	closeApp: 
+	default: 
+
+this.resrcPath to find resorces in the app folder.
+
